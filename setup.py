@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+from setuptools import setup, find_packages
+
+setup(
+    name = "ImagingReso",
+    version = "1.0.0",
+    author = "Yuxuan (Shawn) Zhang, Jean Bilheux",
+    author_email = "zhangy6@ornl.gov, bilheuxjm@ornl.gov",
+    packages = find_packages(exclude=['tests', 'notebooks']),
+    include_package_data = True,
+    test_suite = 'tests',
+    install_requires = [
+        'numpy',
+        'pyfits',
+        'pillow',
+        'scipy',
+    ],
+    dependency_links = [
+    ],
+    description = "resonance imaging neutron data",
+    license = 'BSD',
+    keywords = "neutron resonance imaging",
+    url = "https://github.com/ornlneutronimaging/ImagingReso",
+    classifiers = ['Development Status :: 3 - Alpha',
+                   'Topic :: Scientific/Engineering :: Physics',
+                   'Intended Audience :: Developers',
+                   'Programming Language :: Python :: 2.7',
+                   'Programming Language :: Python :: 3.5'],
+)
+
+
+# End of file
