@@ -33,6 +33,8 @@ class TestUtilities(unittest.TestCase):
         _expected_list = ['Pb','Cd','Gd','Ta','Au','Ag','Eu','Sm','Co','O','Hf','B','In','W','U']
         _expected_list = set([_element.lower() for _element in _expected_list])
         print(_expected_list)
+        print("list_elements: ")
+        print(list_elements)
         self.assertEqual(_expected_list, list_elements)
         
         # ENDF_VII
