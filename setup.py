@@ -7,6 +7,8 @@ setup(
     author = "Yuxuan (Shawn) Zhang, Jean Bilheux",
     author_email = "zhangy6@ornl.gov, bilheuxjm@ornl.gov",
     packages = find_packages(exclude=['tests', 'notebooks']),
+    package_data = {'ImagingReso' : ['reference_data/ENDF_VII',
+                                     'reference_data/ENDF_VIII']},
     include_package_data = True,
     test_suite = 'tests',
     install_requires = [

@@ -32,6 +32,7 @@ class TestUtilities(unittest.TestCase):
         list_elements = get_list_element_from_database(database=_database_1)
         _expected_list = ['Pb','Cd','Gd','Ta','Au','Ag','Eu','Sm','Co','O','Hf','B','In','W','U']
         _expected_list = set([_element.lower() for _element in _expected_list])
+        print(_expected_list)
         self.assertEqual(_expected_list, list_elements)
         
         # ENDF_VII
