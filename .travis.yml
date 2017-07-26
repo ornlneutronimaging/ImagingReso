@@ -21,17 +21,16 @@ before_install:
 install:
   - conda config --set always_yes true
   - conda update conda
-  - conda create -n testenv pip nose python=$TRAVIS_PYTHON_VERSION numpy pathlib pillow scipy matplotlib
+  - conda create -n testenv pip nose python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib pandas periodictable
 #  - conda install --yes --file requirements.conda
   - source activate testenv
   - pip install -U pytest
   - pip install pytest-cov
   - pip install codecov
-  - pip install pathlib
   - python setup.py install
 
 script:
-  - pytest -v --cov
+  - pytest -v --cov=tests/
 
 after_success:
   - codecov
