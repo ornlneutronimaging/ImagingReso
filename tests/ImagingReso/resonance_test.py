@@ -25,4 +25,6 @@ class TestInitialization(unittest.TestCase):
         
     def test_initialization_raises_error_if_unknown_element(self):
         '''assert IOError is raised if element can not be found in database'''
-        pass
+        _elements = ['Unknown','Au','Hf', 'Ag']
+        self.assertRaises(IOError, Resonance, elements=_elements)
+
