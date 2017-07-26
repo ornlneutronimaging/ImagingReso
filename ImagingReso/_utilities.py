@@ -21,9 +21,7 @@ def is_element_in_database(element='', database='ENDF_VIII'):
     list_entry_from_database = get_list_element_from_database(database=database)
     if element.lower() in list_entry_from_database:
         return True
-    
-    return False
-    
+    return False    
     
 def get_list_element_from_database(database=''):
     '''return a string array of all the element from the database'''
