@@ -25,7 +25,7 @@ def is_element_in_database(element='', database='ENDF_VIII'):
     
 def get_list_element_from_database(database=''):
     '''return a string array of all the element from the database'''
-    _file_path = os.path.dirname(__file__)
+    _file_path = os.path.abspath(os.path.dirname(__file__))
     _database_folder = os.path.join(_file_path, 'reference_data', database)
     _list_files = glob.glob(_database_folder + '/*.csv')
     _list_short_files = [os.path.basename(_file) for _file in _list_files]
