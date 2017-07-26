@@ -11,8 +11,8 @@ setup(
     test_suite = 'tests',
     install_requires = [
         'numpy',
-        'pyfits',
-        'pillow',
+        'pandas',
+        'periodictable',
         'scipy',
     ],
     dependency_links = [
