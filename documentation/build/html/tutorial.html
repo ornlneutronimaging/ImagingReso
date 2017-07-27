@@ -50,15 +50,30 @@
 <div class="section" id="initialization">
 <h2>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h2>
 <p>we first define our stack of elements. Each layer of the stack can be a single element, or a compound and
-is defined by a dictionary  {‘elements’: [list_of_elements_as_string’], ‘thickness’, 0.025} where the
-thickness is defined in mm.</p>
+is defined by a dictionary  {‘elements’: [list_of_elements_as_string’], ‘ratio’: [1], thickness’, 0.025} where the
+thickness is defined in mm and the ratio is the stochiometric coefficient of each element.</p>
 <div class="section" id="example">
 <h3>example:<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">_stack</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name_of_stack1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;elements&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Ag&#39;</span><span class="p">,</span><span class="s1">&#39;Si&#39;</span><span class="p">],</span> <span class="s1">&#39;thickness&#39;</span><span class="p">:</span> <span class="mf">0.025</span><span class="p">},</span> <span class="s1">&#39;namee_of_stack2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;elements&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Co&#39;</span><span class="p">],</span> <span class="s1">&#39;thickness&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">}}</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">_stack</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name_of_stack1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;elements&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Ag&#39;</span><span class="p">,</span><span class="s1">&#39;Si&#39;</span><span class="p">],</span> <span class="s1">&#39;ratio&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">thickness</span><span class="s1">&#39;: 0.025}, &#39;</span><span class="n">namee_of_stack2</span><span class="s1">&#39;: {&#39;</span><span class="n">elements</span><span class="s1">&#39;: [&#39;</span><span class="n">Co</span><span class="s1">&#39;], &#39;</span><span class="n">ratio</span><span class="s1">&#39;: [1], thickness&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">}}</span>
 </pre></div>
 </div>
 <p>Then you can now initialize the object</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span> <span class="o">=</span> <span class="n">ImagingReso</span><span class="o">.</span><span class="n">Resonance</span><span class="p">(</span><span class="n">stack</span> <span class="o">=</span> <span class="n">_stack</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It is also possible to define the layers (stack) one by one using their formula as demonstrated here</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span> <span class="o">=</span> <span class="n">ImagingReso</span><span class="o">.</span><span class="n">Resonance</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stack1</span> <span class="o">=</span> <span class="s1">&#39;AgSi&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">thickness1</span> <span class="o">=</span> <span class="mf">0.025</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">stack1</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="n">thickness1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stack2</span> <span class="o">=</span> <span class="s1">&#39;Co&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">thcikness2</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">stack2</span><span class="p">,</span> <span class="n">thcikness</span><span class="o">=</span><span class="n">thickness2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The global material can then be checked usign the <strong>slack</strong> parameter</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">slack</span><span class="p">)</span>
+<span class="go">{&#39;AgSi&#39;: {&#39;elements&#39;: [&#39;Ag&#39;,&#39;Si&#39;], &#39;ratio&#39;:[1,1], &#39;thickness&#39;:0.025}, &#39;Co&#39;: {&#39;elements&#39;:[&#39;Co&#39;], &#39;ratio&#39;:[1], &#39;thickness&#39;: 0.3}}</span>
 </pre></div>
 </div>
 </div>

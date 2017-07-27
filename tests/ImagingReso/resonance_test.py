@@ -8,50 +8,35 @@ class TestInitialization(unittest.TestCase):
 
     def test_correct_initialization_of_stack(self):
         '''assert correct defined stack is correctly saved'''
-        _stack = {'CoAl': {'elements': ['Co','Ag'],
+        _stack = {'CoAg': {'elements': ['Co','Ag'],
+                           'ratio': [1, 2],
                            'thickness': 0.025},
                   'Ag': {'elements': ['Ag'],
+                         'ratio': [1],
                          'thickness': 0.03}}
         o_reso = Resonance(stack=_stack)
         _stack_returned = o_reso.stack
         self.assertEqual(_stack, _stack_returned)
     
-    #def test_initialization_of_correct_elements(self):
-        #'''assert elements are correctly loaded'''
-
-        ## unique element
-        #_elements = ['Ag','Au','Hf']
-        #_thickness = [0.025, 0.025, 0.025]
-        #_o_reso = Resonance(elements=_elements, thicknesses=_thickness)
-        #_elements_expected = _elements.sort()
-        #_elements_returned = _o_reso.elements.sort()
-        #self.assertEqual(_elements_expected, _elements_returned)
-    
-        ## duplicate element
-        #_elements = ['Ag','Au','Hf', 'Ag']
-        #_thickness = [0.025, 0.025, 0.025]
-        #_o_reso = Resonance(elements=_elements, thicknesses=_thickness)
-        #_elements_expected = list(set(_elements)).sort()
-        #_elements_returned = _o_reso.elements.sort()
-        #self.assertEqual(_elements_expected, _elements_returned)
+    def test_adding_layer(self):
+        '''assert adding_layer works'''
+        o_reso = Resonance()
         
-    #def test_initialization_raises_error_if_unknown_element(self):
-        #'''assert IOError is raised if element can not be found in database'''
-        #_elements = ['Unknown','Au','Hf', 'Ag']
-        #self.assertRaises(IOError, Resonance, elements=_elements)
-
-    #def test_initialization_must_contain_at_least_one_element(self):
-        #'''assert at least one element must be defined'''
-        #self.assertRaises(ValueError, _o_reso = Resonance)
+        # layer 1
+        layer1 = 'CoAg'
+        thickness1 = 0.025
+        o_reso.add_layer(formula=layer1, thickness=thickness1)
         
-    #def test_initialization_must_contain_at_least_one_thickness(self):
-        #'''assert at least one thickness must be defined'''
-        #_elements = ['Ag']
-        #self.assertRaises(ValueError, Resonance, elements=_elements)
+        # layer 2
+        layer2 = 'Ag'
+        thickness2 = 0.1
+        o_reso.add_layer(formula=layer2, thickness=thickness2)        
         
-    #def test_initialization_raises_error_if_elements_and_thickness_size_do_not_match(self):
-        #'''assert ValueError is raised when elements and thickness do not have the same size'''
-        #_elements = ['Ag','Au','Hf']
-        #_thickness = [0.025, 0.025]
-        #self.assertRaises(ValueError, Resonance, _elements, _thickness)
-        
+        returned_stack = o_reso.stack
+        expected_stack = {'CoAg': {'elements':['Co','Ag'],
+                                   'ratio': [1,1],
+                                   'thickness': 0.025},
+                          'Ag': {'elements': ['Ag'],
+                                 'ratio': [1],
+                                 'thickness': 0.1}}
+        self.assertEqual(returned_stack, expected_stack)
