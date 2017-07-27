@@ -71,9 +71,24 @@ thickness is defined in mm and the ratio is the stochiometric coefficient of eac
 <span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">stack2</span><span class="p">,</span> <span class="n">thcikness</span><span class="o">=</span><span class="n">thickness2</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The global material can then be checked usign the <strong>slack</strong> parameter</p>
+<p><strong>All the parameters defined can be checked as followed</strong></p>
+<p>The list of stack</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">slack</span><span class="p">)</span>
 <span class="go">{&#39;AgSi&#39;: {&#39;elements&#39;: [&#39;Ag&#39;,&#39;Si&#39;], &#39;ratio&#39;:[1,1], &#39;thickness&#39;:0.025}, &#39;Co&#39;: {&#39;elements&#39;:[&#39;Co&#39;], &#39;ratio&#39;:[1], &#39;thickness&#39;: 0.3}}</span>
+</pre></div>
+</div>
+<p>The energy range defined</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;energy min: </span><span class="si">{}</span><span class="s2"> eV&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">energy_min</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;energy max: </span><span class="si">{}</span><span class="s2"> eV&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">energy_max</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The list of isotopes (and their corresponding file names) found in the database</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pprint</span>  <span class="c1"># to improve display of dictionary</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">isotopes</span><span class="p">)</span>
+<span class="go">{&#39;Ag&#39;: {&#39;file_names&#39;: [&#39;Ag-107.csv&#39;, &#39;Ag-109.csv&#39;],</span>
+<span class="go">        &#39;isotopes&#39;: [&#39;107-Ag&#39;, &#39;109-Ag&#39;]},</span>
+<span class="go"> &#39;Co&#39;: {&#39;file_names&#39;: [&#39;Co-58.csv&#39;, &#39;Co-59.csv&#39;],</span>
+<span class="go">        &#39;isotopes&#39;: [&#39;58-Co&#39;, &#39;59-Co&#39;]}}</span>
 </pre></div>
 </div>
 </div>

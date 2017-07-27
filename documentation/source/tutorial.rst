@@ -36,8 +36,23 @@ It is also possible to define the layers (stack) one by one using their formula 
 >>> thcikness2 = 0.3
 >>> o_reso.add_layer(formula=stack2, thcikness=thickness2)
 
-The global material can then be checked usign the **slack** parameter
+**All the parameters defined can be checked as followed**
+
+The list of stack
 
 >>> print(o_reso.slack)
 {'AgSi': {'elements': ['Ag','Si'], 'ratio':[1,1], 'thickness':0.025}, 'Co': {'elements':['Co'], 'ratio':[1], 'thickness': 0.3}}
 
+The energy range defined
+
+>>> print("energy min: {} eV".format(o_reso.energy_min))
+>>> print("energy max: {} eV".format(o_reso.energy_max))
+
+The list of isotopes (and their corresponding file names) found in the database
+
+>>> import pprint  # to improve display of dictionary
+>>> pprint.pprint(o_reso.isotopes)
+{'Ag': {'file_names': ['Ag-107.csv', 'Ag-109.csv'],
+        'isotopes': ['107-Ag', '109-Ag']},
+ 'Co': {'file_names': ['Co-58.csv', 'Co-59.csv'],
+        'isotopes': ['58-Co', '59-Co']}}

@@ -6,6 +6,7 @@ from ImagingReso._utilities import is_element_in_database
 from ImagingReso._utilities import get_list_element_from_database
 from ImagingReso._utilities import checking_stack
 from ImagingReso._utilities import formula_to_dictionary
+from ImagingReso._utilities import get_isotope_dicts
 
 class TestUtilities(unittest.TestCase):
     
@@ -131,3 +132,18 @@ class TestUtilities(unittest.TestCase):
         _dict_expected = {'Ag2Co': {'elements': ['Ag','Co'], 'ratio': [2,1], 'thickness': 0.025}}
         self.assertEqual(_dict_returned, _dict_expected)
         
+    def test_get_isotope_dicts_returns_correct_dictionary(self):
+        '''assert get_isotope_dict works with typical entry element Ag'''
+        _element = 'Ag'
+        _dict_returned = get_isotope_dicts(element=_element)
+        _dict_expected = {_element: {'isotopes': ['107-Ag','109-Ag'],
+                                     'file_names': ['Ag-107.csv','Ag-109.csv']}}
+        self.assertEqual(_dict_returned, _dict_expected)
+        
+    def test_get_isotope_returns_empty_dict_if_missing_element(self):
+        '''assert get_isotopes_dict returns empty dict if element can not be found such as Al'''
+        _element = 'Al'
+        _dict_returned = get_isotope_dicts(element=_element)
+        _dict_expected = {_element: {'isotopes': [],
+                                     'file_names': []}}
+        self.assertEqual(_dict_returned, _dict_expected)

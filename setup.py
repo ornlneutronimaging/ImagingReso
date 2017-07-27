@@ -15,6 +15,7 @@ setup(
         'numpy',
         'pandas',
         'periodictable',
+        'pprint',
         'scipy',
     ],
     dependency_links = [

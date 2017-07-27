@@ -124,3 +124,47 @@ def formula_to_dictionary(formula='', thickness=np.NaN, database='ENDF_VIII'):
     return {formula: {'elements': _elements_array,
                       'ratio': _ratio_array,
                       'thickness': thickness}}
+
+def get_isotope_dicts(element='', database='ENDF_VIII'):
+    '''return a dictionary with list of isotopes found in database and name of database files
+    
+    Parameters:
+    ===========
+    element: string. Name of the element
+      ex: 'Ag'
+    database: string (default is ENDF_VIII)
+    
+    Returns:
+    ========
+    dictionary with isotopes and files 
+      ex: {'Ag': {'isotopes': ['107-Ag','109-Ag'],
+                  'file_names': ['Ag-107.csv','Ag-109.csv']}}
+    
+    '''
+    _file_path = os.path.abspath(os.path.dirname(__file__))
+    _database_folder = os.path.join(_file_path, 'reference_data', database)
+    _element_search_path = os.path.join(_database_folder, element + '*.csv')
+    list_files = glob.glob(_element_search_path)
+    isotope_dict = {element: {'isotopes': [], 'file_names': []}}
+    isotope_dict_mirror = {}
+                    
+    _isotopes_list = []
+    _isotopes_list_files = []
+        
+    for file in list_files:
+
+        # Obtain element, z number from the basename
+        _basename = os.path.basename(file)
+        [filename, file_extension] = os.path.splitext(_basename)
+        [_name, _number] = filename.split('-')
+        _symbol = _number + '-' + _name
+        isotope = str(_symbol)
+
+        _isotopes_list.append(isotope)
+        _isotopes_list_files.append(_basename)
+                                        
+    isotope_dict[element]['isotopes'] = _isotopes_list
+    isotope_dict[element]['file_names'] = _isotopes_list_files              
+                    
+    return isotope_dict   
+
