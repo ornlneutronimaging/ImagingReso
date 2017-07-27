@@ -3,6 +3,7 @@ import os
 import numbers
 import re
 import numpy as np
+import periodictable as pt
 
 
 def is_element_in_database(element='', database='ENDF_VIII'):
@@ -145,11 +146,16 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
     _database_folder = os.path.join(_file_path, 'reference_data', database)
     _element_search_path = os.path.join(_database_folder, element + '*.csv')
     list_files = glob.glob(_element_search_path)
-    isotope_dict = {element: {'isotopes': [], 'file_names': []}}
+    isotope_dict = {element: {'list': [], 
+                              'file_names': [],
+                              'mass': [],
+                              'ratio': []}}
     isotope_dict_mirror = {}
                     
     _isotopes_list = []
     _isotopes_list_files = []
+    _isotopes_mass = []
+    _isotopes_ratio = []
         
     for file in list_files:
 
@@ -162,9 +168,16 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
 
         _isotopes_list.append(isotope)
         _isotopes_list_files.append(_basename)
+        _isotopes_mass.append(get_isotope_mass(isotope))
+        _isotopes_ratio.append(1)  #FIXME
                                         
-    isotope_dict[element]['isotopes'] = _isotopes_list
+    isotope_dict[element]['list'] = _isotopes_list
     isotope_dict[element]['file_names'] = _isotopes_list_files              
+    isotope_dict[element]['mass'] = _isotopes_mass
+    isotope_dict[element]['ratio'] = _isotopes_ratio
                     
     return isotope_dict   
 
+def get_isotope_mass(isotope=''):
+    '''return the iso mass (SI units) of an given isotope'''
+    return pt.elements.isotope(isotope).mass

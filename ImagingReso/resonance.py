@@ -7,8 +7,7 @@ class Resonance(object):
     
     database = 'ENDF_VIII'
 
-    stack = {} # compound, thickness and ratio of each layer
-    isotopes = {} # list of isotopes and file name for each element
+    stack = {} # compound, thickness, ratio of each layer with isotopes information
     
     energy_max = np.NaN
     energy_min = np.NaN
@@ -30,19 +29,21 @@ class Resonance(object):
         if not stack == {}:
             # checking that every element of each stack is defined
             checking_stack(stack=stack)
-            self.__retrieve_isotopes_infos_from_stack(stack=stack)
+            self.__update_stack_with_isotopes_infos(stack=stack)
             self.stack = stack
     
         self.energy_max = energy_max
         self.energy_min = energy_min
 
-    def __retrieve_isotopes_infos_from_stack(self, stack={}):
-        '''retrieve the isotopes and isotopes file names from each element in stack'''
+    def __update_stack_with_isotopes_infos(self, stack={}):
+        '''retrieve the isotopes, isotopes file names, mass and ratio from each element in stack'''
+        isotopes_array = []
         for _key in stack:
             _elements = stack[_key]['elements']
             for _element in _elements:
                 _dict = get_isotope_dicts(element=_element, database=self.database)
-                self.isotopes = {**self.isotopes, **_dict}
+                isotopes_array.append(_dict)
+            self.stack[_key]['isotopes'] = isotopes_array    
 
     def add_layer(self, formula='', thickness=np.NaN): 
         '''provide another way to define the layers (stack)
