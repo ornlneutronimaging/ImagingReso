@@ -20,39 +20,58 @@ thickness is defined in mm and the ratio is the stochiometric coefficient of eac
 example:
 --------
 
->>> _stack = {'name_of_stack1': {'elements': ['Ag','Si'], 'ratio': [1,1], thickness': 0.025}, 'namee_of_stack2': {'elements': ['Co'], 'ratio': [1], thickness': 0.3}}
+>>> _stack = {'CoAg': {'elements': ['Co', Ag'], 'ratio': [1,1], thickness': 0.025}, 'U': {'elements': ['U'], 'ratio': [1], thickness': 0.3}}
 
-Then you can now initialize the object
+Then you can now initialize the object as followed, in this case we use a energy range of 0 to 300 eV
 
->>> o_reso = ImagingReso.Resonance(stack = _stack)
+>>> o_reso = ImagingReso.Resonance(stack = _stack, energy_min=0, energy_max=300)
 
 It is also possible to define the layers (stack) one by one using their formula as demonstrated here
 
 >>> o_reso = ImagingReso.Resonance()
->>> stack1 = 'AgSi'
+>>> stack1 = 'CoAg'
 >>> thickness1 = 0.025
 >>> o_reso.add_layer(formula=stack1, thickness=thickness1)
->>> stack2 = 'Co'
+>>> stack2 = 'U'
 >>> thcikness2 = 0.3
 >>> o_reso.add_layer(formula=stack2, thcikness=thickness2)
 
 **All the parameters defined can be checked as followed**
 
-The list of stack
+The list of stack displays the input information, but also reported the list of isotopes, mass, etc, for
+the elements you defined, for each layer.
 
->>> print(o_reso.slack)
-{'AgSi': {'elements': ['Ag','Si'], 'ratio':[1,1], 'thickness':0.025}, 'Co': {'elements':['Co'], 'ratio':[1], 'thickness': 0.3}}
-
+>>> import pprint
+>>> pprint.pprint(o_reso.slack)
+{'CoAg': {'elements': ['Co', 'Ag'],
+          'isotopes': [{'Co': {'file_names': ['Co-58.csv', 'Co-59.csv'],
+                               'list': ['58-Co', '59-Co'],
+                               'mass': [57.9357576, 58.9332002],
+                               'ratio': [1, 1]}},
+                       {'Ag': {'file_names': ['Ag-107.csv', 'Ag-109.csv'],
+                               'list': ['107-Ag', '109-Ag'],
+                               'mass': [106.905093, 108.904756],
+                               'ratio': [1, 1]}}],
+          'ratio': [1, 1],
+          'thickness': 0.025},
+ 'U': {'elements': ['U'],
+       'isotopes': [{'U': {'file_names': ['U-233.csv',
+                                          'U-234.csv',
+                                          'U-235.csv',
+                                          'U-238.csv'],
+                           'list': ['233-U', '234-U', '235-U', '238-U'],
+                           'mass': [233.039628,
+                                    234.0409456,
+                                    235.0439231,
+                                    238.0507826],
+                           'ratio': [1, 1, 1, 1]}}],
+       'ratio': [1],
+       'thickness': 0.3}}
+       
 The energy range defined
 
->>> print("energy min: {} eV".format(o_reso.energy_min))
->>> print("energy max: {} eV".format(o_reso.energy_max))
+>>> print("Energy min {} eV".format(o_reso.energy_min))
+Energy min 0 eV
+>>> print("Energy max {} eV".format(o_reso.energy_max))
+Energy max 300 eV
 
-The list of isotopes (and their corresponding file names) found in the database
-
->>> import pprint  # to improve display of dictionary
->>> pprint.pprint(o_reso.isotopes)
-{'Ag': {'file_names': ['Ag-107.csv', 'Ag-109.csv'],
-        'isotopes': ['107-Ag', '109-Ag']},
- 'Co': {'file_names': ['Co-58.csv', 'Co-59.csv'],
-        'isotopes': ['58-Co', '59-Co']}}

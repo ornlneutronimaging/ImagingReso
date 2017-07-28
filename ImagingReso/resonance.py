@@ -24,27 +24,26 @@ class Resonance(object):
         energy_max: float (default 300) max energy in eV to use in calculation
         energy_min: float (default 0) min energy in eV to use in calculation
         '''
-        self.isotopes = {}
-
         if not stack == {}:
             # checking that every element of each stack is defined
             checking_stack(stack=stack)
-            self.__update_stack_with_isotopes_infos(stack=stack)
-            self.stack = stack
+            new_stack = self.__update_stack_with_isotopes_infos(stack=stack)
+            self.stack = new_stack
     
         self.energy_max = energy_max
         self.energy_min = energy_min
 
     def __update_stack_with_isotopes_infos(self, stack={}):
         '''retrieve the isotopes, isotopes file names, mass and ratio from each element in stack'''
-        isotopes_array = []
         for _key in stack:
+            isotopes_array = []
             _elements = stack[_key]['elements']
             for _element in _elements:
                 _dict = get_isotope_dicts(element=_element, database=self.database)
                 isotopes_array.append(_dict)
-            self.stack[_key]['isotopes'] = isotopes_array    
-
+            stack[_key]['isotopes'] = isotopes_array    
+        return stack
+    
     def add_layer(self, formula='', thickness=np.NaN): 
         '''provide another way to define the layers (stack)
         
@@ -61,10 +60,11 @@ class Resonance(object):
         _new_stack = formula_to_dictionary(formula=formula, 
                                            thickness=thickness, 
                                            database=self.database)
-        self.__retrieve_isotopes_infos_from_stack(stack=_new_stack)
+        new_stack = self.__update_stack_with_isotopes_infos(stack=_new_stack)
+        self.stack = {**self.stack, **new_stack}
+      
+#        _key = list(_new_stack.keys())[0]
+#        _value = _new_stack[_key]
         
-        _key = list(_new_stack.keys())[0]
-        _value = _new_stack[_key]
-        
-        self.stack[_key] = _value
+#        self.stack[_key] = _value
         

@@ -143,17 +143,19 @@ class TestUtilities(unittest.TestCase):
                                      'ratio': [1, 1]}}
         self.assertEqual(_dict_returned, _dict_expected)
         
-    #def test_get_isotope_returns_empty_dict_if_missing_element(self):
-        #'''assert get_isotopes_dict returns empty dict if element can not be found such as Al'''
-        #_element = 'Al'
-        #_dict_returned = get_isotope_dicts(element=_element)
-        #_dict_expected = {_element: {'isotopes': [],
-                                     #'file_names': []}}
-        #self.assertEqual(_dict_returned, _dict_expected)
+    def test_get_isotope_returns_empty_dict_if_missing_element(self):
+        '''assert get_isotopes_dict returns empty dict if element can not be found such as Al'''
+        _element = 'Al'
+        _dict_returned = get_isotope_dicts(element=_element)
+        _dict_expected = {_element: {'list': [],
+                                     'file_names': [],
+                                     'mass': [],
+                                     'ratio': []}}
+        self.assertEqual(_dict_returned, _dict_expected)
         
-    #def test_get_isotope_mass(self):
-        #'''assert get_isotope_mass works'''
-        #_isotope = '107-Ag'
-        #_returned_mass = get_isotope_mass(isotope=_isotope)
-        #_expected_mass = 106.905093
-        #self.assertAlmostEqual(_returned_mass, _expected_mass, delta=0.00001)
+    def test_get_isotope_mass(self):
+        '''assert get_isotope_mass works'''
+        _isotope = '107-Ag'
+        _returned_mass = get_isotope_mass(isotope=_isotope)
+        _expected_mass = 106.905093
+        self.assertAlmostEqual(_returned_mass, _expected_mass, delta=0.00001)

@@ -1,6 +1,7 @@
 import unittest
 import numpy as np
 import os
+import pprint
 
 from ImagingReso.resonance import Resonance
 
@@ -35,45 +36,32 @@ class TestInitialization(unittest.TestCase):
         returned_stack = o_reso.stack
         expected_stack = {'CoAg': {'elements':['Co','Ag'],
                                    'ratio': [1,1],
-                                   'thickness': 0.025},
+                                   'thickness': 0.025,
+                                   'isotopes': [{'Co': {'file_names':['Co-58.csv','Co-59.csv'],
+                                                        'list': ['58-Co','59-Co'],
+                                                        'mass': [57.9357576, 58.9332002],
+                                                        'ratio': [1,1],
+                                                        },
+                                                 },
+                                                 {'Ag': {'file_names': ['Ag-107.csv','Ag-109.csv'],
+                                                         'list': ['107-Ag','109-Ag'],
+                                                         'mass': [106.905093, 108.904756],
+                                                         'ratio': [1,1],
+                                                         },
+                                                  }
+                                                 ]},
                           'Ag': {'elements': ['Ag'],
                                  'ratio': [1],
-                                 'thickness': 0.1}}
+                                 'thickness': 0.1,
+                                 'isotopes': [{'Ag': {'file_names': ['Ag-107.csv','Ag-109.csv'],
+                                                      'list': ['107-Ag','109-Ag'],
+                                                      'mass': [106.905093, 108.904756],
+                                                      'ratio': [1,1],
+                                                      },
+                                               },
+                                              ]},
+                          }     
+        
         self.assertEqual(returned_stack, expected_stack)
         
-    def test_listing_isotopes_via_init_method(self):
-        '''assert list of isotopes and database file names correctly retrieved via init method'''
-        _stack = {'CoAg': {'elements': ['Co','Ag'],
-                               'ratio': [1, 2],
-                               'thickness': 0.025},
-                      'Ag': {'elements': ['Ag'],
-                             'ratio': [1],
-                             'thickness': 0.03}}
-        o_reso = Resonance(stack=_stack)
-        _isotopes_returned = o_reso.isotopes
-        _isotopes_expected = {'Co': {'isotopes': ['58-Co','59-Co'],
-                                     'file_names': ['Co-58.csv','Co-59.csv']},
-                              'Ag': {'isotopes': ['107-Ag','109-Ag'],
-                                     'file_names': ['Ag-107.csv','Ag-109.csv']}}
-        self.assertEqual(_isotopes_returned, _isotopes_expected)
-        
-    def test_listing_isotopes_via_add_layer_method(self):
-        '''assert list of isotopes and database file names correctly retrieved via add_layer'''
-        o_reso = Resonance()
-    
-        # layer 1
-        layer1 = 'CoAg'
-        thickness1 = 0.025
-        o_reso.add_layer(formula=layer1, thickness=thickness1)
-    
-        # layer 2
-        layer2 = 'Ag'
-        thickness2 = 0.1
-        o_reso.add_layer(formula=layer2, thickness=thickness2)             
-        
-        _isotopes_retuned = o_reso.isotopes
-        _isotopes_expected = {'Co': {'isotopes': ['58-Co','59-Co'],
-                                         'file_names': ['Co-58.csv','Co-59.csv']},
-                                  'Ag': {'isotopes': ['107-Ag','109-Ag'],
-                                         'file_names': ['Ag-107.csv','Ag-109.csv']}}
-        self.assertEqual(_isotopes_expected, _isotopes_retuned)
+   
