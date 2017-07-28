@@ -7,7 +7,7 @@ class Resonance(object):
     
     database = 'ENDF_VIII'
 
-    stack = {} # compound, thickness, ratio of each layer with isotopes information
+    stack = {} # compound, thickness, atomic_ratio of each layer with isotopes information
     
     energy_max = np.NaN
     energy_min = np.NaN
@@ -19,7 +19,7 @@ class Resonance(object):
         ==========
         stack: dictionary 
           example: {'layer1': {'elements':['Ag','Si], 
-                               'ratio': [1, 2],
+                               'atomic_ratio': [1, 2],
                                'thickness': 0.025}}
         energy_max: float (default 300) max energy in eV to use in calculation
         energy_min: float (default 0) min energy in eV to use in calculation
@@ -36,7 +36,7 @@ class Resonance(object):
         self.energy_min = energy_min
 
     def __update_stack_with_isotopes_infos(self, stack={}):
-        '''retrieve the isotopes, isotopes file names, mass and ratio from each element in stack'''
+        '''retrieve the isotopes, isotopes file names, mass and atomic_ratio from each element in stack'''
         for _key in stack:
             isotopes_array = []
             _elements = stack[_key]['elements']

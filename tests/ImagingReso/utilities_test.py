@@ -59,49 +59,72 @@ class TestUtilities(unittest.TestCase):
         
         # normal simple stack
         stack_1 = {'Ag': {'elements': ['Ag'],
-                          'ratio': [1],
-                          'thickness': 0.025}}
+                          'atomic_ratio': [1],
+                          'thickness': {'value': 0.025,
+                                        'units': 'mm'},
+                          },
+                   }
         _result_1 = checking_stack(stack=stack_1)
         self.assertTrue(_result_1)
         
         # complex set of stacks
         stack_2 = {'Co': {'elements': ['Co'],
-                          'ratio': [1],
-                          'thickness': 0.03},
+                          'atomic_ratio': [1],
+                          'thickness': {'value': 0.03,
+                                        'units': 'mm'},
+                          },
                    'GdEu': {'elements': ['Gd','Eu'],
-                            'ratio': [1,1],
-                            'thickness': 0.025}}
+                            'atomic_ratio': [1,1],
+                            'thickness': {'value': 0.025,
+                                          'units': 'mm'},
+                            },
+                   }
         _result_2 = checking_stack(stack=stack_2)
         self.assertTrue(_result_2)
         
     def test_checking_stack_raises_value_error_if_element_missing_from_database(self):
         '''assert checking_stack raises an error if elements can not be found in database'''
         stack_2 = {'Al': {'elements': ['Al'],
-                          'ratio': [1],
-                          'thickness': 0.03},
+                          'atomic_ratio': [1],
+                          'thickness': {'value': 0.03,
+                                        'units': 'mm'},
+                          },
                        'GdEu': {'elements': ['Gd','Eu'],
-                                'ratio': [1,1],
-                                'thickness': 0.025}}
+                                'atomic_ratio': [1,1],
+                                'thickness': {'value': 0.025,
+                                              'units': 'mm'},
+                                },
+                       }
         self.assertRaises(ValueError, checking_stack, stack=stack_2)
         
     def test_checking_stack_raises_value_error_if_thickness_has_wrong_format(self):
         '''assert checking_stack raises an error if thickness is not a number'''
         stack_2 = {'Ag': {'elements': ['Ag'],
-                          'ratio': [1],
-                          'thickness': '0.025'},
+                          'atomic_ratio': [1],
+                          'thickness': {'value': '0.025',
+                                        'units': 'mm'},
+                          },
                    'GdEu': {'elements': ['Gd','Eu'],
-                            'ratio': [1,1],
-                            'thickness': 0.025}}
+                            'atomic_ratio': [1,1],
+                            'thickness': {'value': 0.025,
+                                          'units': 'mm'},
+                            },
+                   }
         self.assertRaises(ValueError, checking_stack, stack=stack_2)
         
-    def test_raises_error_when_size_ratio_is_different_from_elements(self):
-        '''assert checking_stack raises error if size of ratio and elements do not match'''
+    def test_raises_error_when_size_atomic_ratio_is_different_from_elements(self):
+        '''assert checking_stack raises error if size of atomic_ratio and elements do not match'''
         stack = {'Ag': {'elements': ['Ag'],
-                        'ratio': [1],
-                        'thickness': 0.025},
+                        'atomic_ratio': [1],
+                        'thickness': {'value': 0.025,
+                                      'units': 'mm'},
+                        },
                  'GdEu': {'elements': ['Gd','Eu'],
-                          'ratio': [1],
-                          'thickness': 0.025}}
+                          'atomic_ratio': [1],
+                          'thickness': {'value': 0.025,
+                                        'units': 'mm'},
+                          },
+                 }
         self.assertRaises(ValueError, checking_stack, stack=stack)
         
     def test_formula_to_dictionary_raises_error_when_unknow_element(self):
@@ -115,50 +138,53 @@ class TestUtilities(unittest.TestCase):
         # 'Ag'
         _formula_1 = 'Ag'
         _dict_returned = formula_to_dictionary(formula=_formula_1)
-        _dict_expected = {'Ag': {'elements': ['Ag'], 'ratio': [1], 'thickness': np.NaN}}
+        _dict_expected = {'Ag': {'elements': ['Ag'], 'atomic_ratio': [1], 'thickness': {'value': np.NaN, 'units': 'mm'}}}
         self.assertEqual(_dict_returned, _dict_expected)
 
         # 'Ag2Co'
         _formula_2 = 'Ag2Co'
         _dict_returned = formula_to_dictionary(formula=_formula_2)
-        _dict_expected = {'Ag2Co': {'elements': ['Ag','Co'], 'ratio': [2,1], 'thickness': np.NaN}}
+        _dict_expected = {'Ag2Co': {'elements': ['Ag','Co'], 'atomic_ratio': [2,1], 'thickness': {'value': np.NaN, 'units': 'mm'}}}
         self.assertEqual(_dict_returned, _dict_expected)
         
         # 'Ag2CoU3'
         _formula_3 = 'Ag2CoU3'
         _dict_returned = formula_to_dictionary(formula=_formula_3)
-        _dict_expected = {'Ag2CoU3': {'elements': ['Ag','Co','U'], 'ratio': [2,1,3], 'thickness': np.NaN}}
+        _dict_expected = {'Ag2CoU3': {'elements': ['Ag','Co','U'], 'atomic_ratio': [2,1,3], 'thickness': {'value': np.NaN, 'units': 'mm'}}}
         self.assertEqual(_dict_returned, _dict_expected)
         
         # 'Ag2Co' with thickness=0.025
         _formula_2 = 'Ag2Co'
         _dict_returned = formula_to_dictionary(formula=_formula_2, thickness=0.025)
-        _dict_expected = {'Ag2Co': {'elements': ['Ag','Co'], 'ratio': [2,1], 'thickness': 0.025}}
+        _dict_expected = {'Ag2Co': {'elements': ['Ag','Co'], 'atomic_ratio': [2,1], 'thickness': {'value': 0.025, 'units': 'mm'}}}
         self.assertEqual(_dict_returned, _dict_expected)
         
     def test_get_isotope_dicts_returns_correct_dictionary(self):
         '''assert get_isotope_dict works with typical entry element Ag'''
         _element = 'Ag'
         _dict_returned = get_isotope_dicts(element=_element)
-        _dict_expected = {'density': 10.5,
+        _dict_expected = {'density': {'value': 10.5,
+                                      'units': 'g/mol'},
                           'isotopes': {'list': ['107-Ag','109-Ag'],
                                        'file_names': ['Ag-107.csv','Ag-109.csv'],
                                        'mass': [106.905093, 108.904756],
-                                       'ratio': [0.51839, 0.481610]},
-                          'molar_mass': 107.8682}
+                                       'atomic_ratio': [0.51839, 0.481610]},
+                          'molar_mass': {'value': 107.8682,
+                                         'units': 'g/cm3'},
+                          }
         # list of isotopes
         self.assertEqual(_dict_returned['isotopes']['list'], _dict_expected['isotopes']['list'])
         # names of isotopes
         self.assertEqual(_dict_returned['isotopes']['file_names'], _dict_expected['isotopes']['file_names'])
         # mass of isotopes
         self.assertEqual(_dict_returned['isotopes']['mass'], _dict_expected['isotopes']['mass'])
-        # ratio
-        self.assertAlmostEqual(_dict_returned['isotopes']['ratio'][0], _dict_expected['isotopes']['ratio'][0], delta=0.0001)
-        self.assertAlmostEqual(_dict_returned['isotopes']['ratio'][1], _dict_expected['isotopes']['ratio'][1], delta=0.0001)
+        # atomic_ratio
+        self.assertAlmostEqual(_dict_returned['isotopes']['atomic_ratio'][0], _dict_expected['isotopes']['atomic_ratio'][0], delta=0.0001)
+        self.assertAlmostEqual(_dict_returned['isotopes']['atomic_ratio'][1], _dict_expected['isotopes']['atomic_ratio'][1], delta=0.0001)
         # density
-        self.assertEqual(_dict_returned['density'], _dict_expected['density'])
+        self.assertEqual(_dict_returned['density']['value'], _dict_expected['density']['value'])
         # molar mass
-        self.assertEqual(_dict_returned['molar_mass'], _dict_expected['molar_mass'])
+        self.assertEqual(_dict_returned['molar_mass']['value'], _dict_expected['molar_mass']['value'])
         
     def test_get_isotope_returns_empty_dict_if_missing_element(self):
         '''assert get_isotopes_dict returns empty dict if element can not be found such as Al'''
@@ -167,9 +193,13 @@ class TestUtilities(unittest.TestCase):
         _dict_expected = {'isotopes': {'list': [],
                                        'file_names': [],
                                        'mass': [],
-                                       'ratio': []},
-                          'density': np.NaN,
-                          'molar_mass': np.NaN}
+                                       'atomic_ratio': []},
+                          'density': {'value': np.NaN,
+                                      'units': 'g/cm3'},
+                          'molar_mass': {'value': np.NaN,
+                                         'units': 'g/mol',
+                                         },
+                          }
         self.assertEqual(_dict_returned, _dict_expected)
         
     def test_get_mass(self):

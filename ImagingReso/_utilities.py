@@ -74,12 +74,12 @@ def checking_stack(stack={}, database='ENDF_VIII'):
             if not is_element_in_database(element=_element):
                 raise ValueError("Element {} can not be found in the database".format(_element))
 
-        _thickness = stack[_keys]['thickness']
+        _thickness = stack[_keys]['thickness']['value']
         if not isinstance(_thickness, numbers.Number):
             raise ValueError("Thickness {} should be a number!".format(_thickness))
     
-        _ratio = stack[_keys]['ratio']
-        if len(_ratio) != len(_elements):
+        _atomic_ratio = stack[_keys]['atomic_ratio']
+        if len(_atomic_ratio) != len(_elements):
             raise ValueError("Ratio and Elements should have the same size!")
     
     return True    
@@ -103,28 +103,31 @@ def formula_to_dictionary(formula='', thickness=np.NaN, database='ENDF_VIII'):
     =======
     the dictionary of the elements passed
       ex: {'AgCo2': {'elements': ['Ag','Co'],
-                     'ratio': [1,2],
+                     'atomic_ratio': [1,2],
                      'thickness': thickness}}
     '''
     _formula_parsed = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
 
     _dictionary = {}
     _elements_array = []
-    _ratio_array = []
+    _atomic_ratio_array = []
     for _element in _formula_parsed:
-        [_single_element, _ratio] = list(_element)
+        [_single_element, _atomic_ratio] = list(_element)
         if not is_element_in_database(element=_single_element, database=database):
             raise ValueError("element {} not found in database!".format(_single_element))
 
-        if _ratio == '':
-            _ratio = 1
+        if _atomic_ratio == '':
+            _atomic_ratio = 1
 
-        _ratio_array.append(int(_ratio))
+        _atomic_ratio_array.append(int(_atomic_ratio))
         _elements_array.append(_single_element)
 
     return {formula: {'elements': _elements_array,
-                      'ratio': _ratio_array,
-                      'thickness': thickness}}
+                      'atomic_ratio': _atomic_ratio_array,
+                      'thickness': {'value': thickness,
+                                    'units': 'mm'},
+                      },
+            }
 
 def get_isotope_dicts(element='', database='ENDF_VIII'):
     '''return a dictionary with list of isotopes found in database and name of database files
@@ -149,16 +152,18 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
     isotope_dict = {'isotopes': {'list': [], 
                                  'file_names': [],
                                  'mass': [],
-                                 'ratio': [],},
-                    'density': np.NaN,
-                    'molar_mass': np.NaN,
+                                 'atomic_ratio': [],},
+                    'density': {'value': np.NaN,
+                                'units': 'g/cm3'},
+                    'molar_mass': {'value': np.NaN,
+                                   'units': 'g/mol'},
                     } 
 
     isotope_dict_mirror = {}
     _isotopes_list = []
     _isotopes_list_files = []
     _isotopes_mass = []
-    _isotopes_ratio = []
+    _isotopes_atomic_ratio = []
     _density = np.NaN
     _molar_mass = np.NaN
     
@@ -174,16 +179,16 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
         _isotopes_list.append(isotope)
         _isotopes_list_files.append(_basename)
         _isotopes_mass.append(get_mass(isotope))
-        _isotopes_ratio.append(get_abundance(isotope))
+        _isotopes_atomic_ratio.append(get_abundance(isotope))
         _density = get_density(element)
         _molar_mass = get_mass(element)
                                         
     isotope_dict['isotopes']['list'] = _isotopes_list
     isotope_dict['isotopes']['file_names'] = _isotopes_list_files              
     isotope_dict['isotopes']['mass'] = _isotopes_mass
-    isotope_dict['isotopes']['ratio'] = _isotopes_ratio
-    isotope_dict['density'] = _density
-    isotope_dict['molar_mass'] = _molar_mass
+    isotope_dict['isotopes']['atomic_ratio'] = _isotopes_atomic_ratio
+    isotope_dict['density']['value'] = _density
+    isotope_dict['molar_mass']['value'] = _molar_mass
                     
     return isotope_dict   
 
