@@ -168,7 +168,7 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
 
         _isotopes_list.append(isotope)
         _isotopes_list_files.append(_basename)
-        _isotopes_mass.append(get_isotope_mass(isotope))
+        _isotopes_mass.append(get_mass(isotope))
         _isotopes_ratio.append(1)  #FIXME
                                         
     isotope_dict[element]['list'] = _isotopes_list
@@ -178,6 +178,17 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
                     
     return isotope_dict   
 
-def get_isotope_mass(isotope=''):
-    '''return the iso mass (SI units) of an given isotope'''
-    return pt.elements.isotope(isotope).mass
+def get_mass(element):
+    '''return the molar mass (SI units) of an given isotope, or element
+    
+    Parameters:
+    ===========
+    element: string. Element or isotopes to get the mass from
+    
+    Returns:
+    ========
+    the molar mass of the element/isotope in SI units
+    '''
+    return pt.elements.isotope(element).mass
+
+    

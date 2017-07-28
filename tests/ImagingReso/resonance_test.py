@@ -64,4 +64,42 @@ class TestInitialization(unittest.TestCase):
         
         self.assertEqual(returned_stack, expected_stack)
         
-   
+    def test_element_metadata_via_stack_initialization(self):
+        '''assert __element_metadata is correctly populated using stack initialization'''
+
+        _stack = {'CoAg': {'elements': ['Co','Ag'],
+                               'ratio': [1, 2],
+                               'thickness': 0.025},
+                      'Ag': {'elements': ['Ag'],
+                             'ratio': [1],
+                             'thickness': 0.03}}
+        o_reso = Resonance(stack=_stack)        
+        
+        # molar mass
+        element_infos = o_reso.get_element_infos()
+        co_mass_expected = 58.9332
+        ag_mass_expected = 107.8682
+        self.assertEqual(co_mass_expected, element_infos['Co']['molar_mass'])
+        self.assertEqual(ag_mass_expected, element_infos['Ag']['molar_mass'])
+        
+    def test_element_metadata_via_add_layer_initialization(self):
+        '''assert __element_metadata is correctly populated using add layer initialization'''
+        o_reso = Resonance()
+        
+        # layer 1
+        layer1 = 'CoAg'
+        thickness1 = 0.025
+        o_reso.add_layer(formula=layer1, thickness=thickness1)
+        
+        # layer 2
+        layer2 = 'Ag'
+        thickness2 = 0.1
+        o_reso.add_layer(formula=layer2, thickness=thickness2)        
+    
+        # molar mass
+        element_infos = o_reso.get_element_infos()
+        co_mass_expected = 58.9332
+        ag_mass_expected = 107.8682
+        self.assertEqual(co_mass_expected, element_infos['Co']['molar_mass'])
+        self.assertEqual(ag_mass_expected, element_infos['Ag']['molar_mass'])
+        

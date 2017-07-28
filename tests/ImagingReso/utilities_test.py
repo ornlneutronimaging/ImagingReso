@@ -7,7 +7,7 @@ from ImagingReso._utilities import get_list_element_from_database
 from ImagingReso._utilities import checking_stack
 from ImagingReso._utilities import formula_to_dictionary
 from ImagingReso._utilities import get_isotope_dicts
-from ImagingReso._utilities import get_isotope_mass
+from ImagingReso._utilities import get_mass
 
 class TestUtilities(unittest.TestCase):
     
@@ -153,9 +153,14 @@ class TestUtilities(unittest.TestCase):
                                      'ratio': []}}
         self.assertEqual(_dict_returned, _dict_expected)
         
-    def test_get_isotope_mass(self):
-        '''assert get_isotope_mass works'''
+    def test_get_mass(self):
+        '''assert get_mass works for isotopes and elements'''
         _isotope = '107-Ag'
-        _returned_mass = get_isotope_mass(isotope=_isotope)
+        _returned_mass = get_mass(_isotope)
         _expected_mass = 106.905093
         self.assertAlmostEqual(_returned_mass, _expected_mass, delta=0.00001)
+        
+        _element = 'Ag'
+        _returned_mass = get_mass(_element)
+        _expected_mass = 107.8682
+        self.assertEqual(_returned_mass, _expected_mass)

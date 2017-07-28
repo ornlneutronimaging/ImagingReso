@@ -75,3 +75,11 @@ Energy min 0 eV
 >>> print("Energy max {} eV".format(o_reso.energy_max))
 Energy max 300 eV
 
+Metadata concerning the element defined can also be retrieved this way
+
+>>> pprint.pprint(o_reso.get_element_infos())
+{'Ag': {'molar_mass': 107.8682},
+ 'Co': {'molar_mass': 58.9332},
+ 'U': {'molar_mass': 238.02891}}
+ 
+ 
