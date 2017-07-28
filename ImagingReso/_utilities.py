@@ -169,7 +169,7 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
         _isotopes_list.append(isotope)
         _isotopes_list_files.append(_basename)
         _isotopes_mass.append(get_mass(isotope))
-        _isotopes_ratio.append(1)  #FIXME
+        _isotopes_ratio.append(get_abundance(isotope))
                                         
     isotope_dict[element]['list'] = _isotopes_list
     isotope_dict[element]['file_names'] = _isotopes_list_files              
@@ -177,6 +177,19 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
     isotope_dict[element]['ratio'] = _isotopes_ratio
                     
     return isotope_dict   
+
+def get_abundance(element):
+    '''return the abundance [0.,1.] of the defined element
+    
+    Parameters:
+    ===========
+    element: (sting)
+    
+    Returns:
+    ========
+    the abundance of the elemenet (value between 0 and 1)
+    '''
+    return pt.elements.isotope(element).abundance / 100.
 
 def get_mass(element):
     '''return the molar mass (SI units) of an given isotope, or element
@@ -191,4 +204,15 @@ def get_mass(element):
     '''
     return pt.elements.isotope(element).mass
 
+def get_density(element):
+    '''return the density (g.cm-3) of the element
     
+    Paramters:
+    ==========
+    element: string. Name of element
+    
+    Returns:
+    ========
+    the density of the element in g.cm-3 units
+    '''
+    return pt.elements.isotope(element).density

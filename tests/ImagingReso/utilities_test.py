@@ -8,6 +8,8 @@ from ImagingReso._utilities import checking_stack
 from ImagingReso._utilities import formula_to_dictionary
 from ImagingReso._utilities import get_isotope_dicts
 from ImagingReso._utilities import get_mass
+from ImagingReso._utilities import get_density
+
 
 class TestUtilities(unittest.TestCase):
     
@@ -140,8 +142,17 @@ class TestUtilities(unittest.TestCase):
         _dict_expected = {_element: {'list': ['107-Ag','109-Ag'],
                                      'file_names': ['Ag-107.csv','Ag-109.csv'],
                                      'mass': [106.905093, 108.904756],
-                                     'ratio': [1, 1]}}
-        self.assertEqual(_dict_returned, _dict_expected)
+                                     'ratio': [0.51839, 0.481610]}}
+        # list of isotopes
+        self.assertEqual(_dict_returned['Ag']['list'], _dict_expected['Ag']['list'])
+        # names of isotopes
+        self.assertEqual(_dict_returned['Ag']['file_names'], _dict_expected['Ag']['file_names'])
+        # mass of isotopes
+        self.assertEqual(_dict_returned['Ag']['mass'], _dict_expected['Ag']['mass'])
+        # ratio
+        self.assertAlmostEqual(_dict_returned['Ag']['ratio'][0], _dict_expected['Ag']['ratio'][0], delta=0.0001)
+        self.assertAlmostEqual(_dict_returned['Ag']['ratio'][1], _dict_expected['Ag']['ratio'][1], delta=0.0001)
+        
         
     def test_get_isotope_returns_empty_dict_if_missing_element(self):
         '''assert get_isotopes_dict returns empty dict if element can not be found such as Al'''
@@ -164,3 +175,10 @@ class TestUtilities(unittest.TestCase):
         _returned_mass = get_mass(_element)
         _expected_mass = 107.8682
         self.assertEqual(_returned_mass, _expected_mass)
+        
+    def test_get_density(self):
+        '''assert get_density works'''
+        _element = 'Ag'
+        _returned_density = get_density(_element)
+        _expected_density = 10.5
+        self.assertEqual(_returned_density, _expected_density)

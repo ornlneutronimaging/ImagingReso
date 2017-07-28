@@ -9,8 +9,9 @@ class Resonance(object):
 
     stack = {} # compound, thickness, ratio of each layer with isotopes information
     
-    # we will keep the molar mass of the various elements here for example. Any metadata that the user
-    # is not allow to modify
+    # keep the constant element metadata
+    # molar_mass -> 'mass'
+    # density -> 'density'
     __element_metadata = {} 
     
     energy_max = np.NaN
@@ -59,9 +60,11 @@ class Resonance(object):
         element: string, name of the element
         '''
         _molar_mass = _utilities.get_mass(element)
+        _density = _utilities.get_density(element)
         if not (element in self.__element_metadata.keys()):
             self.__element_metadata[element] = {}
         self.__element_metadata[element]['molar_mass'] = _molar_mass
+        self.__element_metadata[element]['density'] = _density
     
     def add_layer(self, formula='', thickness=np.NaN): 
         '''provide another way to define the layers (stack)
