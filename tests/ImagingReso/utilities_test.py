@@ -1,6 +1,7 @@
 import unittest
 import numpy as np
 import os
+import pprint
 
 from ImagingReso._utilities import is_element_in_database
 from ImagingReso._utilities import get_list_element_from_database
@@ -139,29 +140,36 @@ class TestUtilities(unittest.TestCase):
         '''assert get_isotope_dict works with typical entry element Ag'''
         _element = 'Ag'
         _dict_returned = get_isotope_dicts(element=_element)
-        _dict_expected = {_element: {'list': ['107-Ag','109-Ag'],
-                                     'file_names': ['Ag-107.csv','Ag-109.csv'],
-                                     'mass': [106.905093, 108.904756],
-                                     'ratio': [0.51839, 0.481610]}}
+        _dict_expected = {'density': 10.5,
+                          'isotopes': {'list': ['107-Ag','109-Ag'],
+                                       'file_names': ['Ag-107.csv','Ag-109.csv'],
+                                       'mass': [106.905093, 108.904756],
+                                       'ratio': [0.51839, 0.481610]},
+                          'molar_mass': 107.8682}
         # list of isotopes
-        self.assertEqual(_dict_returned['Ag']['list'], _dict_expected['Ag']['list'])
+        self.assertEqual(_dict_returned['isotopes']['list'], _dict_expected['isotopes']['list'])
         # names of isotopes
-        self.assertEqual(_dict_returned['Ag']['file_names'], _dict_expected['Ag']['file_names'])
+        self.assertEqual(_dict_returned['isotopes']['file_names'], _dict_expected['isotopes']['file_names'])
         # mass of isotopes
-        self.assertEqual(_dict_returned['Ag']['mass'], _dict_expected['Ag']['mass'])
+        self.assertEqual(_dict_returned['isotopes']['mass'], _dict_expected['isotopes']['mass'])
         # ratio
-        self.assertAlmostEqual(_dict_returned['Ag']['ratio'][0], _dict_expected['Ag']['ratio'][0], delta=0.0001)
-        self.assertAlmostEqual(_dict_returned['Ag']['ratio'][1], _dict_expected['Ag']['ratio'][1], delta=0.0001)
-        
+        self.assertAlmostEqual(_dict_returned['isotopes']['ratio'][0], _dict_expected['isotopes']['ratio'][0], delta=0.0001)
+        self.assertAlmostEqual(_dict_returned['isotopes']['ratio'][1], _dict_expected['isotopes']['ratio'][1], delta=0.0001)
+        # density
+        self.assertEqual(_dict_returned['density'], _dict_expected['density'])
+        # molar mass
+        self.assertEqual(_dict_returned['molar_mass'], _dict_expected['molar_mass'])
         
     def test_get_isotope_returns_empty_dict_if_missing_element(self):
         '''assert get_isotopes_dict returns empty dict if element can not be found such as Al'''
         _element = 'Al'
         _dict_returned = get_isotope_dicts(element=_element)
-        _dict_expected = {_element: {'list': [],
-                                     'file_names': [],
-                                     'mass': [],
-                                     'ratio': []}}
+        _dict_expected = {'isotopes': {'list': [],
+                                       'file_names': [],
+                                       'mass': [],
+                                       'ratio': []},
+                          'density': np.NaN,
+                          'molar_mass': np.NaN}
         self.assertEqual(_dict_returned, _dict_expected)
         
     def test_get_mass(self):

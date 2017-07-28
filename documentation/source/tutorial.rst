@@ -43,28 +43,37 @@ the elements you defined, for each layer.
 
 >>> import pprint
 >>> pprint.pprint(o_reso.slack)
-{'CoAg': {'elements': ['Co', 'Ag'],
-          'isotopes': [{'Co': {'file_names': ['Co-58.csv', 'Co-59.csv'],
-                               'list': ['58-Co', '59-Co'],
-                               'mass': [57.9357576, 58.9332002],
-                               'ratio': [1, 1]}},
-                       {'Ag': {'file_names': ['Ag-107.csv', 'Ag-109.csv'],
-                               'list': ['107-Ag', '109-Ag'],
-                               'mass': [106.905093, 108.904756],
-                               'ratio': [1, 1]}}],
+{{'CoAg': {'Ag': {'density': 10.5,
+                 'isotopes': {'file_names': ['Ag-107.csv', 'Ag-109.csv'],
+                              'list': ['107-Ag', '109-Ag'],
+                              'mass': [106.905093, 108.904756],
+                              'ratio': [0.51839, 0.48161000000000004]},
+                 'molar_mass': 107.8682},
+          'Co': {'density': 8.9,
+                 'isotopes': {'file_names': ['Co-58.csv', 'Co-59.csv'],
+                              'list': ['58-Co', '59-Co'],
+                              'mass': [57.9357576, 58.9332002],
+                              'ratio': [0.0, 1.0]},
+                 'molar_mass': 58.9332},
+          'elements': ['Co', 'Ag'],
           'ratio': [1, 1],
           'thickness': 0.025},
- 'U': {'elements': ['U'],
-       'isotopes': [{'U': {'file_names': ['U-233.csv',
-                                          'U-234.csv',
-                                          'U-235.csv',
-                                          'U-238.csv'],
-                           'list': ['233-U', '234-U', '235-U', '238-U'],
-                           'mass': [233.039628,
-                                    234.0409456,
-                                    235.0439231,
-                                    238.0507826],
-                           'ratio': [1, 1, 1, 1]}}],
+ 'U': {'U': {'density': 18.95,
+             'isotopes': {'file_names': ['U-233.csv',
+                                         'U-234.csv',
+                                         'U-235.csv',
+                                         'U-238.csv'],
+                          'list': ['233-U', '234-U', '235-U', '238-U'],
+                          'mass': [233.039628,
+                                   234.0409456,
+                                   235.0439231,
+                                   238.0507826],
+                          'ratio': [0.0,
+                                    5.4999999999999995e-05,
+                                    0.0072,
+                                    0.992745]},
+             'molar_mass': 238.02891},
+       'elements': ['U'],
        'ratio': [1],
        'thickness': 0.3}}
        
@@ -75,10 +84,3 @@ Energy min 0 eV
 >>> print("Energy max {} eV".format(o_reso.energy_max))
 Energy max 300 eV
 
-Metadata concerning the element defined can also be retrieved this way
-
->>> pprint.pprint(o_reso.get_element_infos())
-{'Ag': {'density': 10.5, 'molar_mass': 107.8682},
- 'Co': {'density': 8.9, 'molar_mass': 58.9332},
- 'U': {'density': 18.95, 'molar_mass': 238.02891}}
- 

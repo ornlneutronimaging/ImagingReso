@@ -146,17 +146,22 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
     _database_folder = os.path.join(_file_path, 'reference_data', database)
     _element_search_path = os.path.join(_database_folder, element + '*.csv')
     list_files = glob.glob(_element_search_path)
-    isotope_dict = {element: {'list': [], 
-                              'file_names': [],
-                              'mass': [],
-                              'ratio': []}}
+    isotope_dict = {'isotopes': {'list': [], 
+                                 'file_names': [],
+                                 'mass': [],
+                                 'ratio': [],},
+                    'density': np.NaN,
+                    'molar_mass': np.NaN,
+                    } 
+
     isotope_dict_mirror = {}
-                    
     _isotopes_list = []
     _isotopes_list_files = []
     _isotopes_mass = []
     _isotopes_ratio = []
-        
+    _density = np.NaN
+    _molar_mass = np.NaN
+    
     for file in list_files:
 
         # Obtain element, z number from the basename
@@ -170,11 +175,15 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
         _isotopes_list_files.append(_basename)
         _isotopes_mass.append(get_mass(isotope))
         _isotopes_ratio.append(get_abundance(isotope))
+        _density = get_density(element)
+        _molar_mass = get_mass(element)
                                         
-    isotope_dict[element]['list'] = _isotopes_list
-    isotope_dict[element]['file_names'] = _isotopes_list_files              
-    isotope_dict[element]['mass'] = _isotopes_mass
-    isotope_dict[element]['ratio'] = _isotopes_ratio
+    isotope_dict['isotopes']['list'] = _isotopes_list
+    isotope_dict['isotopes']['file_names'] = _isotopes_list_files              
+    isotope_dict['isotopes']['mass'] = _isotopes_mass
+    isotope_dict['isotopes']['ratio'] = _isotopes_ratio
+    isotope_dict['density'] = _density
+    isotope_dict['molar_mass'] = _molar_mass
                     
     return isotope_dict   
 
