@@ -151,7 +151,9 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
     list_files = glob.glob(_element_search_path)
     isotope_dict = {'isotopes': {'list': [], 
                                  'file_names': [],
-                                 'mass': [],
+                                 'mass': {'value': [],
+                                          'units': 'g/mol',
+                                 },
                                  'atomic_ratio': [],},
                     'density': {'value': np.NaN,
                                 'units': 'g/cm3'},
@@ -185,7 +187,7 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
                                         
     isotope_dict['isotopes']['list'] = _isotopes_list
     isotope_dict['isotopes']['file_names'] = _isotopes_list_files              
-    isotope_dict['isotopes']['mass'] = _isotopes_mass
+    isotope_dict['isotopes']['mass']['value'] = _isotopes_mass
     isotope_dict['isotopes']['atomic_ratio'] = _isotopes_atomic_ratio
     isotope_dict['density']['value'] = _density
     isotope_dict['molar_mass']['value'] = _molar_mass

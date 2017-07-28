@@ -167,7 +167,8 @@ class TestUtilities(unittest.TestCase):
                                       'units': 'g/mol'},
                           'isotopes': {'list': ['107-Ag','109-Ag'],
                                        'file_names': ['Ag-107.csv','Ag-109.csv'],
-                                       'mass': [106.905093, 108.904756],
+                                       'mass': {'value': [106.905093, 108.904756],
+                                                'units': 'g/mol'},
                                        'atomic_ratio': [0.51839, 0.481610]},
                           'molar_mass': {'value': 107.8682,
                                          'units': 'g/cm3'},
@@ -177,7 +178,7 @@ class TestUtilities(unittest.TestCase):
         # names of isotopes
         self.assertEqual(_dict_returned['isotopes']['file_names'], _dict_expected['isotopes']['file_names'])
         # mass of isotopes
-        self.assertEqual(_dict_returned['isotopes']['mass'], _dict_expected['isotopes']['mass'])
+        self.assertEqual(_dict_returned['isotopes']['mass']['value'], _dict_expected['isotopes']['mass']['value'])
         # atomic_ratio
         self.assertAlmostEqual(_dict_returned['isotopes']['atomic_ratio'][0], _dict_expected['isotopes']['atomic_ratio'][0], delta=0.0001)
         self.assertAlmostEqual(_dict_returned['isotopes']['atomic_ratio'][1], _dict_expected['isotopes']['atomic_ratio'][1], delta=0.0001)
@@ -192,7 +193,9 @@ class TestUtilities(unittest.TestCase):
         _dict_returned = get_isotope_dicts(element=_element)
         _dict_expected = {'isotopes': {'list': [],
                                        'file_names': [],
-                                       'mass': [],
+                                       'mass': {'value': [],
+                                                'units': 'g/mol',
+                                                },
                                        'atomic_ratio': []},
                           'density': {'value': np.NaN,
                                       'units': 'g/cm3'},

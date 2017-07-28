@@ -45,7 +45,9 @@ class TestInitialization(unittest.TestCase):
                                                  'units': 'mm'},
                                    'Co': {'isotopes': {'file_names':['Co-58.csv','Co-59.csv'],
                                                        'list': ['58-Co','59-Co'],
-                                                       'mass': [57.9357576, 58.9332002],
+                                                       'mass': {'value': [57.9357576, 58.9332002],
+                                                                'units': 'g/mol',
+                                                                },
                                                        'atomic_ratio': [0.0,1.0],
                                                        },
                                           'density': {'value': 8.9,
@@ -55,7 +57,9 @@ class TestInitialization(unittest.TestCase):
                                           },
                                    'Ag': {'isotopes': {'file_names': ['Ag-107.csv','Ag-109.csv'],
                                                        'list': ['107-Ag','109-Ag'],
-                                                       'mass': [106.905093, 108.904756],
+                                                       'mass': {'value': [106.905093, 108.904756],
+                                                                'units': 'g/mol',
+                                                                },
                                                        'atomic_ratio': [0.51839,0.48161000],
                                                        },
                                           'density': {'value': 10.5,
@@ -70,7 +74,9 @@ class TestInitialization(unittest.TestCase):
                                                'units': 'mm'},
                                  'Ag': {'isotopes': {'file_names': ['Ag-107.csv','Ag-109.csv'],
                                                      'list': ['107-Ag','109-Ag'],
-                                                     'mass': [106.905093, 108.904756],
+                                                     'mass': {'value': [106.905093, 108.904756],
+                                                              'units': 'g/mol',
+                                                              },
                                                       'atomic_ratio': [0.51839,0.48161000],
                                                       },
                                         'density': {'value': 10.5,
@@ -97,8 +103,10 @@ class TestInitialization(unittest.TestCase):
         self.assertEqual(returned_stack['CoAg']['Co']['isotopes']['list'], 
                          expected_stack['CoAg']['Co']['isotopes']['list'])
         # mass
-        self.assertEqual(returned_stack['CoAg']['Co']['isotopes']['mass'], 
-                         expected_stack['CoAg']['Co']['isotopes']['mass'])
+        self.assertEqual(returned_stack['CoAg']['Co']['isotopes']['mass']['value'], 
+                         expected_stack['CoAg']['Co']['isotopes']['mass']['value'])
+        self.assertEqual(returned_stack['CoAg']['Co']['isotopes']['mass']['units'], 
+                         expected_stack['CoAg']['Co']['isotopes']['mass']['units'])
         # atomic_ratio Co
         self.assertAlmostEqual(returned_stack['CoAg']['Co']['isotopes']['atomic_ratio'][0],
                                expected_stack['CoAg']['Co']['isotopes']['atomic_ratio'][0],
