@@ -87,7 +87,7 @@ class Resonance(object):
                 for _element in _list_element:
                     list_all_dict[_compound][_element] = self.get_stochiometric_ratio(
                         compound = _compound, 
-                        element = _element)
+                        element = _element)     
             return list_all_dict
         
         # checking compound is valid
@@ -98,7 +98,7 @@ class Resonance(object):
         
         # checking element is valid
         if element == '': 
-            # we assume that the element and compounds names matche
+            # we assume that the element and compounds names matched
             element = compound
         list_element = _stack[compound].keys()
         if not element in list_element:
@@ -114,5 +114,62 @@ class Resonance(object):
             _stochiometric_ratio[_iso] = _ratio
             
         return _stochiometric_ratio
+        
+    def set_stochiometric_ratio(self, compound='', element='', list_ratio=[]):
+        '''defines the new set of ratio of the compound/element and trigger the calculation to update the density
+        
+        Parameters:
+        ===========
+        compound: string (default is ''). Name of compound
+        elememnt: string (defualt is ''). Name of element
+        list_ratio: list (default is []). list of new stochiometric_ratio
+        
+        Raises:
+        =======
+        ValueError if compound does not exist
+        ValueError if element does not exist
+        ValueError if list_ratio does not have the right format
+        '''
+        _stack = self.stack
+        
+        list_compounds = _stack.keys()
+        if not compound in _stack.keys():
+            list_compounds_joined = ', '.join(list_compounds)
+            raise ValueError("Compound '{}' could not be find in {}".format(compile, list_compounds_joined))
+
+        if element == '': 
+            # we assume that the element and compounds names matched
+            element = compound
+        list_element = _stack[compound].keys()
+        if not element in list_element:
+            list_element_joined = ', '.join(list_element)
+            raise ValueError("Element '{}' should be any of those elements: {}".format(element, list_element_joined))
+        
+        old_list_ratio = _stack[compound][element]['isotopes']['list']
+        if not (len(old_list_ratio) == len(list_ratio)):
+            raise ValueError("New list of ratio ({} elements) does not match old list size ({} elements!".format(len(
+                list_ratio), len(old_list_ratio)))
+        
+        self.stack[compound][element]['isotopes']['isotopic_ratio'] = list_ratio
+        self.__update_molar_mass(compound=compound, element=element)
+        
+    def __update_molar_mass(self, compound='', element=''):
+        '''Re-calculate the molar moass of the compound / element given due to stochiometric changes for example
+        
+        Paramters:
+        ==========
+        compound: string (default is '') name of compound
+        element: string (default is '') name of element
+        '''
+        _molar_mass_element = 0
+        list_ratio = self.stack[compound][element]['isotopes']['isotopic_ratio']
+        list_mass = self.stack[compound][element]['isotopes']['mass']['value']
+        ratio_mass = zip(list_ratio, list_mass)
+        for _ratio, _mass in ratio_mass:
+            _molar_mass_element += np.float(_ratio) * np.float(_mass)
+        self.stack[compound][element]['molar_mass']['value'] = _molar_mass_element
+        
+        
+        
         
         

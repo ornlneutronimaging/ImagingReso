@@ -180,6 +180,48 @@ the elements you defined, for each layer.</p>
 </div>
 <div class="section" id="define-new-set-of-isotopic-ratio">
 <h3>Define new set of isotopic ratio<a class="headerlink" href="#define-new-set-of-isotopic-ratio" title="Permalink to this headline">¶</a></h3>
+<p>Let’s presume our new set of ‘U’ ratio is</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">new_list_ratio</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Let’s define the new stochiomettric ratio</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span><span class="o">.</span><span class="n">set_stochiometric_ratio</span><span class="p">(</span><span class="n">compound</span><span class="o">=</span><span class="s1">&#39;U&#39;</span><span class="p">,</span> <span class="n">list_ratio</span><span class="o">=</span><span class="n">new_list_ratio</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">stack</span><span class="p">)</span>
+<span class="go">{&#39;CoAg&#39;: {&#39;Ag&#39;: {&#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;, &#39;value&#39;: 10.5},</span>
+<span class="go">                 &#39;isotopes&#39;: {&#39;file_names&#39;: [&#39;Ag-107.csv&#39;, &#39;Ag-109.csv&#39;],</span>
+<span class="go">                              &#39;isotopic_ratio&#39;: [0.51839, 0.48161000000000004],</span>
+<span class="go">                              &#39;list&#39;: [&#39;107-Ag&#39;, &#39;109-Ag&#39;],</span>
+<span class="go">                              &#39;mass&#39;: {&#39;units&#39;: &#39;g/mol&#39;,</span>
+<span class="go">                                       &#39;value&#39;: [106.905093, 108.904756]}},</span>
+<span class="go">                 &#39;molar_mass&#39;: {&#39;units&#39;: &#39;g/mol&#39;, &#39;value&#39;: 107.8682}},</span>
+<span class="go">          &#39;Co&#39;: {&#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;, &#39;value&#39;: 8.9},</span>
+<span class="go">                 &#39;isotopes&#39;: {&#39;file_names&#39;: [&#39;Co-58.csv&#39;, &#39;Co-59.csv&#39;],</span>
+<span class="go">                              &#39;isotopic_ratio&#39;: [0.0, 1.0],</span>
+<span class="go">                              &#39;list&#39;: [&#39;58-Co&#39;, &#39;59-Co&#39;],</span>
+<span class="go">                              &#39;mass&#39;: {&#39;units&#39;: &#39;g/mol&#39;,</span>
+<span class="go">                                       &#39;value&#39;: [57.9357576, 58.9332002]}},</span>
+<span class="go">                 &#39;molar_mass&#39;: {&#39;units&#39;: &#39;g/mol&#39;, &#39;value&#39;: 58.9332}},</span>
+<span class="go">          &#39;elements&#39;: [&#39;Co&#39;, &#39;Ag&#39;],</span>
+<span class="go">          &#39;stochiometric_ratio&#39;: [1, 1],</span>
+<span class="go">          &#39;thickness&#39;: {&#39;units&#39;: &#39;mm&#39;, &#39;value&#39;: 0.025}},</span>
+<span class="go"> &#39;U&#39;: {&#39;U&#39;: {&#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;, &#39;value&#39;: 18.95},</span>
+<span class="go">             &#39;isotopes&#39;: {&#39;file_names&#39;: [&#39;U-233.csv&#39;,</span>
+<span class="go">                                         &#39;U-234.csv&#39;,</span>
+<span class="go">                                         &#39;U-235.csv&#39;,</span>
+<span class="go">                                         &#39;U-238.csv&#39;],</span>
+<span class="go">                          &#39;isotopic_ratio&#39;: [0.2, 0.3, 0.4, 0.1],</span>
+<span class="go">                          &#39;list&#39;: [&#39;233-U&#39;, &#39;234-U&#39;, &#39;235-U&#39;, &#39;238-U&#39;],</span>
+<span class="go">                          &#39;mass&#39;: {&#39;units&#39;: &#39;g/mol&#39;,</span>
+<span class="go">                                   &#39;value&#39;: [233.039628,</span>
+<span class="go">                                             234.0409456,</span>
+<span class="go">                                             235.0439231,</span>
+<span class="go">                                             238.0507826]}},</span>
+<span class="go">             &#39;molar_mass&#39;: {&#39;units&#39;: &#39;g/mol&#39;, &#39;value&#39;: 234.64285678}},</span>
+<span class="go">       &#39;elements&#39;: [&#39;U&#39;],</span>
+<span class="go">       &#39;stochiometric_ratio&#39;: [1],</span>
+<span class="go">       &#39;thickness&#39;: {&#39;units&#39;: &#39;mm&#39;, &#39;value&#39;: 0.3}}}</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>

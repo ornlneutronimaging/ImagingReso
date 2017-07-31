@@ -150,3 +150,45 @@ if compound is composed of only 1 element, **element** paremeter can be omitted
  
 Define new set of isotopic ratio
 --------------------------------
+
+Let's presume our new set of 'U' ratio is
+
+>>> new_list_ratio = [0.2, 0.3, 0.4, 0.1]
+
+Let's define the new stochiomettric ratio
+
+>>> o_reso.set_stochiometric_ratio(compound='U', list_ratio=new_list_ratio)
+>>> pprint.pprint(o_reso.stack)
+{'CoAg': {'Ag': {'density': {'units': 'g/cm3', 'value': 10.5},
+                 'isotopes': {'file_names': ['Ag-107.csv', 'Ag-109.csv'],
+                              'isotopic_ratio': [0.51839, 0.48161000000000004],
+                              'list': ['107-Ag', '109-Ag'],
+                              'mass': {'units': 'g/mol',
+                                       'value': [106.905093, 108.904756]}},
+                 'molar_mass': {'units': 'g/mol', 'value': 107.8682}},
+          'Co': {'density': {'units': 'g/cm3', 'value': 8.9},
+                 'isotopes': {'file_names': ['Co-58.csv', 'Co-59.csv'],
+                              'isotopic_ratio': [0.0, 1.0],
+                              'list': ['58-Co', '59-Co'],
+                              'mass': {'units': 'g/mol',
+                                       'value': [57.9357576, 58.9332002]}},
+                 'molar_mass': {'units': 'g/mol', 'value': 58.9332}},
+          'elements': ['Co', 'Ag'],
+          'stochiometric_ratio': [1, 1],
+          'thickness': {'units': 'mm', 'value': 0.025}},
+ 'U': {'U': {'density': {'units': 'g/cm3', 'value': 18.95},
+             'isotopes': {'file_names': ['U-233.csv',
+                                         'U-234.csv',
+                                         'U-235.csv',
+                                         'U-238.csv'],
+                          'isotopic_ratio': [0.2, 0.3, 0.4, 0.1],
+                          'list': ['233-U', '234-U', '235-U', '238-U'],
+                          'mass': {'units': 'g/mol',
+                                   'value': [233.039628,
+                                             234.0409456,
+                                             235.0439231,
+                                             238.0507826]}},
+             'molar_mass': {'units': 'g/mol', 'value': 234.64285678}},
+       'elements': ['U'],
+       'stochiometric_ratio': [1],
+       'thickness': {'units': 'mm', 'value': 0.3}}}

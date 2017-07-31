@@ -238,3 +238,27 @@ class TestGetterSetter(unittest.TestCase):
         self.assertEqual(_expected_dict['U']['U']['233-U'], _stochiometric_ratio['U']['U']['233-U'])
         self.assertEqual(_expected_dict['U']['U']['238-U'], _stochiometric_ratio['U']['U']['238-U'])
         self.assertEqual(_expected_dict['CoAg']['Ag']['107-Ag'], _stochiometric_ratio['CoAg']['Ag']['107-Ag'])
+        
+    def test_set_stochiometric_ratio_raises_value_error_if_wrong_compound(self):
+        '''assert ValueError raised if wrong compound in stochiometric ratio setter'''
+        self.assertRaises(ValueError, self.o_reso.set_stochiometric_ratio)
+        self.assertRaises(ValueError, self.o_reso.set_stochiometric_ratio, compound='unknown')
+        
+    def test_set_stochiometric_ratio_raises_value_error_if_wrong_element(self):
+        '''assert ValueError raised if wrong element in stochiometric ratio setter'''
+        self.assertRaises(ValueError, self.o_reso.set_stochiometric_ratio, compound='CoAg')
+        self.assertRaises(ValueError, self.o_reso.set_stochiometric_ratio, compound='CoAg', element='unknown')
+        
+    def test_set_stochiometric_ratio_has_correct_new_list_size(self):
+        '''assert ValueRror raised if new list of ratio does not match old list size'''
+        self.assertRaises(ValueError, self.o_reso.set_stochiometric_ratio, compound='U', element='U', list_ratio=[0, 1, 2])
+        
+    def test_set_stochiometri_ratio_correctly_calculates_new_molar_mass(self):
+        '''assert molar mass is correctly calculated for new set of stochiometric coefficient'''
+        self.o_reso.set_stochiometric_ratio(compound='CoAg', element='Co', list_ratio=[0.5, 0.5])
+        new_molar_mass = self.o_reso.stack['CoAg']['Co']['molar_mass']['value']
+        list_isotopes_mass = self.o_reso.stack['CoAg']['Co']['isotopes']['mass']['value']
+        list_isotopes_ratio = self.o_reso.stack['CoAg']['Co']['isotopes']['isotopic_ratio']
+        mass_ratio = zip(list_isotopes_mass, list_isotopes_ratio)
+        expected_molar_mass = np.array([_m * _r for _m, _r in mass_ratio]).sum()
+        self.assertAlmostEqual(new_molar_mass, expected_molar_mass, delta=0.0001)
