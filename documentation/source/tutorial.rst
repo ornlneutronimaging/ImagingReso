@@ -67,8 +67,8 @@ the elements you defined, for each layer.
                               'mass': {'units': 'g/mol',
                                        'value': [57.9357576, 58.9332002]}},
                  'molar_mass': {'units': 'g/mol', 'value': 58.9332}},
-          'atomic_ratio': [1, 1],
           'elements': ['Co', 'Ag'],
+          'stochiometric_ratio': [1, 1],
           'thickness': {'units': 'mm', 'value': 0.025}},
  'U': {'U': {'density': {'units': 'g/cm3', 'value': 18.95},
              'isotopes': {'file_names': ['U-233.csv',
@@ -86,8 +86,8 @@ the elements you defined, for each layer.
                                              235.0439231,
                                              238.0507826]}},
              'molar_mass': {'units': 'g/mol', 'value': 238.02891}},
-       'atomic_ratio': [1],
        'elements': ['U'],
+       'stochiometric_ratio': [1],
        'thickness': {'units': 'mm', 'value': 0.3}}}
        
 The energy range defined

@@ -63,6 +63,7 @@ def checking_stack(stack={}, database='ENDF_VIII'):
     ======
     ValueError if one of the element in one of the stack can not be found 
     ValueError if thickness is not a float
+    ValueError if elements and stochiometric ratio arrays do not have the same size
     
     Return:
     ======
@@ -78,9 +79,9 @@ def checking_stack(stack={}, database='ENDF_VIII'):
         if not isinstance(_thickness, numbers.Number):
             raise ValueError("Thickness {} should be a number!".format(_thickness))
     
-        _atomic_ratio = stack[_keys]['atomic_ratio']
-        if len(_atomic_ratio) != len(_elements):
-            raise ValueError("Ratio and Elements should have the same size!")
+        _stochiometric_ratio = stack[_keys]['stochiometric_ratio']
+        if len(_stochiometric_ratio) != len(_elements):
+            raise ValueError("Stochiometric Ratio and Elements should have the same size!")
     
     return True    
 
@@ -103,7 +104,7 @@ def formula_to_dictionary(formula='', thickness=np.NaN, database='ENDF_VIII'):
     =======
     the dictionary of the elements passed
       ex: {'AgCo2': {'elements': ['Ag','Co'],
-                     'atomic_ratio': [1,2],
+                     'stochiometric_ratio': [1,2],
                      'thickness': thickness}}
     '''
     _formula_parsed = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
@@ -123,7 +124,7 @@ def formula_to_dictionary(formula='', thickness=np.NaN, database='ENDF_VIII'):
         _elements_array.append(_single_element)
 
     return {formula: {'elements': _elements_array,
-                      'atomic_ratio': _atomic_ratio_array,
+                      'stochiometric_ratio': _atomic_ratio_array,
                       'thickness': {'value': thickness,
                                     'units': 'mm'},
                       },

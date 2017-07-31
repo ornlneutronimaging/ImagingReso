@@ -10,12 +10,12 @@ class TestInitialization(unittest.TestCase):
     def test_correct_initialization_of_stack(self):
         '''assert correct defined stack is correctly saved'''
         _stack = {'CoAg': {'elements': ['Co','Ag'],
-                           'atomic_ratio': [1, 2],
+                           'stochiometric_ratio': [1, 2],
                            'thickness': {'value': 0.025,
                                          'units': 'mm'},
                            },
                   'Ag': {'elements': ['Ag'],
-                         'atomic_ratio': [1],
+                         'stochiometric_ratio': [1],
                          'thickness': {'value': 0.03,
                                        'units': 'mm'},
                          },
@@ -40,7 +40,7 @@ class TestInitialization(unittest.TestCase):
         
         returned_stack = o_reso.stack
         expected_stack = {'CoAg': {'elements':['Co','Ag'],
-                                   'atomic_ratio': [1,1],
+                                   'stochiometric_ratio': [1,1],
                                    'thickness': {'value': 0.025,
                                                  'units': 'mm'},
                                    'Co': {'isotopes': {'file_names':['Co-58.csv','Co-59.csv'],
@@ -69,7 +69,7 @@ class TestInitialization(unittest.TestCase):
                                           },
                                    },
                           'Ag': {'elements': ['Ag'],
-                                 'atomic_ratio': [1],
+                                 'stochiometric_ratio': [1],
                                  'thickness': {'value': 0.1,
                                                'units': 'mm'},
                                  'Ag': {'isotopes': {'file_names': ['Ag-107.csv','Ag-109.csv'],
@@ -91,7 +91,7 @@ class TestInitialization(unittest.TestCase):
         # elements
         self.assertEqual(returned_stack['CoAg']['elements'], expected_stack['CoAg']['elements'])
         # atomic_atomic_ratio
-        self.assertEqual(returned_stack['CoAg']['atomic_ratio'], expected_stack['CoAg']['atomic_ratio'])
+        self.assertEqual(returned_stack['CoAg']['stochiometric_ratio'], expected_stack['CoAg']['stochiometric_ratio'])
         # thickness
         self.assertEqual(returned_stack['CoAg']['thickness']['value'], expected_stack['CoAg']['thickness']['value'])
         self.assertEqual(returned_stack['CoAg']['thickness']['units'], expected_stack['CoAg']['thickness']['units'])
@@ -137,12 +137,12 @@ class TestInitialization(unittest.TestCase):
         '''assert __element_metadata is correctly populated using stack initialization'''
 
         _stack = {'CoAg': {'elements': ['Co','Ag'],
-                           'atomic_ratio': [1, 2],
+                           'stochiometric_ratio': [1, 2],
                            'thickness': {'value': 0.025,
                                          'units': 'mm'},
                            },
                   'Ag': {'elements': ['Ag'],
-                         'atomic_ratio': [1],
+                         'stochiometric_ratio': [1],
                          'thickness': {'value': 0.03,
                                        'units': 'mm'},
                          },
