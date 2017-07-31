@@ -169,7 +169,7 @@ class TestUtilities(unittest.TestCase):
                                        'file_names': ['Ag-107.csv','Ag-109.csv'],
                                        'mass': {'value': [106.905093, 108.904756],
                                                 'units': 'g/mol'},
-                                       'atomic_ratio': [0.51839, 0.481610]},
+                                       'isotopic_ratio': [0.51839, 0.481610]},
                           'molar_mass': {'value': 107.8682,
                                          'units': 'g/cm3'},
                           }
@@ -180,8 +180,8 @@ class TestUtilities(unittest.TestCase):
         # mass of isotopes
         self.assertEqual(_dict_returned['isotopes']['mass']['value'], _dict_expected['isotopes']['mass']['value'])
         # atomic_ratio
-        self.assertAlmostEqual(_dict_returned['isotopes']['atomic_ratio'][0], _dict_expected['isotopes']['atomic_ratio'][0], delta=0.0001)
-        self.assertAlmostEqual(_dict_returned['isotopes']['atomic_ratio'][1], _dict_expected['isotopes']['atomic_ratio'][1], delta=0.0001)
+        self.assertAlmostEqual(_dict_returned['isotopes']['isotopic_ratio'][0], _dict_expected['isotopes']['isotopic_ratio'][0], delta=0.0001)
+        self.assertAlmostEqual(_dict_returned['isotopes']['isotopic_ratio'][1], _dict_expected['isotopes']['isotopic_ratio'][1], delta=0.0001)
         # density
         self.assertEqual(_dict_returned['density']['value'], _dict_expected['density']['value'])
         # molar mass
@@ -196,7 +196,7 @@ class TestUtilities(unittest.TestCase):
                                        'mass': {'value': [],
                                                 'units': 'g/mol',
                                                 },
-                                       'atomic_ratio': []},
+                                       'isotopic_ratio': []},
                           'density': {'value': np.NaN,
                                       'units': 'g/cm3'},
                           'molar_mass': {'value': np.NaN,

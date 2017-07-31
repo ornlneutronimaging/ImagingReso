@@ -48,7 +48,7 @@ class TestInitialization(unittest.TestCase):
                                                        'mass': {'value': [57.9357576, 58.9332002],
                                                                 'units': 'g/mol',
                                                                 },
-                                                       'atomic_ratio': [0.0,1.0],
+                                                       'isotopic_ratio': [0.0,1.0],
                                                        },
                                           'density': {'value': 8.9,
                                                       'units': 'g/cm3'},
@@ -60,7 +60,7 @@ class TestInitialization(unittest.TestCase):
                                                        'mass': {'value': [106.905093, 108.904756],
                                                                 'units': 'g/mol',
                                                                 },
-                                                       'atomic_ratio': [0.51839,0.48161000],
+                                                       'isotopic_ratio': [0.51839,0.48161000],
                                                        },
                                           'density': {'value': 10.5,
                                                       'units': 'g/cm3'},
@@ -77,7 +77,7 @@ class TestInitialization(unittest.TestCase):
                                                      'mass': {'value': [106.905093, 108.904756],
                                                               'units': 'g/mol',
                                                               },
-                                                      'atomic_ratio': [0.51839,0.48161000],
+                                                      'isotopic_ratio': [0.51839,0.48161000],
                                                       },
                                         'density': {'value': 10.5,
                                                     'units': 'g/cm3'},
@@ -108,18 +108,18 @@ class TestInitialization(unittest.TestCase):
         self.assertEqual(returned_stack['CoAg']['Co']['isotopes']['mass']['units'], 
                          expected_stack['CoAg']['Co']['isotopes']['mass']['units'])
         # atomic_ratio Co
-        self.assertAlmostEqual(returned_stack['CoAg']['Co']['isotopes']['atomic_ratio'][0],
-                               expected_stack['CoAg']['Co']['isotopes']['atomic_ratio'][0],
+        self.assertAlmostEqual(returned_stack['CoAg']['Co']['isotopes']['isotopic_ratio'][0],
+                               expected_stack['CoAg']['Co']['isotopes']['isotopic_ratio'][0],
                                delta=0.0001)
-        self.assertAlmostEqual(returned_stack['CoAg']['Co']['isotopes']['atomic_ratio'][1],
-                               expected_stack['CoAg']['Co']['isotopes']['atomic_ratio'][1],
+        self.assertAlmostEqual(returned_stack['CoAg']['Co']['isotopes']['isotopic_ratio'][1],
+                               expected_stack['CoAg']['Co']['isotopes']['isotopic_ratio'][1],
                                delta=0.0001)
-        # atomic_ratio Ag
-        self.assertAlmostEqual(returned_stack['CoAg']['Ag']['isotopes']['atomic_ratio'][0],
-                                   expected_stack['CoAg']['Ag']['isotopes']['atomic_ratio'][0],
+        # isotopic_ratio Ag
+        self.assertAlmostEqual(returned_stack['CoAg']['Ag']['isotopes']['isotopic_ratio'][0],
+                                   expected_stack['CoAg']['Ag']['isotopes']['isotopic_ratio'][0],
                                    delta=0.0001)
-        self.assertAlmostEqual(returned_stack['CoAg']['Ag']['isotopes']['atomic_ratio'][1],
-                                   expected_stack['CoAg']['Ag']['isotopes']['atomic_ratio'][1],
+        self.assertAlmostEqual(returned_stack['CoAg']['Ag']['isotopes']['isotopic_ratio'][1],
+                                   expected_stack['CoAg']['Ag']['isotopes']['isotopic_ratio'][1],
                                    delta=0.0001)
         
         # density

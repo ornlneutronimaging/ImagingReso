@@ -154,7 +154,7 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
                                  'mass': {'value': [],
                                           'units': 'g/mol',
                                  },
-                                 'atomic_ratio': [],},
+                                 'isotopic_ratio': [],},
                     'density': {'value': np.NaN,
                                 'units': 'g/cm3'},
                     'molar_mass': {'value': np.NaN,
@@ -188,7 +188,7 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
     isotope_dict['isotopes']['list'] = _isotopes_list
     isotope_dict['isotopes']['file_names'] = _isotopes_list_files              
     isotope_dict['isotopes']['mass']['value'] = _isotopes_mass
-    isotope_dict['isotopes']['atomic_ratio'] = _isotopes_atomic_ratio
+    isotope_dict['isotopes']['isotopic_ratio'] = _isotopes_atomic_ratio
     isotope_dict['density']['value'] = _density
     isotope_dict['molar_mass']['value'] = _molar_mass
                     
