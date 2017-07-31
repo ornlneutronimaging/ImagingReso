@@ -133,6 +133,55 @@ the elements you defined, for each layer.</p>
 </div>
 </div>
 </div>
+<div class="section" id="modify-isotopic-ratio">
+<h2>Modify Isotopic Ratio<a class="headerlink" href="#modify-isotopic-ratio" title="Permalink to this headline">¶</a></h2>
+<p>Let’s presume that the U layer of our sample does not have the default isotopic_ratio reported</p>
+<p><code class="docutils literal"><span class="pre">`</span>
+<span class="pre">U-233</span> <span class="pre">-&gt;</span> <span class="pre">0</span>
+<span class="pre">U-234</span> <span class="pre">-&gt;</span> <span class="pre">5.5e-5</span>
+<span class="pre">U-235</span> <span class="pre">-&gt;</span> <span class="pre">0.007</span>
+<span class="pre">U-238</span> <span class="pre">-&gt;</span> <span class="pre">0.99</span>
+<span class="pre">`</span></code></p>
+<p>but instead</p>
+<p><code class="docutils literal"><span class="pre">`</span>
+<span class="pre">U-233</span> <span class="pre">-&gt;</span> <span class="pre">0</span>
+<span class="pre">U-234</span> <span class="pre">-&gt;</span> <span class="pre">0</span>
+<span class="pre">U-235</span> <span class="pre">-&gt;</span> <span class="pre">0.15</span>
+<span class="pre">U-238</span> <span class="pre">-&gt;</span> <span class="pre">085</span>
+<span class="pre">`</span></code></p>
+<div class="section" id="display-current-isotopic-ratio">
+<h3>Display current isotopic ratio<a class="headerlink" href="#display-current-isotopic-ratio" title="Permalink to this headline">¶</a></h3>
+<p>It’s possible to display the current list of isotopic ratio</p>
+<p>To display the entire list</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">get_stochiometric_ratio</span><span class="p">())</span>
+<span class="go">{&#39;CoAg&#39;: {&#39;Ag&#39;: {&#39;107-Ag&#39;: 0.51839, &#39;109-Ag&#39;: 0.48161000000000004},</span>
+<span class="go">          &#39;Co&#39;: {&#39;58-Co&#39;: 0.0, &#39;59-Co&#39;: 1.0}},</span>
+<span class="go"> &#39;U&#39;: {&#39;U&#39;: {&#39;233-U&#39;: 0.0,</span>
+<span class="go">             &#39;234-U&#39;: 5.4999999999999995e-05,</span>
+<span class="go">             &#39;235-U&#39;: 0.0072,</span>
+<span class="go">             &#39;238-U&#39;: 0.992745}}}</span>
+</pre></div>
+</div>
+<p>From there, it’s possible to narrow down the search to the compound and element we are looking for</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">get_stochiometric_ratio</span><span class="p">(</span><span class="n">compound</span><span class="o">=</span><span class="s1">&#39;U&#39;</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="s1">&#39;U&#39;</span><span class="p">))</span>
+<span class="go">{&#39;233-U&#39;: 0.0,</span>
+<span class="go"> &#39;234-U&#39;: 5.4999999999999995e-05,</span>
+<span class="go"> &#39;235-U&#39;: 0.0072,</span>
+<span class="go"> &#39;238-U&#39;: 0.992745}</span>
+</pre></div>
+</div>
+<p>if compound is composed of only 1 element, <strong>element</strong> paremeter can be omitted
+&gt;&gt;&gt; pprint.pprint(o_reso.get_stochiometric_ratio(compound=’U’))
+{‘233-U’: 0.0,</p>
+<blockquote>
+<div>‘234-U’: 5.4999999999999995e-05,
+‘235-U’: 0.0072,
+‘238-U’: 0.992745}</div></blockquote>
+</div>
+<div class="section" id="define-new-set-of-isotopic-ratio">
+<h3>Define new set of isotopic ratio<a class="headerlink" href="#define-new-set-of-isotopic-ratio" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
 </div>
 
 
@@ -156,6 +205,7 @@ the elements you defined, for each layer.</p>
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#initialization">Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modify-isotopic-ratio">Modify Isotopic Ratio</a></li>
 </ul>
 </li>
 </ul>

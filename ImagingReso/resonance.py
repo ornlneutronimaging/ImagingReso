@@ -63,3 +63,56 @@ class Resonance(object):
                                            database=self.database)
         new_stack = self.__update_stack_with_isotopes_infos(stack=_new_stack)
         self.stack = {**self.stack, **new_stack}
+
+    def get_stochiometric_ratio(self, compound='', element=''):
+        '''returns the list of isotopes for the element of the compound defined with their stochiometric values
+        
+        Parameters:
+        ===========
+        compound: string (default is empty). If empty, all the stochiometric will be displayed
+        element: string (default is same as compound). 
+        
+        Raises:
+        =======
+        ValueError if element is not defined in the stack
+        '''
+        _stack = self.stack
+        
+        if compound == '':
+            _list_compounds = _stack.keys()
+            list_all_dict = {}
+            for _compound in _list_compounds:
+                _list_element = _stack[_compound]['elements']
+                list_all_dict[_compound] = {}
+                for _element in _list_element:
+                    list_all_dict[_compound][_element] = self.get_stochiometric_ratio(
+                        compound = _compound, 
+                        element = _element)
+            return list_all_dict
+        
+        # checking compound is valid
+        list_compounds = _stack.keys()
+        if not compound in list_compounds:
+            list_compounds_joined = ', '.join(list_compounds)
+            raise ValueError("Compound '{}' could not be find in {}".format(compile, list_compounds_joined))
+        
+        # checking element is valid
+        if element == '': 
+            # we assume that the element and compounds names matche
+            element = compound
+        list_element = _stack[compound].keys()
+        if not element in list_element:
+            list_element_joined = ', '.join(list_element)
+            raise ValueError("Element '{}' should be any of those elements: {}".format(element, list_element_joined))
+        
+        list_istopes = _stack[compound][element]['isotopes']['list']
+        list_ratio = _stack[compound][element]['isotopes']['isotopic_ratio']
+        iso_ratio = zip(list_istopes, list_ratio)
+        
+        _stochiometric_ratio = {}
+        for _iso, _ratio in iso_ratio:
+            _stochiometric_ratio[_iso] = _ratio
+            
+        return _stochiometric_ratio
+        
+        

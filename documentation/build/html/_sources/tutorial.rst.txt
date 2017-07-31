@@ -97,3 +97,56 @@ Energy min 0 eV
 >>> print("Energy max {} eV".format(o_reso.energy_max))
 Energy max 300 eV
 
+Modify Isotopic Ratio
+#####################
+
+Let's presume that the U layer of our sample does not have the default isotopic_ratio reported
+
+```
+U-233 -> 0
+U-234 -> 5.5e-5
+U-235 -> 0.007
+U-238 -> 0.99
+```
+
+but instead
+
+```
+U-233 -> 0
+U-234 -> 0
+U-235 -> 0.15
+U-238 -> 085
+```
+
+Display current isotopic ratio
+------------------------------
+
+It's possible to display the current list of isotopic ratio
+
+To display the entire list
+
+>>> pprint.pprint(o_reso.get_stochiometric_ratio())
+{'CoAg': {'Ag': {'107-Ag': 0.51839, '109-Ag': 0.48161000000000004},
+          'Co': {'58-Co': 0.0, '59-Co': 1.0}},
+ 'U': {'U': {'233-U': 0.0,
+             '234-U': 5.4999999999999995e-05,
+             '235-U': 0.0072,
+             '238-U': 0.992745}}}
+             
+From there, it's possible to narrow down the search to the compound and element we are looking for
+
+>>> pprint.pprint(o_reso.get_stochiometric_ratio(compound='U', element='U'))  
+{'233-U': 0.0,
+ '234-U': 5.4999999999999995e-05,
+ '235-U': 0.0072,
+ '238-U': 0.992745}
+ 
+if compound is composed of only 1 element, **element** paremeter can be omitted
+>>> pprint.pprint(o_reso.get_stochiometric_ratio(compound='U'))
+{'233-U': 0.0,
+ '234-U': 5.4999999999999995e-05,
+ '235-U': 0.0072,
+ '238-U': 0.992745}
+ 
+Define new set of isotopic ratio
+--------------------------------

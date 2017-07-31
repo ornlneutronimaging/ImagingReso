@@ -184,3 +184,57 @@ class TestInitialization(unittest.TestCase):
         ag_density_expected = 10.5
         self.assertEqual(co_density_expected, stack['CoAg']['Co']['density']['value'])
         self.assertEqual(ag_density_expected, stack['Ag']['Ag']['density']['value'])
+        
+
+class TestGetterSetter(unittest.TestCase):
+    
+    def setUp(self):
+        _stack = {'CoAg': {'elements': ['Co','Ag'],
+                               'stochiometric_ratio': [1, 2],
+                                   'thickness': {'value': 0.025,
+                                                 'units': 'mm'},
+                                   },
+                      'U': {'elements': ['U'],
+                                 'stochiometric_ratio': [1],
+                                 'thickness': {'value': 0.03,
+                                               'units': 'mm'},
+                                 },
+                          }
+        self.o_reso = Resonance(stack=_stack)        
+        
+    def test_retrieve_stochiometric_ratio_raises_error_if_unknown_compound(self):
+        '''assert ValueError raised if wrong compound when getting stochiometric ratio'''
+        self.assertRaises(ValueError, self.o_reso.get_stochiometric_ratio, compound='unknown')
+        
+    def test_if_element_misssing_use_compound_and_raises_error_if_wrong(self):
+        '''assert ValueError raised if element does not exist'''
+        self.assertRaises(ValueError, self.o_reso.get_stochiometric_ratio, compound='CoAg')
+        
+    def test_stochiometric_ratio_returned(self):
+        '''assert the stochiometric ratio are correctly returned'''
+        _stochiometric_ratio = self.o_reso.get_stochiometric_ratio(compound='U')
+        _expected_dict = {'233-U': 0.0,
+                          '234-U': 5.5e-5,
+                          '235-U': 0.0072,
+                          '238-U': 0.992745}
+        self.assertEqual(_expected_dict['233-U'], _stochiometric_ratio['233-U'])
+        self.assertEqual(_expected_dict['235-U'], _stochiometric_ratio['235-U'])
+        self.assertEqual(_expected_dict['238-U'], _stochiometric_ratio['238-U'])
+        
+    def test_list_all_stochiometric_ratio(self):
+        '''assert the entire stochiometric list is returned'''
+        _stochiometric_ratio = self.o_reso.get_stochiometric_ratio()
+        _expected_dict = {'U': {'U': {'233-U': 0.0,
+                                      '234-U': 5.5e-5,
+                                      '235-U': 0.0072,
+                                      '238-U': 0.992745},
+                                },
+                          'CoAg': {'Ag': {'107-Ag': 0.51839,
+                                          '109-Ag': 0.4816},
+                                   'Co': {'58-Co': 0.0,
+                                          '59-Co': 1.0},
+                                   },
+                          }
+        self.assertEqual(_expected_dict['U']['U']['233-U'], _stochiometric_ratio['U']['U']['233-U'])
+        self.assertEqual(_expected_dict['U']['U']['238-U'], _stochiometric_ratio['U']['U']['238-U'])
+        self.assertEqual(_expected_dict['CoAg']['Ag']['107-Ag'], _stochiometric_ratio['CoAg']['Ag']['107-Ag'])
