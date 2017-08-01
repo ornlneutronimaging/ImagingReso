@@ -4,6 +4,8 @@ import numbers
 import re
 import numpy as np
 import periodictable as pt
+import pandas as pd
+from scipy.interpolate import interp1d
 
 
 def is_element_in_database(element='', database='ENDF_VIII'):
@@ -238,3 +240,52 @@ def get_density(element):
     the density of the element in g.cm-3 units
     '''
     return pt.elements.isotope(element).density
+
+def get_database_data(file_name=''):
+    '''return the energy (eV) and Sigma (barn) from the file_name
+    
+    Parameters:
+    ===========
+    file_name: string ('' by default) name of csv file
+    
+    Returns:
+    ========
+    pandas dataframe
+    
+    Raises:
+    =======
+    IOError if file does not exist
+    '''
+    if not os.path.exists(file_name):
+        raise IOError("File {} does not exist!".format(file_name))
+    df = pd.read_csv(file_name, header=1)
+    return df
+
+def get_interpolated_data(df=[], E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
+    '''return the interpolated x and y axis for the given x range [E_min, E_max] with step defined
+    
+    Parameters:
+    ===========
+    df: data frame 
+    E_min: left range of new interpolated data
+    E_max: right range of new interpolated data
+    E_step: step of energy to use in interpolated data
+    
+    Returns:
+    ========
+    x_axis and y_axis of interpolated data over specified range
+    '''
+    
+    # remove data outside specified range [x_min, x_max]
+    df = df.drop(df[df.E_eV < E_min].index)
+    df = df.drop(df[df.E_eV > E_max].index)
+
+    # reset index
+    df = df.reset_index(drop=True)
+    
+    # energy x_axis
+    x_axis = np.linspace(df['E_eV'].min(), df['E_eV'].max(), E_step)
+    y_axis_function = interp1d(x=df['E_eV'], y=df['Sig_b'], kind='linear')
+    y_axis = y_axis_function(x_axis)   
+    
+    return {'x_axis': x_axis, 'y-axis': y_axis}

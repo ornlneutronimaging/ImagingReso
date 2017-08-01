@@ -2,6 +2,7 @@ import unittest
 import numpy as np
 import os
 import pprint
+import pandas as pd
 
 from ImagingReso._utilities import is_element_in_database
 from ImagingReso._utilities import get_list_element_from_database
@@ -10,9 +11,10 @@ from ImagingReso._utilities import formula_to_dictionary
 from ImagingReso._utilities import get_isotope_dicts
 from ImagingReso._utilities import get_mass
 from ImagingReso._utilities import get_density
+from ImagingReso._utilities import get_database_data, get_interpolated_data
 
 
-class TestUtilities(unittest.TestCase):
+class TestUtilities_1(unittest.TestCase):
     
     def test_is_element_in_database(self):
         '''assert is_element_in_database works correctly for good and bad input elements'''
@@ -230,3 +232,31 @@ class TestUtilities(unittest.TestCase):
         _returned_density = get_density(_element)
         _expected_density = 10.5
         self.assertEqual(_returned_density, _expected_density)
+        
+        
+class TestUtilities_2(unittest.TestCase):
+    
+    def setUp(self):
+        _file_path = os.path.dirname(__file__)
+        self.database_path = os.path.abspath(os.path.join(_file_path, '../../ImagingReso/reference_data/ENDF_VIII'))
+    
+    def test_get_database_name_raises_error_if_wrong_file(self):
+        '''assert IOError is raised if get_database has wrong file name passed in'''
+        file_name = 'do_not_exist'
+        self.assertRaises(IOError, get_database_data, file_name=file_name)
+        
+    def test_get_database_works(self):
+        '''assert get_database returns correct pandas object'''
+        file_name = os.path.join(self.database_path, 'Ag-107.csv')
+        df = get_database_data(file_name=file_name)
+        self.assertTrue(isinstance(df, pd.DataFrame))
+    
+    def test_get_interpolated_data(self):
+        '''assert get_interpolated_data returns the correct dictionary of x_axis and y_axis'''
+        file_name = os.path.join(self.database_path, 'Ag-107.csv')
+        df = get_database_data(file_name=file_name)
+        E_min = 300
+        E_max = 600
+        _dict = get_interpolated_data(df=df, E_min=E_min, E_max=E_max, E_step=10)
+        pprint.pprint(_dict)
+        
