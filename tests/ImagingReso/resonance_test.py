@@ -262,3 +262,13 @@ class TestGetterSetter(unittest.TestCase):
         mass_ratio = zip(list_isotopes_mass, list_isotopes_ratio)
         expected_molar_mass = np.array([_m * _r for _m, _r in mass_ratio]).sum()
         self.assertAlmostEqual(new_molar_mass, expected_molar_mass, delta=0.0001)
+        
+    def test_set_stochiometri_ratio_correctly_calculates_new_density(self):
+        '''assert density is correctly calculated for new set of stochiometric coefficient'''
+        self.o_reso.set_stochiometric_ratio(compound='CoAg', element='Co', list_ratio=[0.5, 0.5])
+        new_density = self.o_reso.stack['CoAg']['Co']['density']['value']
+        list_density = self.o_reso.stack['CoAg']['Co']['isotopes']['density']['value']
+        list_isotopes_ratio = self.o_reso.stack['CoAg']['Co']['isotopes']['isotopic_ratio']
+        density_ratio = zip(list_density, list_isotopes_ratio)
+        expected_density = np.array([_d * _r for _d, _r in density_ratio]).sum()
+        self.assertAlmostEqual(new_density, expected_density, delta=0.0001)    

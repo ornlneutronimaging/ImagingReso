@@ -164,7 +164,7 @@ class TestUtilities(unittest.TestCase):
         _element = 'Ag'
         _dict_returned = get_isotope_dicts(element=_element)
         _dict_expected = {'density': {'value': 10.5,
-                                      'units': 'g/mol'},
+                                      'units': 'g/cm3'},
                           'isotopes': {'list': ['107-Ag','109-Ag'],
                                        'file_names': ['Ag-107.csv','Ag-109.csv'],
                                        'mass': {'value': [106.905093, 108.904756],

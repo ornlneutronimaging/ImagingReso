@@ -152,22 +152,23 @@ class Resonance(object):
         
         self.stack[compound][element]['isotopes']['isotopic_ratio'] = list_ratio
         self.__update_molar_mass(compound=compound, element=element)
-        #self.__update_density(compound=compound, element=element)
+        self.__update_density(compound=compound, element=element)
 
-    #def __update_density(self, compound='', element=''):
-        #'''Re-calculate the density of the compound / element given due to stochiometric changes
+    def __update_density(self, compound='', element=''):
+        '''Re-calculate the density of the compound / element given due to stochiometric changes
         
-        #Parameters:
-        #===========
-        #compound: string (default is '') name of compound
-        #element: string (default is '') name of element
-        #'''
-        #_density = 0
-        #list_ratio = self.stack[compound][element]['isotopes']['isotopic_ratio']
-        #list_elements = self.stack[compound][element]['isotopes']['list']
-        
-
-
+        Parameters:
+        ===========
+        compound: string (default is '') name of compound
+        element: string (default is '') name of element
+        '''
+        _density_element = 0
+        list_ratio = self.stack[compound][element]['isotopes']['isotopic_ratio']
+        list_density = self.stack[compound][element]['isotopes']['density']['value']
+        ratio_density = zip(list_ratio, list_density)
+        for _ratio, _density in ratio_density:
+            _density_element += np.float(_ratio) * np.float(_density)
+        self.stack[compound][element]['density']['value'] = _density_element
         
     def __update_molar_mass(self, compound='', element=''):
         '''Re-calculate the molar moass of the compound / element given due to stochiometric changes
