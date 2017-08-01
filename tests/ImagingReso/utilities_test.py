@@ -169,6 +169,8 @@ class TestUtilities(unittest.TestCase):
                                        'file_names': ['Ag-107.csv','Ag-109.csv'],
                                        'mass': {'value': [106.905093, 108.904756],
                                                 'units': 'g/mol'},
+                                       'density': {'value': [10.406, 10.600],
+                                                   'units': 'g/cm3'},
                                        'isotopic_ratio': [0.51839, 0.481610]},
                           'molar_mass': {'value': 107.8682,
                                          'units': 'g/cm3'},
@@ -179,6 +181,9 @@ class TestUtilities(unittest.TestCase):
         self.assertEqual(_dict_returned['isotopes']['file_names'], _dict_expected['isotopes']['file_names'])
         # mass of isotopes
         self.assertEqual(_dict_returned['isotopes']['mass']['value'], _dict_expected['isotopes']['mass']['value'])
+        # density of isotopes
+        self.assertAlmostEqual(_dict_returned['isotopes']['density']['value'][0], _dict_expected['isotopes']['density']['value'][0], delta=0.001)
+        self.assertAlmostEqual(_dict_returned['isotopes']['density']['value'][1], _dict_expected['isotopes']['density']['value'][1], delta=0.001)
         # atomic_ratio
         self.assertAlmostEqual(_dict_returned['isotopes']['isotopic_ratio'][0], _dict_expected['isotopes']['isotopic_ratio'][0], delta=0.0001)
         self.assertAlmostEqual(_dict_returned['isotopes']['isotopic_ratio'][1], _dict_expected['isotopes']['isotopic_ratio'][1], delta=0.0001)
@@ -196,6 +201,8 @@ class TestUtilities(unittest.TestCase):
                                        'mass': {'value': [],
                                                 'units': 'g/mol',
                                                 },
+                                       'density': {'value': [],
+                                                   'units': 'g/cm3'},
                                        'isotopic_ratio': []},
                           'density': {'value': np.NaN,
                                       'units': 'g/cm3'},
