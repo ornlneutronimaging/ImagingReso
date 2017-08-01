@@ -1,4 +1,5 @@
 import numpy as np
+import numbers
 
 from ImagingReso import _utilities
 
@@ -34,16 +35,6 @@ class Resonance(object):
         
         self.energy_max = energy_max
         self.energy_min = energy_min
-
-    def __update_stack_with_isotopes_infos(self, stack={}):
-        '''retrieve the isotopes, isotopes file names, mass and atomic_ratio from each element in stack'''
-        for _key in stack:
-            isotopes_array = []
-            _elements = stack[_key]['elements']
-            for _element in _elements:
-                _dict = _utilities.get_isotope_dicts(element=_element, database=self.database)
-                stack[_key][_element] = _dict    
-        return stack
     
     def add_layer(self, formula='', thickness=np.NaN): 
         '''provide another way to define the layers (stack)
@@ -153,6 +144,94 @@ class Resonance(object):
         self.stack[compound][element]['isotopes']['isotopic_ratio'] = list_ratio
         self.__update_molar_mass(compound=compound, element=element)
         self.__update_density(compound=compound, element=element)
+
+    def get_density(self, compound='', element=''):
+        '''returns the list of isotopes for the element of the compound defined with their density
+        
+        Parameters:
+        ===========
+        compound: string (default is empty). If empty, all the stochiometric will be displayed
+        element: string (default is same as compound). 
+        
+        Raises:
+        =======
+        ValueError if element is not defined in the stack
+        '''
+        _stack = self.stack
+        
+        if compound == '':
+            _list_compounds = _stack.keys()
+            list_all_dict = {}
+            for _compound in _list_compounds:
+                _list_element = _stack[_compound]['elements']
+                list_all_dict[_compound] = {}
+                for _element in _list_element:
+                    list_all_dict[_compound][_element] = self.get_density(
+                        compound = _compound, 
+                        element = _element)     
+            return list_all_dict
+        
+        # checking compound is valid
+        list_compounds = _stack.keys()
+        if not compound in list_compounds:
+            list_compounds_joined = ', '.join(list_compounds)
+            raise ValueError("Compound '{}' could not be find in {}".format(compile, list_compounds_joined))
+        
+        # checking element is valid
+        if element == '': 
+            # we assume that the element and compounds names matched
+            element = compound
+        list_element = _stack[compound].keys()
+        if not element in list_element:
+            list_element_joined = ', '.join(list_element)
+            raise ValueError("Element '{}' should be any of those elements: {}".format(element, list_element_joined))
+        
+        return _stack[compound][element]['density']['value']
+
+    def set_density(self, compound='', element='', density=np.NaN):
+        '''defines the new density f the compound/element 
+        
+        Parameters:
+        ===========
+        compound: string (default is ''). Name of compound
+        elememnt: string (defualt is ''). Name of element
+        density: float (default is np.NaN). New density
+        
+        Raises:
+        =======
+        ValueError if compound does not exist
+        ValueError if element does not exist
+        ValueError if density is not a number
+        '''
+        _stack = self.stack
+        
+        list_compounds = _stack.keys()
+        if not compound in _stack.keys():
+            list_compounds_joined = ', '.join(list_compounds)
+            raise ValueError("Compound '{}' could not be find in {}".format(compile, list_compounds_joined))
+
+        if element == '': 
+            # we assume that the element and compounds names matched
+            element = compound
+        list_element = _stack[compound].keys()
+        if not element in list_element:
+            list_element_joined = ', '.join(list_element)
+            raise ValueError("Element '{}' should be any of those elements: {}".format(element, list_element_joined))
+        
+        if not isinstance(density, numbers.Number):
+            raise ValueError("Density '{}' must be a number!".format(density))
+        
+        self.stack[compound][element]['density']['value'] = density
+
+    def __update_stack_with_isotopes_infos(self, stack={}):
+        '''retrieve the isotopes, isotopes file names, mass and atomic_ratio from each element in stack'''
+        for _key in stack:
+            isotopes_array = []
+            _elements = stack[_key]['elements']
+            for _element in _elements:
+                _dict = _utilities.get_isotope_dicts(element=_element, database=self.database)
+                stack[_key][_element] = _dict    
+        return stack
 
     def __update_density(self, compound='', element=''):
         '''Re-calculate the density of the compound / element given due to stochiometric changes

@@ -216,3 +216,26 @@ Let's define the new stochiomettric ratio
        'thickness': {'units': 'mm', 'value': 0.3}}}
        
 As you can see, the **density** and **molar_mass** values of the *U* compound/element have been updated.
+
+Let's assume that the **Ag** element is not perfect and has some voids that changes its density to 8.5 (instead of 10.5). 
+We need to change this value. 
+
+First, we can have the current density value for this element
+
+>>> print(o_reso.get_density(compound='CoAg', element='Co'))
+10.5
+
+or of all the compounds
+
+>>> pprint.pprint(o_reso.get_density())
+{'CoAg': {'Ag': 10.5, 'Co': 8.9}, 'U': {'U': 18.680428927650006}}
+
+And now we can change the value of the density for the **Co** element
+
+>>> o_reso.set_density(compound='CoAg', element='Co', density=8.5)
+>>> pprint.pprint(o_reso.get_density())
+{'CoAg': {'Ag': 10.5, 'Co': 20}, 'U': {'U': 18.680428927650006}}
+
+
+
+

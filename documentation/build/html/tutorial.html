@@ -245,6 +245,24 @@ the elements you defined, for each layer.</p>
 </pre></div>
 </div>
 <p>As you can see, the <strong>density</strong> and <strong>molar_mass</strong> values of the <em>U</em> compound/element have been updated.</p>
+<p>Let’s assume that the <strong>Ag</strong> element is not perfect and has some voids that changes its density to 8.5 (instead of 10.5).
+We need to change this value.</p>
+<p>First, we can have the current density value for this element</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">get_density</span><span class="p">(</span><span class="n">compound</span><span class="o">=</span><span class="s1">&#39;CoAg&#39;</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="s1">&#39;Co&#39;</span><span class="p">))</span>
+<span class="go">10.5</span>
+</pre></div>
+</div>
+<p>or of all the compounds</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">get_density</span><span class="p">())</span>
+<span class="go">{&#39;CoAg&#39;: {&#39;Ag&#39;: 10.5, &#39;Co&#39;: 8.9}, &#39;U&#39;: {&#39;U&#39;: 18.680428927650006}}</span>
+</pre></div>
+</div>
+<p>And now we can change the value of the density for the <strong>Co</strong> element</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span><span class="o">.</span><span class="n">set_density</span><span class="p">(</span><span class="n">compound</span><span class="o">=</span><span class="s1">&#39;CoAg&#39;</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="s1">&#39;Co&#39;</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="mf">8.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">get_density</span><span class="p">())</span>
+<span class="go">{&#39;CoAg&#39;: {&#39;Ag&#39;: 10.5, &#39;Co&#39;: 20}, &#39;U&#39;: {&#39;U&#39;: 18.680428927650006}}</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>

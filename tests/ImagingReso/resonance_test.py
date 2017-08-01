@@ -202,6 +202,7 @@ class TestGetterSetter(unittest.TestCase):
                           }
         self.o_reso = Resonance(stack=_stack)        
         
+    # stochiometric ratio
     def test_retrieve_stochiometric_ratio_raises_error_if_unknown_compound(self):
         '''assert ValueError raised if wrong compound when getting stochiometric ratio'''
         self.assertRaises(ValueError, self.o_reso.get_stochiometric_ratio, compound='unknown')
@@ -253,7 +254,7 @@ class TestGetterSetter(unittest.TestCase):
         '''assert ValueRror raised if new list of ratio does not match old list size'''
         self.assertRaises(ValueError, self.o_reso.set_stochiometric_ratio, compound='U', element='U', list_ratio=[0, 1, 2])
         
-    def test_set_stochiometri_ratio_correctly_calculates_new_molar_mass(self):
+    def test_set_stochiometric_ratio_correctly_calculates_new_molar_mass(self):
         '''assert molar mass is correctly calculated for new set of stochiometric coefficient'''
         self.o_reso.set_stochiometric_ratio(compound='CoAg', element='Co', list_ratio=[0.5, 0.5])
         new_molar_mass = self.o_reso.stack['CoAg']['Co']['molar_mass']['value']
@@ -263,7 +264,7 @@ class TestGetterSetter(unittest.TestCase):
         expected_molar_mass = np.array([_m * _r for _m, _r in mass_ratio]).sum()
         self.assertAlmostEqual(new_molar_mass, expected_molar_mass, delta=0.0001)
         
-    def test_set_stochiometri_ratio_correctly_calculates_new_density(self):
+    def test_set_stochiometric_ratio_correctly_calculates_new_density(self):
         '''assert density is correctly calculated for new set of stochiometric coefficient'''
         self.o_reso.set_stochiometric_ratio(compound='CoAg', element='Co', list_ratio=[0.5, 0.5])
         new_density = self.o_reso.stack['CoAg']['Co']['density']['value']
@@ -272,3 +273,43 @@ class TestGetterSetter(unittest.TestCase):
         density_ratio = zip(list_density, list_isotopes_ratio)
         expected_density = np.array([_d * _r for _d, _r in density_ratio]).sum()
         self.assertAlmostEqual(new_density, expected_density, delta=0.0001)    
+        
+    # density
+    def test_retrieve_density_raises_error_if_unknown_compound(self):
+        '''assert ValueError raised if wrong compound when getting density'''
+        self.assertRaises(ValueError, self.o_reso.get_density, compound='unknown')
+        
+    def test_if_element_misssing_use_compound_and_raises_error_if_wrong_when_getting_density(self):
+        '''assert ValueError raised if element does not exist when getting density'''
+        self.assertRaises(ValueError, self.o_reso.get_density, compound='CoAg')        
+        
+    def test_density_returned(self):
+        '''assert the density are correctly returned'''
+        _density = self.o_reso.get_density(compound='U')
+        _expected_density = 18.95
+        self.assertEqual(_density, _expected_density)
+        
+    def test_density_returned_all(self):
+        '''assert the density of all element works'''
+        _density_list = self.o_reso.get_density()
+        _expected_density = {'CoAg': {'Co': 8.9,
+                                      'Ag': 10.5,
+                                      },
+                             'U': {'U': 18.95,
+                                   },
+                             }
+        self.assertEqual(_expected_density, _density_list)
+        
+    def test_set_density_raises_error_if_bad_compound_element_or_density(self):
+        '''assert set density raises error if any of the parameters is wrong'''
+        self.assertRaises(ValueError, self.o_reso.set_density)
+        self.assertRaises(ValueError, self.o_reso.set_density, compound='unknown')
+        self.assertRaises(ValueError, self.o_reso.set_density, compound='CoAg', element='unknown')
+        self.assertRaises(ValueError, self.o_reso.set_density, compound='CoAg', element='Co', density='not_a_number')
+        
+    def test_set_density_works(self):
+        '''assert set density works'''
+        self.o_reso.set_density(compound='CoAg', element='Ag', density=50)
+        _expected_density = 50
+        _returned_density = self.o_reso.get_density(compound='CoAg', element='Ag')
+        self.assertEqual(_expected_density, _returned_density)
