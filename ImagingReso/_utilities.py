@@ -379,3 +379,51 @@ def calculate_transmission(thickness_cm=np.NaN, atoms_per_cm3=np.NaN, sigma_b=[]
     '''
     transmission = np.exp( -thickness_cm * 1e-24 * sigma_b * atoms_per_cm3)
     return np.array(transmission)
+
+def set_distance_units(value, from_units='mm', to_units='cm'):
+    '''convert distance into new units
+    
+    Parameters:
+    ===========
+    value: float. value to convert
+    from_units: string. Must be 'mm', 'cm' or 'm'
+    to_units: string. must be 'mm','cm' or 'm'
+    
+    Returns:
+    ========
+    converted value
+    
+    Raises:
+    =======
+    ValueError if from_units is not a valid unit (see above)
+    ValueError if to_units is not a valud unit
+    '''
+    if from_units == to_units:
+        return value
+
+    coeff = 1
+    if from_units == 'cm':
+        if to_units == 'mm':
+            coeff = 10
+        elif to_units == 'm':
+            coeff = 0.01
+        else:
+            raise ValueError("to_units not supported ['cm','m','mm']!")
+    elif from_units == 'mm':
+        if to_units == 'cm':
+            coeff = 0.1
+        elif to_units == 'm':
+            coeff = 0.001
+        else:
+            raise ValueError("to_units not supported ['cm','m','mm']!")
+    elif from_units == 'm':
+        if to_units == 'mm':
+            coeff = 1000
+        elif to_units == 'cm':
+            coeff = 100
+        else:
+            raise ValueError("to_units not supported ['cm','m','mm']!")
+    else:
+        raise ValueError("to_units not supported ['cm','m','mm']!")
+
+    return coeff * value

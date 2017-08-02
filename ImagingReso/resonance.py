@@ -262,6 +262,24 @@ class Resonance(object):
         # populate atoms_per_cm3
         self.__calculate_atoms_per_cm3()
         
+        # calculate transmission and attenuation
+        self.__calculate_transmission()
+
+    def __calculate_transmission(self):
+        '''  '''
+        stack = self.stack
+        stack_signal = {}
+        for _name_of_compound in stack.keys():
+            _list_element = stack[_name_of_compound]['elements']
+            for _element in list_element:
+                
+                # get thickness in cm !!!!!!!
+                _thickness = 10 # ! fix me
+                for _iso in stack[_name_of_compound][_element]['isotopes']['list']:
+                    pass
+        
+        
+        
     def __calculate_atoms_per_cm3(self):
         '''calculate for each element, the atoms per cm3'''
         stack = self.stack
