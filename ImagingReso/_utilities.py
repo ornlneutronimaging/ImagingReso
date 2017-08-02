@@ -361,3 +361,21 @@ def get_atoms_per_cm3_of_layer(compound_dict={}):
         atoms_per_cm3[_element] = Avogadro * _step1 
     
     return atoms_per_cm3
+
+def calculate_transmission(thickness_cm=np.NaN, atoms_per_cm3=np.NaN, sigma_b=[]):
+    '''calculate the transmission signal using the formula
+    
+    transmission = exp( - thickness_cm * atoms_per_cm3 * 1e-24 * sigma_b)
+    
+    Parameters:
+    ===========
+    thickness: float (in cm)
+    atoms_per_cm3: float (number of atoms per cm3 of element/isotope)
+    sigma_b: np.array of sigma retrieved from database
+    
+    Returns:
+    ========
+    transmission array
+    '''
+    transmission = np.exp( -thickness_cm * 1e-24 * sigma_b * atoms_per_cm3)
+    return np.array(transmission)

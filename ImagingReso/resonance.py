@@ -11,6 +11,7 @@ class Resonance(object):
 
     stack = {} # compound, thickness, atomic_ratio of each layer with isotopes information
     stack_sigma = {} # all the energy and sigma of the isotopes and compounds 
+    stack_signal = {} # transmission and attenuation signal for every isotope and compound
     
     energy_max = np.NaN
     energy_min = np.NaN
@@ -164,6 +165,9 @@ class Resonance(object):
         self.__update_molar_mass(compound=compound, element=element)
         self.__update_density(compound=compound, element=element)
 
+        # update entire stack
+        self.__math_on_stack()
+
     def get_density(self, compound='', element=''):
         '''returns the list of isotopes for the element of the compound defined with their density
         
@@ -241,6 +245,9 @@ class Resonance(object):
             raise ValueError("Density '{}' must be a number!".format(density))
         
         self.stack[compound][element]['density']['value'] = density
+
+        # update entire stack
+        self.__math_on_stack()
         
     def __math_on_stack(self):
         '''will perform all the various update of the stack, such as populating the stack_sigma, caluclate the density of the

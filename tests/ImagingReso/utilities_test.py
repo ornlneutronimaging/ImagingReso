@@ -17,6 +17,7 @@ from ImagingReso._utilities import get_interpolated_data
 from ImagingReso._utilities import get_sigma
 from ImagingReso._utilities import get_compound_density
 from ImagingReso._utilities import get_atoms_per_cm3_of_layer
+from ImagingReso._utilities import calculate_transmission
 
 class TestUtilities_1(unittest.TestCase):
     
@@ -38,6 +39,10 @@ class TestUtilities_1(unittest.TestCase):
         _answer = is_element_in_database(element=_element)
         self.assertTrue(_answer)
         
+        _element = 'C'
+        _answer = is_element_in_database(element=_element)
+        self.assertFalse(_answer)
+
     def test_get_list_element_from_database(self):
         '''assert the correct list of element is retrieved from the database'''
 
@@ -349,3 +354,14 @@ class TestUtilities_2(unittest.TestCase):
         _stack_returned = o_reso.stack
         _atoms_per_cm3 = get_atoms_per_cm3_of_layer(compound_dict=_stack['CoAg'])
         self.assertAlmostEqual(_atoms_per_cm3['Ag'], 3.5381585765227393e22, delta=1)
+        
+    def test_calculate_transmission(self):
+        '''assert calculate_transmission works'''
+        thickness = 10 # cm
+        atoms_per_cm3 = 8.9e22
+        sigma_b = np.linspace(1,10,10)
+        transmission_returned = calculate_transmission(thickness_cm=thickness, 
+                                                      atoms_per_cm3=atoms_per_cm3, 
+                                                      sigma_b=sigma_b)
+        transmission_expected = np.array([np.exp(-thickness * 1e-24 * _b * atoms_per_cm3) for _b in sigma_b])
+        self.assertTrue((transmission_expected == transmission_returned).all())
