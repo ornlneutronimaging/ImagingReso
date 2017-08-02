@@ -62,7 +62,7 @@ the elements you defined, for each layer.
 
 >>> import pprint
 >>> pprint.pprint(o_reso.slack)
-{{'CoAg': {'Ag': {'density': {'units': 'g/cm3', 'value': 10.5},
+{'CoAg': {'Ag': {'density': {'units': 'g/cm3', 'value': 10.5},
                  'isotopes': {'density': {'units': 'g/cm3',
                                           'value': [10.406250187729098,
                                                     10.600899412431097]},
@@ -82,6 +82,8 @@ the elements you defined, for each layer.
                               'mass': {'units': 'g/mol',
                                        'value': [57.9357576, 58.9332002]}},
                  'molar_mass': {'units': 'g/mol', 'value': 58.9332}},
+          'atoms_per_cm3': {'Ag': 1.8051829472054791e+21,
+                            'Co': 1.8051829472054791e+21},
           'density': {'units': 'g/cm3', 'value': 0.5},
           'elements': ['Co', 'Ag'],
           'stochiometric_ratio': [1, 1],
@@ -107,11 +109,12 @@ the elements you defined, for each layer.
                                              235.0439231,
                                              238.0507826]}},
              'molar_mass': {'units': 'g/mol', 'value': 238.02891}},
+       'atoms_per_cm3': {'U': 4.7943575106128917e+22},
        'density': {'units': 'g/cm3', 'value': 18.949999999999999},
        'elements': ['U'],
        'stochiometric_ratio': [1],
-       'thickness': {'units': 'mm', 'value': 0.3}}}
-       
+       'thickness': {'units': 'mm', 'value': 0.3}}}       
+
 The energy range defined
 
 >>> print("Energy min {} eV".format(o_reso.energy_min))
@@ -121,8 +124,10 @@ Energy max 300 eV
 >>> print("Energy step {} eV".format(o_reso.energy_step))
 Energy step 10 eV
 
-During initialization, the Cross Section (Sigma in barns) vs Energy (eV) of each isotope and
-element are calculated and saved in the **stack_sigma** dictionary
+During the initialization process, the following things take place behind the scene
+- the number of atoms per cm3 of each element is calculated
+- the density of each layer (if not provided is estimated)
+- the arrays of Sigma (barns) vs Energy for each isotope is retrieved
 
 >>> pprint.pprint(o_reso.stack_sigma)
 {'CoAg': {'Ag': {'107-Ag': {'energy_eV': array([  1.00000000e-05,   1.03401821e+01,   2.06803541e+01,
@@ -230,6 +235,8 @@ Let's define the new stochiomettric ratio
                               'mass': {'units': 'g/mol',
                                        'value': [57.9357576, 58.9332002]}},
                  'molar_mass': {'units': 'g/mol', 'value': 58.9332}},
+          'atoms_per_cm3': {'Ag': 1.8051829472054791e+21,
+                            'Co': 1.8051829472054791e+21},
           'density': {'units': 'g/cm3', 'value': 0.5},
           'elements': ['Co', 'Ag'],
           'stochiometric_ratio': [1, 1],
@@ -252,6 +259,7 @@ Let's define the new stochiomettric ratio
                                              235.0439231,
                                              238.0507826]}},
              'molar_mass': {'units': 'g/mol', 'value': 234.64285678}},
+       'atoms_per_cm3': {'U': 4.7943575106128917e+22},
        'density': {'units': 'g/cm3', 'value': 18.949999999999999},
        'elements': ['U'],
        'stochiometric_ratio': [1],

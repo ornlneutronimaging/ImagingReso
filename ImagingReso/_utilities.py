@@ -6,6 +6,7 @@ import numpy as np
 import periodictable as pt
 import pandas as pd
 from scipy.interpolate import interp1d
+from scipy.constants import Avogadro
 
 
 def is_element_in_database(element='', database='ENDF_VIII'):
@@ -331,3 +332,32 @@ def get_sigma(database_file_name='', E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
                                  E_step=E_step)
     return {'energy': _dict['x_axis'],
             'sigma': _dict['y_axis']}
+
+def get_atoms_per_cm3_of_layer(compound_dict={}):
+    '''calculate the atoms per cm3 of the given compound (layer)
+    
+    Paramters:
+    ==========
+    compound_dict: {} 
+    
+    Returns:
+    ========
+    dictionary
+    '''
+    atoms_per_cm3 = {}
+    
+    _list_of_elements = compound_dict['elements']
+    _stochiometric_list = compound_dict['stochiometric_ratio']
+    _element_stochio = zip(_list_of_elements, _stochiometric_list)
+
+    _element_stochio = zip(_list_of_elements, _stochiometric_list)
+    _molar_mass_sum = 0
+    for _element, _stochio in _element_stochio:
+        _molar_mass_sum += _stochio * compound_dict[_element]['molar_mass']['value']
+
+    _element_stochio = zip(_list_of_elements, _stochiometric_list)
+    for _element, _stochio in _element_stochio:
+        _step1 = (compound_dict['density']['value'] * _stochio) / _molar_mass_sum
+        atoms_per_cm3[_element] = Avogadro * _step1 
+    
+    return atoms_per_cm3

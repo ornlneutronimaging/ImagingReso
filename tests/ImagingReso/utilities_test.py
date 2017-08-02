@@ -4,6 +4,7 @@ import os
 import pprint
 import pandas as pd
 
+from ImagingReso.resonance import Resonance
 from ImagingReso._utilities import is_element_in_database
 from ImagingReso._utilities import get_list_element_from_database
 from ImagingReso._utilities import checking_stack
@@ -15,7 +16,7 @@ from ImagingReso._utilities import get_database_data
 from ImagingReso._utilities import get_interpolated_data
 from ImagingReso._utilities import get_sigma
 from ImagingReso._utilities import get_compound_density
-
+from ImagingReso._utilities import get_atoms_per_cm3_of_layer
 
 class TestUtilities_1(unittest.TestCase):
     
@@ -328,3 +329,23 @@ class TestUtilities_2(unittest.TestCase):
         sigma_last_expected = 7.17933
         self.assertEqual(energy_last_expected, energy_last_returned)
         self.assertEqual(sigma_last_expected, sigma_last_returned)        
+        
+    def test_get_atoms_per_cm3_of_layer(self):
+        '''assert get_atoms_per_cm3_of_layer works'''
+        _stack = {'CoAg': {'elements': ['Co','Ag'],
+                           'stochiometric_ratio': [1, 1],
+                           'thickness': {'value': 0.025,
+                                         'units': 'mm'},
+                           'density': {'value': 9.8,
+                                       'units': 'g/cm3'},
+                           },
+                  'Ag': {'elements': ['Ag'],
+                         'stochiometric_ratio': [1],
+                         'thickness': {'value': 0.03,
+                                       'units': 'mm'},
+                         },
+                  }
+        o_reso = Resonance(stack=_stack)
+        _stack_returned = o_reso.stack
+        _atoms_per_cm3 = get_atoms_per_cm3_of_layer(compound_dict=_stack['CoAg'])
+        self.assertAlmostEqual(_atoms_per_cm3['Ag'], 3.5381585765227393e22, delta=1)

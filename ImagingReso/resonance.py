@@ -47,12 +47,9 @@ class Resonance(object):
             new_stack = self.__update_stack_with_isotopes_infos(stack=stack)
             self.stack = new_stack
             
-            # populate stack_sigma
-            self.__get_sigmas()
-            
-            # populate compound density (if none provided)
-            self.__update_layer_density()
-    
+            # calculate stack_sigma, layer density, atoms_per_cm3 ...
+            self.__math_on_stack()
+                
     def add_layer(self, formula='', thickness=np.NaN, density=np.NaN): 
         '''provide another way to define the layers (stack)
         
@@ -74,13 +71,8 @@ class Resonance(object):
         new_stack = self.__update_stack_with_isotopes_infos(stack=_new_stack)
         self.stack = {**self.stack, **new_stack}
         
-        # populate stack_sigma
-        self.__get_sigmas()
-        
-        # populate compound density (if none provided)
-        self.__update_layer_density()
-        
-        
+        # calculate stack_sigma, layer density, atoms_per_cm3 ...
+        self.__math_on_stack()
 
     def get_stochiometric_ratio(self, compound='', element=''):
         '''returns the list of isotopes for the element of the compound defined with their stochiometric values
@@ -250,6 +242,27 @@ class Resonance(object):
         
         self.stack[compound][element]['density']['value'] = density
         
+    def __math_on_stack(self):
+        '''will perform all the various update of the stack, such as populating the stack_sigma, caluclate the density of the
+        layers....etc. '''
+
+        # populate stack_sigma (Sigma vs Energy for every element)
+        self.__get_sigmas()
+
+        # populate compound density (if none provided)
+        self.__update_layer_density()
+
+        # populate atoms_per_cm3
+        self.__calculate_atoms_per_cm3()
+        
+    def __calculate_atoms_per_cm3(self):
+        '''calculate for each element, the atoms per cm3'''
+        stack = self.stack
+        for _name_of_compound in stack.keys():
+            atoms_per_cm3 = _utilities.get_atoms_per_cm3_of_layer(compound_dict=stack[_name_of_compound])
+            stack[_name_of_compound]['atoms_per_cm3'] = atoms_per_cm3
+        self.stack = stack
+
     def __fill_missing_keys(self, stack={}):
         _list_key_to_check = ['density']
         _list_key_value = [{'value': np.NaN,

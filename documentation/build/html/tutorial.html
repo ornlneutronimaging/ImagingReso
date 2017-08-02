@@ -94,7 +94,7 @@ estimage the density of the compound (layer)</p>
 the elements you defined, for each layer.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pprint</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">slack</span><span class="p">)</span>
-<span class="go">{{&#39;CoAg&#39;: {&#39;Ag&#39;: {&#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;, &#39;value&#39;: 10.5},</span>
+<span class="go">{&#39;CoAg&#39;: {&#39;Ag&#39;: {&#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;, &#39;value&#39;: 10.5},</span>
 <span class="go">                 &#39;isotopes&#39;: {&#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;,</span>
 <span class="go">                                          &#39;value&#39;: [10.406250187729098,</span>
 <span class="go">                                                    10.600899412431097]},</span>
@@ -114,6 +114,8 @@ the elements you defined, for each layer.</p>
 <span class="go">                              &#39;mass&#39;: {&#39;units&#39;: &#39;g/mol&#39;,</span>
 <span class="go">                                       &#39;value&#39;: [57.9357576, 58.9332002]}},</span>
 <span class="go">                 &#39;molar_mass&#39;: {&#39;units&#39;: &#39;g/mol&#39;, &#39;value&#39;: 58.9332}},</span>
+<span class="go">          &#39;atoms_per_cm3&#39;: {&#39;Ag&#39;: 1.8051829472054791e+21,</span>
+<span class="go">                            &#39;Co&#39;: 1.8051829472054791e+21},</span>
 <span class="go">          &#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;, &#39;value&#39;: 0.5},</span>
 <span class="go">          &#39;elements&#39;: [&#39;Co&#39;, &#39;Ag&#39;],</span>
 <span class="go">          &#39;stochiometric_ratio&#39;: [1, 1],</span>
@@ -139,6 +141,7 @@ the elements you defined, for each layer.</p>
 <span class="go">                                             235.0439231,</span>
 <span class="go">                                             238.0507826]}},</span>
 <span class="go">             &#39;molar_mass&#39;: {&#39;units&#39;: &#39;g/mol&#39;, &#39;value&#39;: 238.02891}},</span>
+<span class="go">       &#39;atoms_per_cm3&#39;: {&#39;U&#39;: 4.7943575106128917e+22},</span>
 <span class="go">       &#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;, &#39;value&#39;: 18.949999999999999},</span>
 <span class="go">       &#39;elements&#39;: [&#39;U&#39;],</span>
 <span class="go">       &#39;stochiometric_ratio&#39;: [1],</span>
@@ -154,8 +157,10 @@ the elements you defined, for each layer.</p>
 <span class="go">Energy step 10 eV</span>
 </pre></div>
 </div>
-<p>During initialization, the Cross Section (Sigma in barns) vs Energy (eV) of each isotope and
-element are calculated and saved in the <strong>stack_sigma</strong> dictionary</p>
+<p>During the initialization process, the following things take place behind the scene
+- the number of atoms per cm3 of each element is calculated
+- the density of each layer (if not provided is estimated)
+- the arrays of Sigma (barns) vs Energy for each isotope is retrieved</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">stack_sigma</span><span class="p">)</span>
 <span class="go">{&#39;CoAg&#39;: {&#39;Ag&#39;: {&#39;107-Ag&#39;: {&#39;energy_eV&#39;: array([  1.00000000e-05,   1.03401821e+01,   2.06803541e+01,</span>
 <span class="go">         ...</span>
@@ -258,6 +263,8 @@ element are calculated and saved in the <strong>stack_sigma</strong> dictionary<
 <span class="go">                              &#39;mass&#39;: {&#39;units&#39;: &#39;g/mol&#39;,</span>
 <span class="go">                                       &#39;value&#39;: [57.9357576, 58.9332002]}},</span>
 <span class="go">                 &#39;molar_mass&#39;: {&#39;units&#39;: &#39;g/mol&#39;, &#39;value&#39;: 58.9332}},</span>
+<span class="go">          &#39;atoms_per_cm3&#39;: {&#39;Ag&#39;: 1.8051829472054791e+21,</span>
+<span class="go">                            &#39;Co&#39;: 1.8051829472054791e+21},</span>
 <span class="go">          &#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;, &#39;value&#39;: 0.5},</span>
 <span class="go">          &#39;elements&#39;: [&#39;Co&#39;, &#39;Ag&#39;],</span>
 <span class="go">          &#39;stochiometric_ratio&#39;: [1, 1],</span>
@@ -280,6 +287,7 @@ element are calculated and saved in the <strong>stack_sigma</strong> dictionary<
 <span class="go">                                             235.0439231,</span>
 <span class="go">                                             238.0507826]}},</span>
 <span class="go">             &#39;molar_mass&#39;: {&#39;units&#39;: &#39;g/mol&#39;, &#39;value&#39;: 234.64285678}},</span>
+<span class="go">       &#39;atoms_per_cm3&#39;: {&#39;U&#39;: 4.7943575106128917e+22},</span>
 <span class="go">       &#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;, &#39;value&#39;: 18.949999999999999},</span>
 <span class="go">       &#39;elements&#39;: [&#39;U&#39;],</span>
 <span class="go">       &#39;stochiometric_ratio&#39;: [1],</span>
