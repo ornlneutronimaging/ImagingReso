@@ -289,3 +289,23 @@ def get_interpolated_data(df=[], E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
     y_axis = y_axis_function(x_axis)   
     
     return {'x_axis': x_axis, 'y_axis': y_axis}
+
+def get_sigma(database_file_name='', E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
+    '''retrieve the Energy and sigma axis for the given isotop
+    
+    Paramters:
+    ==========
+    database_file_name: string
+    E_min: left range of new interpolated data
+    E_max: right range of new interpolated data
+    E_step: step of energy to use in interpolated data
+    
+    Returns:
+    ========
+    {'energy': np.array(), 'sigma': np.array}
+    '''
+    _df = get_database_data(file_name=database_file_name)
+    _dict = get_interpolated_data(df=_df, E_min=E_min, E_max=E_max, 
+                                 E_step=E_step)
+    return {'energy': _dict['x_axis'],
+            'sigma': _dict['y_axis']}

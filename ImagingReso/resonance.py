@@ -9,6 +9,7 @@ class Resonance(object):
     database = 'ENDF_VIII'
 
     stack = {} # compound, thickness, atomic_ratio of each layer with isotopes information
+    stack_sigma = {} # all the energy and sigma of the isotopes and compounds 
     
     energy_max = np.NaN
     energy_min = np.NaN

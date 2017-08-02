@@ -11,7 +11,9 @@ from ImagingReso._utilities import formula_to_dictionary
 from ImagingReso._utilities import get_isotope_dicts
 from ImagingReso._utilities import get_mass
 from ImagingReso._utilities import get_density
-from ImagingReso._utilities import get_database_data, get_interpolated_data
+from ImagingReso._utilities import get_database_data
+from ImagingReso._utilities import get_interpolated_data
+from ImagingReso._utilities import get_sigma
 
 
 class TestUtilities_1(unittest.TestCase):
@@ -275,3 +277,25 @@ class TestUtilities_2(unittest.TestCase):
         self.assertEqual(x_axis_last_expected, x_axis_last_returned)
         self.assertEqual(y_axis_last_expected, y_axis_last_returned)
         
+    def test_get_sigma(self):
+        '''assert get_sigma returns the correct dictionary of energy and sigma keys'''
+        file_name = os.path.join(self.database_path, 'Ag-107.csv')
+        _dict_returned = get_sigma(database_file_name=file_name, E_min=300, 
+                                  E_max=600, 
+                                  E_step=10)
+        
+        # first value
+        energy_0_returned = _dict_returned['energy'][0]
+        sigma_0_returned = _dict_returned['sigma'][0]
+        energy_0_expected = 300.17
+        sigma_0_expected = 4.08687
+        self.assertEqual(energy_0_expected, energy_0_returned)
+        self.assertAlmostEqual(sigma_0_expected, sigma_0_returned, delta=0.001)
+        
+        # last value
+        energy_last_returned = _dict_returned['energy'][-1]
+        sigma_last_returned = _dict_returned['sigma'][-1]
+        energy_last_expected = 599.967
+        sigma_last_expected = 7.17933
+        self.assertEqual(energy_last_expected, energy_last_returned)
+        self.assertEqual(sigma_last_expected, sigma_last_returned)        
