@@ -87,7 +87,7 @@ def checking_stack(stack={}, database='ENDF_VIII'):
     
     return True    
 
-def formula_to_dictionary(formula='', thickness=np.NaN, database='ENDF_VIII'):
+def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database='ENDF_VIII'):
     '''create dictionary based on formula given
     
     Parameters:
@@ -96,6 +96,7 @@ def formula_to_dictionary(formula='', thickness=np.NaN, database='ENDF_VIII'):
        ex: 'AgCo2'
        ex: 'Ag'
     thickness: float (in mm) default is np.NaN
+    density: float (in g/cm3) default is np.NaN
     database: string (default is ENDV_VIII). Database where to look for elements
     
     Raises:
@@ -107,7 +108,13 @@ def formula_to_dictionary(formula='', thickness=np.NaN, database='ENDF_VIII'):
     the dictionary of the elements passed
       ex: {'AgCo2': {'elements': ['Ag','Co'],
                      'stochiometric_ratio': [1,2],
-                     'thickness': thickness}}
+                     'thickness': {'value': thickness,
+                                   'units': 'mm',
+                                   },
+                     'density': {'value': density,
+                                 'units': 'g/cm3',
+                                 },
+                    }
     '''
     _formula_parsed = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
 
@@ -129,6 +136,9 @@ def formula_to_dictionary(formula='', thickness=np.NaN, database='ENDF_VIII'):
                       'stochiometric_ratio': _atomic_ratio_array,
                       'thickness': {'value': thickness,
                                     'units': 'mm'},
+                      'density': {'value': density,
+                                  'units': 'g/cm3',
+                                  }
                       },
             }
 
@@ -240,6 +250,17 @@ def get_density(element):
     the density of the element in g.cm-3 units
     '''
     return pt.elements.isotope(element).density
+
+def get_compound_density(list_density=[], list_ratio=[]):
+    ''''''
+    _ratio_density = zip(list_ratio, list_density)
+    _density_compound = 0
+    
+    _sum_ratio = np.array(list_ratio).sum()
+    
+    for _ratio, _density in _ratio_density:
+        _density_compound += (_ratio * _density) / _sum_ratio
+    return _density_compound
 
 def get_database_data(file_name=''):
     '''return the energy (eV) and Sigma (barn) from the file_name

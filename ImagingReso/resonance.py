@@ -24,7 +24,13 @@ class Resonance(object):
         stack: dictionary 
           example: {'layer1': {'elements':['Ag','Si], 
                                'atomic_ratio': [1, 2],
-                               'thickness': 0.025}}
+                               'thickness': {'value': 0.025,
+                                             'units': 'mm',
+                                             },
+                               'density': {'units': 'g/cm3',
+                                           'value': 0.5,
+                                           },
+                                }
         energy_max: float (default 300) max energy in eV to use in calculation
         energy_min: float (default 0) min energy in eV to use in calculation
         energy_step: float (default 0.1) energy step to use in extrapolation of sigma data
@@ -43,8 +49,11 @@ class Resonance(object):
             
             # populate stack_sigma
             self.__get_sigmas()
+            
+            # populate compound density (if none provided)
+            self.__update_layer_density()
     
-    def add_layer(self, formula='', thickness=np.NaN): 
+    def add_layer(self, formula='', thickness=np.NaN, density=np.NaN): 
         '''provide another way to define the layers (stack)
         
         Parameters:
@@ -53,18 +62,23 @@ class Resonance(object):
            ex: 'CoAg2'
            ex: 'Al'
         thickness: float (in mm) 
+        density: float (g/cm3)
         '''
         if formula == '':
             return
         
         _new_stack = _utilities.formula_to_dictionary(formula=formula, 
-                                           thickness=thickness, 
-                                           database=self.database)
+                                                      thickness=thickness, 
+                                                      density=density,
+                                                      database=self.database)      
         new_stack = self.__update_stack_with_isotopes_infos(stack=_new_stack)
         self.stack = {**self.stack, **new_stack}
         
         # populate stack_sigma
         self.__get_sigmas()
+        
+        # populate compound density (if none provided)
+        self.__update_layer_density()
 
     def get_stochiometric_ratio(self, compound='', element=''):
         '''returns the list of isotopes for the element of the compound defined with their stochiometric values
@@ -233,7 +247,23 @@ class Resonance(object):
             raise ValueError("Density '{}' must be a number!".format(density))
         
         self.stack[compound][element]['density']['value'] = density
+        
+    def __update_layer_density(self):
+        '''calculate the layer density if the user did not provide any'''
+        _stack = self.stack
+        list_compound = _stack.keys()
+        for _key in list_compound:
+            if np.isnan(_stack[_key]['density']['value']):
+                _list_ratio = _stack[_key]['stochiometric_ratio']
+                _list_density = []
+                for _element in _stack[_key]['elements']:
+                    _list_density.append(_stack[_key][_element]['density']['value'])
+                    _compound_density = _utilities.get_compound_density(list_density=_list_density, 
+                                                                        list_ratio=_list_ratio)         
 
+                _stack[_key]['density']['value'] = _compound_density
+        self.stack = _stack
+                
     def __update_stack_with_isotopes_infos(self, stack={}):
         '''retrieve the isotopes, isotopes file names, mass and atomic_ratio from each element in stack'''
         for _key in stack:

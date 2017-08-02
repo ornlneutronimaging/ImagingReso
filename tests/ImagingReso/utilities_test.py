@@ -14,6 +14,7 @@ from ImagingReso._utilities import get_density
 from ImagingReso._utilities import get_database_data
 from ImagingReso._utilities import get_interpolated_data
 from ImagingReso._utilities import get_sigma
+from ImagingReso._utilities import get_compound_density
 
 
 class TestUtilities_1(unittest.TestCase):
@@ -142,25 +143,45 @@ class TestUtilities_1(unittest.TestCase):
         # 'Ag'
         _formula_1 = 'Ag'
         _dict_returned = formula_to_dictionary(formula=_formula_1)
-        _dict_expected = {'Ag': {'elements': ['Ag'], 'stochiometric_ratio': [1], 'thickness': {'value': np.NaN, 'units': 'mm'}}}
+        _dict_expected = {'Ag': {'elements': ['Ag'], 
+                                 'stochiometric_ratio': [1], 
+                                 'thickness': {'value': np.NaN, 'units': 'mm'},
+                                 'density': {'value': np.NaN, 'units': 'g/cm3'},
+                                 },
+                          } 
         self.assertEqual(_dict_returned, _dict_expected)
-
+        
         # 'Ag2Co'
         _formula_2 = 'Ag2Co'
-        _dict_returned = formula_to_dictionary(formula=_formula_2)
-        _dict_expected = {'Ag2Co': {'elements': ['Ag','Co'], 'stochiometric_ratio': [2,1], 'thickness': {'value': np.NaN, 'units': 'mm'}}}
+        _dict_returned = formula_to_dictionary(formula=_formula_2, thickness=10)
+        _dict_expected = {'Ag2Co': {'elements': ['Ag','Co'], 
+                                    'stochiometric_ratio': [2,1], 
+                                    'thickness': {'value': 10, 'units': 'mm'},
+                                    'density': {'value': np.NaN, 'units': 'g/cm3'},
+                                    },
+                          } 
         self.assertEqual(_dict_returned, _dict_expected)
         
         # 'Ag2CoU3'
         _formula_3 = 'Ag2CoU3'
-        _dict_returned = formula_to_dictionary(formula=_formula_3)
-        _dict_expected = {'Ag2CoU3': {'elements': ['Ag','Co','U'], 'stochiometric_ratio': [2,1,3], 'thickness': {'value': np.NaN, 'units': 'mm'}}}
+        _dict_returned = formula_to_dictionary(formula=_formula_3, density=20)
+        _dict_expected = {'Ag2CoU3': {'elements': ['Ag','Co','U'], 
+                                      'stochiometric_ratio': [2,1,3], 
+                                      'thickness': {'value': np.NaN, 'units': 'mm'},
+                                      'density': {'value': 20, 'units': 'g/cm3'},
+                                    },
+                          }           
         self.assertEqual(_dict_returned, _dict_expected)
         
         # 'Ag2Co' with thickness=0.025
         _formula_2 = 'Ag2Co'
         _dict_returned = formula_to_dictionary(formula=_formula_2, thickness=0.025)
-        _dict_expected = {'Ag2Co': {'elements': ['Ag','Co'], 'stochiometric_ratio': [2,1], 'thickness': {'value': 0.025, 'units': 'mm'}}}
+        _dict_expected = {'Ag2Co': {'elements': ['Ag','Co'], 
+                                    'stochiometric_ratio': [2,1], 
+                                    'thickness': {'value': 0.025, 'units': 'mm'},
+                                    'density': {'value': np.NaN, 'units': 'g/cm3'},
+                                    },
+                          }
         self.assertEqual(_dict_returned, _dict_expected)
         
     def test_get_isotope_dicts_returns_correct_dictionary(self):
@@ -235,7 +256,15 @@ class TestUtilities_1(unittest.TestCase):
         _expected_density = 10.5
         self.assertEqual(_returned_density, _expected_density)
         
-        
+    def test_get_compound_density(self):
+        '''assert the get_compound_density works'''
+        list_ratio = [1, 2]
+        list_density = [10, 20]
+        _returned_compound_density = get_compound_density(list_density=list_density, 
+                                                         list_ratio=list_ratio)
+        _expected_compound_density = (1 * 10)/3. + (2 * 20)/3.
+        self.assertEqual(_returned_compound_density, _expected_compound_density)
+
 class TestUtilities_2(unittest.TestCase):
     
     def setUp(self):

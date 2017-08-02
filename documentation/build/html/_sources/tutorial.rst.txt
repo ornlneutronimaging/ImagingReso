@@ -14,26 +14,33 @@ Initialization
 ##############
 
 we first define our stack of elements. Each layer of the stack can be a single element, or a compound and
-is defined by a dictionary  {'elements': [list_of_elements_as_string'], 'ratio': [1], thickness', 0.025} where the
-thickness is defined in mm and the ratio is the stochiometric coefficient of each element. 
+is defined by a dictionary  where the
+thickness is defined in mm, the density in g/cm3 and the ratio is the stochiometric coefficient of each element. 
 
 example:
 --------
 
->>> _stack = _stack = {'CoAg': {'elements': ['Co','Ag'],
-                   'atomic_ratio': [1,1],
+>>> _stack = {'CoAg': {'elements': ['Co','Ag'],
+                   'stochiometric_ratio': [1,1],
                    'thickness': {'value': 0.025,
                                 'units': 'mm'},
+                   'density': {'value': 0.5,
+                              'units': 'g/cm3'},
                   },
          'U': {'elements': ['U'],
-               'atomic_ratio': [1],
+               'stochiometric_ratio': [1],
               'thickness': {'value': 0.3,
-                           'units': 'mm'},
+                            'units': 'mm'},
+                'density': {'value': np.NaN,
+                            'units': 'g/cm3'},
               },
          }
          
 Then you can now initialize the object as followed, in this case we use a energy range of 0 to 300 eV with 
 10 eV of energy step.
+
+As noted that if the density is omitted, the program will use the stochiometri_ratio and theoretical density of each element to 
+estimage the density of the compound (layer)
 
 >>> o_reso = ImagingReso.Resonance(stack = _stack, energy_min=0, energy_max=300, energy_step=10)
 
@@ -41,8 +48,9 @@ It is also possible to define the layers (stack) one by one using their formula 
 
 >>> o_reso = ImagingReso.Resonance(energy_min=0, energy_max=300, energy_step=10)
 >>> stack1 = 'CoAg'
->>> thickness1 = 0.025
->>> o_reso.add_layer(formula=stack1, thickness=thickness1)
+>>> thickness1 = 0.025 #mm
+>>> density1 = 0.5 #g/cm3
+>>> o_reso.add_layer(formula=stack1, thickness=thickness1, density=density1)
 >>> stack2 = 'U'
 >>> thcikness2 = 0.3
 >>> o_reso.add_layer(formula=stack2, thcikness=thickness2)
@@ -54,7 +62,7 @@ the elements you defined, for each layer.
 
 >>> import pprint
 >>> pprint.pprint(o_reso.slack)
-{'CoAg': {'Ag': {'density': {'units': 'g/cm3', 'value': 10.5},
+{{'CoAg': {'Ag': {'density': {'units': 'g/cm3', 'value': 10.5},
                  'isotopes': {'density': {'units': 'g/cm3',
                                           'value': [10.406250187729098,
                                                     10.600899412431097]},
@@ -74,6 +82,7 @@ the elements you defined, for each layer.
                               'mass': {'units': 'g/mol',
                                        'value': [57.9357576, 58.9332002]}},
                  'molar_mass': {'units': 'g/mol', 'value': 58.9332}},
+          'density': {'units': 'g/cm3', 'value': 0.5},
           'elements': ['Co', 'Ag'],
           'stochiometric_ratio': [1, 1],
           'thickness': {'units': 'mm', 'value': 0.025}},
@@ -98,6 +107,7 @@ the elements you defined, for each layer.
                                              235.0439231,
                                              238.0507826]}},
              'molar_mass': {'units': 'g/mol', 'value': 238.02891}},
+       'density': {'units': 'g/cm3', 'value': 18.949999999999999},
        'elements': ['U'],
        'stochiometric_ratio': [1],
        'thickness': {'units': 'mm', 'value': 0.3}}}
@@ -220,6 +230,7 @@ Let's define the new stochiomettric ratio
                               'mass': {'units': 'g/mol',
                                        'value': [57.9357576, 58.9332002]}},
                  'molar_mass': {'units': 'g/mol', 'value': 58.9332}},
+          'density': {'units': 'g/cm3', 'value': 0.5},
           'elements': ['Co', 'Ag'],
           'stochiometric_ratio': [1, 1],
           'thickness': {'units': 'mm', 'value': 0.025}},
@@ -241,6 +252,7 @@ Let's define the new stochiomettric ratio
                                              235.0439231,
                                              238.0507826]}},
              'molar_mass': {'units': 'g/mol', 'value': 234.64285678}},
+       'density': {'units': 'g/cm3', 'value': 18.949999999999999},
        'elements': ['U'],
        'stochiometric_ratio': [1],
        'thickness': {'units': 'mm', 'value': 0.3}}}

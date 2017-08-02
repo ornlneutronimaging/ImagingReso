@@ -85,13 +85,17 @@ class TestInitialization(unittest.TestCase):
         # layer 2
         layer2 = 'Ag'
         thickness2 = 0.1
-        o_reso.add_layer(formula=layer2, thickness=thickness2)        
+        density2 = 0.5
+        o_reso.add_layer(formula=layer2, thickness=thickness2, density=density2)        
         
         returned_stack = o_reso.stack
+        
         expected_stack = {'CoAg': {'elements':['Co','Ag'],
                                    'stochiometric_ratio': [1,1],
                                    'thickness': {'value': 0.025,
                                                  'units': 'mm'},
+                                   'density': {'value': 9.7,
+                                               'units': 'g/cm3'},
                                    'Co': {'isotopes': {'file_names':['Co-58.csv','Co-59.csv'],
                                                        'list': ['58-Co','59-Co'],
                                                        'mass': {'value': [57.9357576, 58.9332002],
@@ -121,6 +125,8 @@ class TestInitialization(unittest.TestCase):
                                  'stochiometric_ratio': [1],
                                  'thickness': {'value': 0.1,
                                                'units': 'mm'},
+                                 'density': {'value': 0.5,
+                                             'units': 'g/cm3'},
                                  'Ag': {'isotopes': {'file_names': ['Ag-107.csv','Ag-109.csv'],
                                                      'list': ['107-Ag','109-Ag'],
                                                      'mass': {'value': [106.905093, 108.904756],
@@ -171,7 +177,14 @@ class TestInitialization(unittest.TestCase):
                                    expected_stack['CoAg']['Ag']['isotopes']['isotopic_ratio'][1],
                                    delta=0.0001)
         
-        # density
+        # layer density
+        self.assertEqual(returned_stack['Ag']['density']['value'], 
+                         expected_stack['Ag']['density']['value'])
+        self.assertAlmostEqual(returned_stack['CoAg']['density']['value'], 
+                               expected_stack['CoAg']['density']['value'],
+                               delta = 0.1)
+        
+        # element density
         self.assertEqual(returned_stack['CoAg']['Ag']['density']['value'], 
                          expected_stack['CoAg']['Ag']['density']['value'])
         self.assertEqual(returned_stack['CoAg']['Co']['density']['value'], 
