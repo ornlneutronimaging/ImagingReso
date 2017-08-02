@@ -266,7 +266,18 @@ class Resonance(object):
             _molar_mass_element += np.float(_ratio) * np.float(_mass)
         self.stack[compound][element]['molar_mass']['value'] = _molar_mass_element
         
-        
-        
-        
+    #def __get_sigmas(self):
+        #'''will populate the stack_sigma dictionary with the energy and sigma array
+        #for all the compound/element and isotopes'''
+        #stack_sigma = {}
+        #_stack = self.stack
+
+        #_list_compounds = _stack.keys()
+        #list_all_dict = {}
+        #for _compound in _list_compounds:
+            #_list_element = _stack[_compound]['elements']
+            #list_all_dict[_compound] = {}
+            #for _element in _list_element:        
+                
+                
         
