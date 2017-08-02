@@ -258,5 +258,20 @@ class TestUtilities_2(unittest.TestCase):
         E_min = 300
         E_max = 600
         _dict = get_interpolated_data(df=df, E_min=E_min, E_max=E_max, E_step=10)
-        pprint.pprint(_dict)
+        
+        # first value
+        x_axis_0_returned = _dict['x_axis'][0]
+        y_axis_0_returned = _dict['y_axis'][0]
+        x_axis_0_expected = 300.17
+        y_axis_0_expected = 4.08687
+        self.assertEqual(x_axis_0_expected, x_axis_0_returned)
+        self.assertAlmostEqual(y_axis_0_expected, y_axis_0_returned, delta=0.001)
+        
+        # last value
+        x_axis_last_returned = _dict['x_axis'][-1]
+        y_axis_last_returned = _dict['y_axis'][-1]
+        x_axis_last_expected = 599.967
+        y_axis_last_expected = 7.17933
+        self.assertEqual(x_axis_last_expected, x_axis_last_returned)
+        self.assertEqual(y_axis_last_expected, y_axis_last_returned)
         

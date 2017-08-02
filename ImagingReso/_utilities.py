@@ -288,4 +288,4 @@ def get_interpolated_data(df=[], E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
     y_axis_function = interp1d(x=df['E_eV'], y=df['Sig_b'], kind='linear')
     y_axis = y_axis_function(x_axis)   
     
-    return {'x_axis': x_axis, 'y-axis': y_axis}
+    return {'x_axis': x_axis, 'y_axis': y_axis}
