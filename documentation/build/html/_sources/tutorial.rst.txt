@@ -32,13 +32,14 @@ example:
               },
          }
          
-Then you can now initialize the object as followed, in this case we use a energy range of 0 to 300 eV
+Then you can now initialize the object as followed, in this case we use a energy range of 0 to 300 eV with 
+10 eV of energy step.
 
->>> o_reso = ImagingReso.Resonance(stack = _stack, energy_min=0, energy_max=300)
+>>> o_reso = ImagingReso.Resonance(stack = _stack, energy_min=0, energy_max=300, energy_step=10)
 
 It is also possible to define the layers (stack) one by one using their formula as demonstrated here
 
->>> o_reso = ImagingReso.Resonance()
+>>> o_reso = ImagingReso.Resonance(energy_min=0, energy_max=300, energy_step=10)
 >>> stack1 = 'CoAg'
 >>> thickness1 = 0.025
 >>> o_reso.add_layer(formula=stack1, thickness=thickness1)
@@ -107,6 +108,35 @@ The energy range defined
 Energy min 0 eV
 >>> print("Energy max {} eV".format(o_reso.energy_max))
 Energy max 300 eV
+>>> print("Energy step {} eV".format(o_reso.energy_step))
+Energy step 10 eV
+
+During initialization, the Cross Section (Sigma in barns) vs Energy (eV) of each isotope and
+element are calculated and saved in the **stack_sigma** dictionary
+
+>>> pprint.pprint(o_reso.stack_sigma)
+{'CoAg': {'Ag': {'107-Ag': {'energy_eV': array([  1.00000000e-05,   1.03401821e+01,   2.06803541e+01,
+         ...
+         2.79184656e+02,   2.89524828e+02,   2.99865000e+02]),
+                            'sigma_b': array([ 1938.91      ,     6.69765395,     6.9742027 ,     5.28153402,
+         ...
+         4.73100823,     4.11286   ])},
+                 '109-Ag': {'energy_eV': array([  1.00000000e-05,   1.03446648e+01,   2.06893197e+01,
+         ...
+         2.79305690e+02,   2.89650345e+02,   2.99995000e+02]),
+                            'sigma_b': array([  4.51167000e+03,   1.19932847e+01,   5.51138934e+00,
+         ...
+         4.32864623e+00,   1.19208304e+01,   5.41247000e+00])},
+                 'energy_ev': array([  1.00000000e-05,   1.03424234e+01,   2.06848369e+01,
+         ...
+         2.79245173e+02,   2.89587587e+02,   2.99930000e+02]),
+                 'sigma': array([ 3177.9769436 ,     9.24808268,     6.26969716,    64.29044465,
+         ...
+         8.19369849,     4.73876517])},
+         
+         ...
+         
+          }}}
 
 Modify Isotopic Ratio
 #####################

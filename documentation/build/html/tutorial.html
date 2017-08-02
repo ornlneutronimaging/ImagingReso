@@ -67,12 +67,13 @@ thickness is defined in mm and the ratio is the stochiometric coefficient of eac
 <span class="go">         }</span>
 </pre></div>
 </div>
-<p>Then you can now initialize the object as followed, in this case we use a energy range of 0 to 300 eV</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span> <span class="o">=</span> <span class="n">ImagingReso</span><span class="o">.</span><span class="n">Resonance</span><span class="p">(</span><span class="n">stack</span> <span class="o">=</span> <span class="n">_stack</span><span class="p">,</span> <span class="n">energy_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">energy_max</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<p>Then you can now initialize the object as followed, in this case we use a energy range of 0 to 300 eV with
+10 eV of energy step.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span> <span class="o">=</span> <span class="n">ImagingReso</span><span class="o">.</span><span class="n">Resonance</span><span class="p">(</span><span class="n">stack</span> <span class="o">=</span> <span class="n">_stack</span><span class="p">,</span> <span class="n">energy_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">energy_max</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">energy_step</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>It is also possible to define the layers (stack) one by one using their formula as demonstrated here</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span> <span class="o">=</span> <span class="n">ImagingReso</span><span class="o">.</span><span class="n">Resonance</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span> <span class="o">=</span> <span class="n">ImagingReso</span><span class="o">.</span><span class="n">Resonance</span><span class="p">(</span><span class="n">energy_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">energy_max</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">energy_step</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">stack1</span> <span class="o">=</span> <span class="s1">&#39;CoAg&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">thickness1</span> <span class="o">=</span> <span class="mf">0.025</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">stack1</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="n">thickness1</span><span class="p">)</span>
@@ -140,8 +141,38 @@ the elements you defined, for each layer.</p>
 <span class="go">Energy min 0 eV</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy max </span><span class="si">{}</span><span class="s2"> eV&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">energy_max</span><span class="p">))</span>
 <span class="go">Energy max 300 eV</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy step </span><span class="si">{}</span><span class="s2"> eV&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">energy_step</span><span class="p">))</span>
+<span class="go">Energy step 10 eV</span>
 </pre></div>
 </div>
+<p>During initialization, the Cross Section (Sigma in barns) vs Energy (eV) of each isotope and
+element are calculated and saved in the <strong>stack_sigma</strong> dictionary</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">stack_sigma</span><span class="p">)</span>
+<span class="go">{&#39;CoAg&#39;: {&#39;Ag&#39;: {&#39;107-Ag&#39;: {&#39;energy_eV&#39;: array([  1.00000000e-05,   1.03401821e+01,   2.06803541e+01,</span>
+<span class="go">         ...</span>
+<span class="go">         2.79184656e+02,   2.89524828e+02,   2.99865000e+02]),</span>
+<span class="go">                            &#39;sigma_b&#39;: array([ 1938.91      ,     6.69765395,     6.9742027 ,     5.28153402,</span>
+<span class="go">         ...</span>
+<span class="go">         4.73100823,     4.11286   ])},</span>
+<span class="go">                 &#39;109-Ag&#39;: {&#39;energy_eV&#39;: array([  1.00000000e-05,   1.03446648e+01,   2.06893197e+01,</span>
+<span class="go">         ...</span>
+<span class="go">         2.79305690e+02,   2.89650345e+02,   2.99995000e+02]),</span>
+<span class="go">                            &#39;sigma_b&#39;: array([  4.51167000e+03,   1.19932847e+01,   5.51138934e+00,</span>
+<span class="go">         ...</span>
+<span class="go">         4.32864623e+00,   1.19208304e+01,   5.41247000e+00])},</span>
+<span class="go">                 &#39;energy_ev&#39;: array([  1.00000000e-05,   1.03424234e+01,   2.06848369e+01,</span>
+<span class="go">         ...</span>
+<span class="go">         2.79245173e+02,   2.89587587e+02,   2.99930000e+02]),</span>
+<span class="go">                 &#39;sigma&#39;: array([ 3177.9769436 ,     9.24808268,     6.26969716,    64.29044465,</span>
+<span class="go">         ...</span>
+<span class="go">         8.19369849,     4.73876517])},</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>…</p>
+<blockquote>
+<div>}}}</div></blockquote>
+</div></blockquote>
 </div>
 </div>
 <div class="section" id="modify-isotopic-ratio">

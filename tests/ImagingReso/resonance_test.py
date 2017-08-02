@@ -48,8 +48,13 @@ class TestInitialization(unittest.TestCase):
         o_reso = Resonance(stack=_stack, energy_max=energy_max, energy_min=energy_min, 
                                energy_step=energy_step)        
         stack_sigma = o_reso.stack_sigma
+        
+        # for isotopes
         self.assertEqual(len(stack_sigma), 2)
         self.assertEqual(stack_sigma['Ag']['Ag']['107-Ag']['energy_eV'][0], 10.1978)
+
+        # for elements
+        self.assertAlmostEqual(stack_sigma['Ag']['Ag']['energy_ev'][0], 10.14, delta=0.01)
 
     def test_correct_initialization_of_stack(self):
         '''assert correct defined stack is correctly saved'''

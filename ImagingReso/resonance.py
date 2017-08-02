@@ -294,8 +294,14 @@ class Resonance(object):
                 stack_sigma[_compound][_element] = {}
                 _list_isotopes = _stack[_compound][_element]['isotopes']['list']
                 _list_file_names = _stack[_compound][_element]['isotopes']['file_names']
-                _iso_file = zip(_list_isotopes, _list_file_names)
-                for _iso, _file in _iso_file:
+                _list_isotopic_ratio = _stack[_compound][_element]['isotopes']['isotopic_ratio']
+                _iso_file_ratio = zip(_list_isotopes, _list_file_names, _list_isotopic_ratio)
+                
+                _dict_sigma_isotopes_sum = {}
+                _sigma_all_isotopes = 0
+                _energy_all_isotpes = 0
+                
+                for _iso, _file, _ratio in _iso_file_ratio:
                     stack_sigma[_compound][_element][_iso] = {}
                     _file = os.path.join(_database_folder, _file)
                     _dict = _utilities.get_sigma(database_file_name=_file, 
@@ -304,6 +310,15 @@ class Resonance(object):
                                                 E_step=self.energy_step)
                     stack_sigma[_compound][_element][_iso]['energy_eV'] = _dict['energy']
                     stack_sigma[_compound][_element][_iso]['sigma_b'] = _dict['sigma']
+
+                    # sigma for all isotopes with their isotopic ratio
+                    _sigma_all_isotopes += _dict['sigma'] * _ratio
+                    _energy_all_isotpes += _dict['energy']
+
+                # energy axis (x-axis) is averaged to take into account differences between x-axis of isotopes
+                _mean_energy_all_isotopes = _energy_all_isotpes/len(_list_isotopes)
+                stack_sigma[_compound][_element]['energy_ev'] = _mean_energy_all_isotopes
+                stack_sigma[_compound][_element]['sigma'] = _sigma_all_isotopes
                     
         self.stack_sigma = stack_sigma
                     
