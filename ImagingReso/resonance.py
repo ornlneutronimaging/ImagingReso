@@ -1,5 +1,6 @@
 import numpy as np
 import numbers
+import os
 
 from ImagingReso import _utilities
 
@@ -13,8 +14,9 @@ class Resonance(object):
     
     energy_max = np.NaN
     energy_min = np.NaN
+    energy_step = np.NaN
     
-    def __init__(self, stack={}, energy_max=300, energy_min=0):
+    def __init__(self, stack={}, energy_max=300, energy_min=0, energy_step=0.1):
         '''initialize resonance object
         
         Paramters:
@@ -25,17 +27,22 @@ class Resonance(object):
                                'thickness': 0.025}}
         energy_max: float (default 300) max energy in eV to use in calculation
         energy_min: float (default 0) min energy in eV to use in calculation
+        energy_step: float (default 0.1) energy step to use in extrapolation of sigma data
         '''
         self.__element_metadata = {}
         
+        self.energy_max = energy_max
+        self.energy_min = energy_min
+        self.energy_step = energy_step
+
         if not stack == {}:
             # checking that every element of each stack is defined
             _utilities.checking_stack(stack=stack)
             new_stack = self.__update_stack_with_isotopes_infos(stack=stack)
             self.stack = new_stack
-        
-        self.energy_max = energy_max
-        self.energy_min = energy_min
+            
+            # populate stack_sigma
+            self.__get_sigmas()
     
     def add_layer(self, formula='', thickness=np.NaN): 
         '''provide another way to define the layers (stack)
@@ -55,6 +62,9 @@ class Resonance(object):
                                            database=self.database)
         new_stack = self.__update_stack_with_isotopes_infos(stack=_new_stack)
         self.stack = {**self.stack, **new_stack}
+        
+        # populate stack_sigma
+        self.__get_sigmas()
 
     def get_stochiometric_ratio(self, compound='', element=''):
         '''returns the list of isotopes for the element of the compound defined with their stochiometric values
@@ -266,18 +276,36 @@ class Resonance(object):
             _molar_mass_element += np.float(_ratio) * np.float(_mass)
         self.stack[compound][element]['molar_mass']['value'] = _molar_mass_element
         
-    #def __get_sigmas(self):
-        #'''will populate the stack_sigma dictionary with the energy and sigma array
-        #for all the compound/element and isotopes'''
-        #stack_sigma = {}
-        #_stack = self.stack
+    def __get_sigmas(self):
+        '''will populate the stack_sigma dictionary with the energy and sigma array
+        for all the compound/element and isotopes'''
+        stack_sigma = {}
+        _stack = self.stack
 
-        #_list_compounds = _stack.keys()
-        #list_all_dict = {}
-        #for _compound in _list_compounds:
-            #_list_element = _stack[_compound]['elements']
-            #list_all_dict[_compound] = {}
-            #for _element in _list_element:        
-                
+        _file_path = os.path.abspath(os.path.dirname(__file__))
+        _database_folder = os.path.join(_file_path, 'reference_data', self.database)
+
+        _list_compounds = _stack.keys()
+        for _compound in _list_compounds:
+            _list_element = _stack[_compound]['elements']
+            stack_sigma[_compound] = {}
+            
+            for _element in _list_element:
+                stack_sigma[_compound][_element] = {}
+                _list_isotopes = _stack[_compound][_element]['isotopes']['list']
+                _list_file_names = _stack[_compound][_element]['isotopes']['file_names']
+                _iso_file = zip(_list_isotopes, _list_file_names)
+                for _iso, _file in _iso_file:
+                    stack_sigma[_compound][_element][_iso] = {}
+                    _file = os.path.join(_database_folder, _file)
+                    _dict = _utilities.get_sigma(database_file_name=_file, 
+                                                E_min=self.energy_min, 
+                                                E_max=self.energy_max, 
+                                                E_step=self.energy_step)
+                    stack_sigma[_compound][_element][_iso]['energy_eV'] = _dict['energy']
+                    stack_sigma[_compound][_element][_iso]['sigma_b'] = _dict['sigma']
+                    
+        self.stack_sigma = stack_sigma
+                    
                 
         
