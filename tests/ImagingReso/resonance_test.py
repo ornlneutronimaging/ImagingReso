@@ -255,11 +255,15 @@ class TestGetterSetter(unittest.TestCase):
                                'stochiometric_ratio': [1, 2],
                                    'thickness': {'value': 0.025,
                                                  'units': 'mm'},
+                                   'density': {'value': np.NaN,
+                                               'units': 'g/cm3'},
                                    },
                       'U': {'elements': ['U'],
                                  'stochiometric_ratio': [1],
                                  'thickness': {'value': 0.03,
                                                'units': 'mm'},
+                                 'density': {'value': np.NaN,
+                                            'units': 'g/cm3'},
                                  },
                           }
         self.o_reso = Resonance(stack=_stack)        

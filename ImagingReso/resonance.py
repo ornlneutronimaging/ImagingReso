@@ -79,6 +79,8 @@ class Resonance(object):
         
         # populate compound density (if none provided)
         self.__update_layer_density()
+        
+        
 
     def get_stochiometric_ratio(self, compound='', element=''):
         '''returns the list of isotopes for the element of the compound defined with their stochiometric values
@@ -248,6 +250,21 @@ class Resonance(object):
         
         self.stack[compound][element]['density']['value'] = density
         
+    def __fill_missing_keys(self, stack={}):
+        _list_key_to_check = ['density']
+        _list_key_value = [{'value': np.NaN,
+                            'units': 'g/cm3'}]
+
+        list_compound = stack.keys()
+        for _key in list_compound:
+            _inside_keys = stack[_key].keys()
+            _key_value_to_search = zip(_list_key_to_check, _list_key_value)
+            for _key_to_find, _value_to_add in _key_value_to_search:
+                if not (_key_to_find in _inside_keys):
+                    stack[_key][_key_to_find] = _value_to_add.copy()
+
+        return stack
+        
     def __update_layer_density(self):
         '''calculate the layer density if the user did not provide any'''
         _stack = self.stack
@@ -272,6 +289,8 @@ class Resonance(object):
             for _element in _elements:
                 _dict = _utilities.get_isotope_dicts(element=_element, database=self.database)
                 stack[_key][_element] = _dict    
+        
+        stack = self.__fill_missing_keys(stack=stack)
         return stack
 
     def __update_density(self, compound='', element=''):
