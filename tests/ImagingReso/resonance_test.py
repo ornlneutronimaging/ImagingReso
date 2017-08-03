@@ -379,3 +379,18 @@ class TestGetterSetter(unittest.TestCase):
         _expected_density = 50
         _returned_density = self.o_reso.get_density(compound='CoAg', element='Ag')
         self.assertEqual(_expected_density, _returned_density)
+        
+    def test_calculate_transmission(self):
+        '''assert calculation of transmission'''
+        _stack = {'CoAg': {'elements': ['Co','Ag'],
+                               'stochiometric_ratio': [1, 2],
+                               'thickness': {'value': 0.025,
+                                             'units': 'mm'},
+                               },
+                      'Ag': {'elements': ['Ag'],
+                             'stochiometric_ratio': [1],
+                             'thickness': {'value': 0.03,
+                                           'units': 'mm'},
+                             },
+                      }
+        o_reso = Resonance(stack=_stack)          

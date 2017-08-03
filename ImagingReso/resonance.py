@@ -267,19 +267,28 @@ class Resonance(object):
 
     def __calculate_transmission(self):
         '''  '''
-        pass
-        #stack = self.stack
-        #stack_signal = {}
-        #for _name_of_compound in stack.keys():
-            #_list_element = stack[_name_of_compound]['elements']
-            #for _element in list_element:
-                
-                ## get thickness in cm !!!!!!!
-                #_thickness = 10 # ! fix me
-                #for _iso in stack[_name_of_compound][_element]['isotopes']['list']:
-                    #pass
+        stack = self.stack
+        stack_sigma = self.stack_sigma
+        stack_signal = {}
         
-        
+        stack_signal = {}
+        for _name_of_compound in stack.keys():
+            stack_signal[_name_of_compound] = {}
+            _list_element = stack[_name_of_compound]['elements']
+            _thickness_cm = _utilities.set_distance_units(value=stack[_name_of_compound]['thickness']['value'],
+                                                          from_units=stack[_name_of_compound]['thickness']['units'],
+                                                          to_units='cm')
+            for _element in _list_element:
+                stack_signal[_name_of_compound][_element] = {}
+                _atoms_per_cm3 = stack[_name_of_compound]['atoms_per_cm3'][_element]
+                for _iso in stack[_name_of_compound][_element]['isotopes']['list']:
+                    stack_signal[_name_of_compound][_element][_iso] = {}
+                    _sigma = stack_sigma[_name_of_compound][_element][_iso]['sigma_b']
+                    _transmission = _utilities.calculate_transmission(
+                        thickness_cm=_thickness_cm, 
+                        atoms_per_cm3=_atoms_per_cm3, 
+                        sigma_b=_sigma)
+                    stack_signal[_name_of_compound][_element][_iso]['transmission'] = _transmission
         
     def __calculate_atoms_per_cm3(self):
         '''calculate for each element, the atoms per cm3'''
