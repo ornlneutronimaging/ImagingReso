@@ -373,4 +373,20 @@ class TestUtilities_2(unittest.TestCase):
         new_value = set_distance_units(value=value, 
                                            from_units=from_units, 
                                            to_units=to_units)
-        self.assertEqual(new_value, 1)        
+        self.assertEqual(new_value, 1)       
+        
+    def test_energy_to_lambda(self):
+        '''assert energy_to_lambda works'''
+        energy_ev = np.linspace(1, 10, 10)
+        energy_lambda = energy_to_lambda(energy_ev=energy_ev)
+        
+        expected_energy_lambda_0 = 0.0090436
+        expected_energy_lambda_1 = 0.0045218
+        expected_energy_lambda_2 = 0.0030145
+        expected_energy_lambda_3 = 0.0022609
+        self.assertAlmostEquals(expected_energy_lambda_0, energy_lambda[0], delta=0.0001)
+        self.assertAlmostEquals(expected_energy_lambda_1, energy_lambda[1], delta=0.0001)
+        self.assertAlmostEquals(expected_energy_lambda_2, energy_lambda[2], delta=0.0001)
+        self.assertAlmostEquals(expected_energy_lambda_3, energy_lambda[3], delta=0.0001)
+
+        

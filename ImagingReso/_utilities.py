@@ -427,3 +427,18 @@ def set_distance_units(value=np.NaN, from_units='mm', to_units='cm'):
         raise ValueError("to_units not supported ['cm','m','mm']!")
 
     return coeff * value
+
+def energy_to_lambda(energy_ev=[]):
+    '''convert into lambda the energy array
+    
+    Parameters:
+    ===========
+    energy: array (in eV)
+    
+    Returns:
+    ========
+    array in Angstroms
+    '''
+    energy_mev = energy_ev * 1000
+    lambda_array = np.sqrt(81.787) / energy_mev
+    return lambda_array

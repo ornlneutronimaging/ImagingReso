@@ -328,3 +328,32 @@ or for the isotope 107-Ag
 
 >>> transmission_CoAg_Ag_107Ag = o_reso.stack_signal['CoAg']['Ag']['107-Ag']['transmission']
 >>> energy_CoAg_Ag_107Ag = o_reso.stack_signal['CoAg']['Ag']['107-Ag']['energy_eV']
+
+Display Transmission and Attenuation
+####################################
+
+Here are the flags available for the final plot (in bold, the default values)
+
+ - transmission: True or False. If False, the attenuation signal is plotted
+ - x_axis: 'energy' or 'lambda'
+ - mixed: True or False. Display the total signal
+ - all_layers: True or False. Dislay the signal of each compound/layer
+ - all_elements: True or False. Display the signal of each element
+ - all_isotopes: True or False. Display the signal of each isotope
+ - items_to_plot: Array that defines what to plot. You need to define the path to the compound/element/isotope you want to see.
+
+example:
+
+if we want to display the Co element of the CoAg Compound
+
+>>> items_to_plot = [['CoAg','Co']]
+
+if we want also to display the 107-Ag isotope of the element Al of compound CoAg
+
+>>> items_to_plot = [['CoAg', 'Co'],['CoAg','Ag','107-Ag']]
+
+So here are a few examples of plot commands
+
+>>> o_reso.plot(x_axis='lambda', all_layers=True)
+>>> o_reso.plot(transmission=False, items_to_plot= [['CoAg', 'Co'],['CoAg','Ag','107-Ag']])
+>>> o_reso.plot(items_to_plot=[['CoAg','Co']])

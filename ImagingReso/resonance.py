@@ -13,6 +13,7 @@ class Resonance(object):
     stack = {} # compound, thickness, atomic_ratio of each layer with isotopes information
     stack_sigma = {} # all the energy and sigma of the isotopes and compounds 
     stack_signal = {} # transmission and attenuation signal for every isotope and compound
+    total_signal = {}  # transmission and attenuation of the entire sample
     
     energy_max = np.NaN
     energy_min = np.NaN
@@ -274,6 +275,8 @@ class Resonance(object):
         
         stack_signal = {}
         
+        total_transmisison = 1.
+        
         # compound level
         for _name_of_compound in stack.keys():
             stack_signal[_name_of_compound] = {}
@@ -318,8 +321,15 @@ class Resonance(object):
             stack_signal[_name_of_compound]['transmission'] = transmission_compound
             stack_signal[_name_of_compound]['attenuation'] = 1. - transmission_compound
             stack_signal[_name_of_compound]['energy_eV'] = energy_compound
-
+            
+            total_transmisison *= transmission_compound
+            total_attenuation *= (1. - transmission_compound)
+            
         self.stack_signal = stack_signal
+        total_signal['transmission'] = total_transmisison
+        total_signal['attenuation'] = total_attenuation
+        total_signal['energy_eV'] = energy_compound
+        self.total_signal = total_signal
         
     def __calculate_atoms_per_cm3(self):
         '''calculate for each element, the atoms per cm3'''
@@ -450,7 +460,7 @@ class Resonance(object):
                     
         self.stack_sigma = stack_sigma
                     
-    def plot(self, transmission=False, energy=True, mixed=False, all_layers=False, all_elements=False, 
+    def plot(self, transmission=False, x_axis='energy', mixed=False, all_layers=False, all_elements=False, 
              all_isotopes=False, items_to_plot=[]):
         '''display the transmission or attenuation of compound, element and/or isotopes specified
         
@@ -458,8 +468,7 @@ class Resonance(object):
         ===========
         transmission: boolean. True -> display transmission signal
                                False -> display the attenuation signal
-        energy: boolean. True -> x-axis will be in eV
-                         False -> x-axis will be in Angstroms
+        x_axis: string. Must be either 'energy' or 'lambda'
         mixed: boolean. True -> display the total of each layer
                         False -> not displayed
         all_layers: boolean. True -> display all layers
@@ -485,14 +494,23 @@ class Resonance(object):
             y_axis_label = 'Neutron Attenuation'
             y_axis_tag = 'attenuation'
             
-        if energy:
+        if x_axis == 'energy':
             x_axis_label = 'Energy (eV)'
         else:
             x_axis_label = u"Wavelength (\u212B)"
         
+        if mixed:
+            _x_axis = self.total_signal['energy_eV']
+            if x_axis == 'lambda':
+                _x_axis = _utilities.energy_to_lambda(energy_ev=_x_axis)
+            _y_axis = self.total_signal[y_axis_tag]
+            plt.plot(_x_axis, _y_axis, label=_compound)
+        
         if all_layers:
             for _compound in _stack.keys():
                 _x_axis = _stack_signal[_compound]['energy_eV']
+                if x_axis == 'lambda':
+                    _x_axis = _utilities.energy_to_lambda(energy_ev=_x_axis)
                 _y_axis = _stack_signal[_compound][y_axis_tag]
                 plt.plot(_x_axis, _y_axis, label=_compound)
         
@@ -500,6 +518,8 @@ class Resonance(object):
             for _compound in _stack.keys():
                 for _element in _stack[_compound]['elements']:
                     _x_axis = _stack_signal[_compound][_element]['energy_eV']
+                    if x_axis == 'lambda':
+                        _x_axis = _utilities.energy_to_lambda(energy_ev=_x_axis)
                     _y_axis = _stack_signal[_compound][_element][y_axis_tag]
                     plt.plot(_x_axis, _y_axis, label="{}/{}".format(_compound, _element))
                     
@@ -508,6 +528,8 @@ class Resonance(object):
                 for _element in _stack[_compound]['elements']:
                     for _isotope in _stack[_compound][_element]['isotopes']['list']:
                         _x_axis = _stack_signal[_compound][_element][_isotope]['energy_eV']
+                        if x_axis == 'lambda':
+                            _x_axis = _utilities.energy_to_lambda(energy_ev=_x_axis)
                         _y_axis = _stack_signal[_compound][_element][_isotope][y_axis_tag]
                         plt.plot(_x_axis, _y_axis, label="{}/{}/{}".format(_compound, _element, _isotope))
         
@@ -520,6 +542,8 @@ class Resonance(object):
                 _live_path = _live_path[_item]
         
             _x_axis = _live_path['energy_eV']
+            if x_axis == 'lambda':
+                _x_axis = _utilities.energy_to_lambda(energy_ev=_x_axis)
             _y_axis = _live_path[y_axis_tag]
             plt.plot(_x_axis, _y_axis, label=_label)
         

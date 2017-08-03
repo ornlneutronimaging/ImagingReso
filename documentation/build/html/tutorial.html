@@ -355,6 +355,36 @@ every time one of the parameters is modified, such as density, stochiometric coe
 </div>
 </div>
 </div>
+<div class="section" id="display-transmission-and-attenuation">
+<h2>Display Transmission and Attenuation<a class="headerlink" href="#display-transmission-and-attenuation" title="Permalink to this headline">¶</a></h2>
+<p>Here are the flags available for the final plot (in bold, the default values)</p>
+<blockquote>
+<div><ul class="simple">
+<li>transmission: True or False. If False, the attenuation signal is plotted</li>
+<li>x_axis: ‘energy’ or ‘lambda’</li>
+<li>mixed: True or False. Display the total signal</li>
+<li>all_layers: True or False. Dislay the signal of each compound/layer</li>
+<li>all_elements: True or False. Display the signal of each element</li>
+<li>all_isotopes: True or False. Display the signal of each isotope</li>
+<li>items_to_plot: Array that defines what to plot. You need to define the path to the compound/element/isotope you want to see.</li>
+</ul>
+</div></blockquote>
+<p>example:</p>
+<p>if we want to display the Co element of the CoAg Compound</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">items_to_plot</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;CoAg&#39;</span><span class="p">,</span><span class="s1">&#39;Co&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>if we want also to display the 107-Ag isotope of the element Al of compound CoAg</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">items_to_plot</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;CoAg&#39;</span><span class="p">,</span> <span class="s1">&#39;Co&#39;</span><span class="p">],[</span><span class="s1">&#39;CoAg&#39;</span><span class="p">,</span><span class="s1">&#39;Ag&#39;</span><span class="p">,</span><span class="s1">&#39;107-Ag&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>So here are a few examples of plot commands</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_axis</span><span class="o">=</span><span class="s1">&#39;lambda&#39;</span><span class="p">,</span> <span class="n">all_layers</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">transmission</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">items_to_plot</span><span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;CoAg&#39;</span><span class="p">,</span> <span class="s1">&#39;Co&#39;</span><span class="p">],[</span><span class="s1">&#39;CoAg&#39;</span><span class="p">,</span><span class="s1">&#39;Ag&#39;</span><span class="p">,</span><span class="s1">&#39;107-Ag&#39;</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">items_to_plot</span><span class="o">=</span><span class="p">[[</span><span class="s1">&#39;CoAg&#39;</span><span class="p">,</span><span class="s1">&#39;Co&#39;</span><span class="p">]])</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -379,6 +409,7 @@ every time one of the parameters is modified, such as density, stochiometric coe
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#initialization">Initialization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#modify-isotopic-ratio">Modify Isotopic Ratio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#display-transmission-and-attenuation">Display Transmission and Attenuation</a></li>
 </ul>
 </li>
 </ul>
