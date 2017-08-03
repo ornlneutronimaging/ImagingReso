@@ -1,6 +1,7 @@
 import numpy as np
 import numbers
 import os
+import matplotlib.pyplot as plt
 
 from ImagingReso import _utilities
 
@@ -449,5 +450,81 @@ class Resonance(object):
                     
         self.stack_sigma = stack_sigma
                     
-                
+    def plot(self, transmission=False, energy=True, mixed=False, all_layers=False, all_elements=False, 
+             all_isotopes=False, items_to_plot=[]):
+        '''display the transmission or attenuation of compound, element and/or isotopes specified
         
+        Parameters:
+        ===========
+        transmission: boolean. True -> display transmission signal
+                               False -> display the attenuation signal
+        energy: boolean. True -> x-axis will be in eV
+                         False -> x-axis will be in Angstroms
+        mixed: boolean. True -> display the total of each layer
+                        False -> not displayed
+        all_layers: boolean. True -> display all layers
+                             False -> not displayed
+        all_elements: boolean. True -> display all elements signal
+                               False -> not displayed
+        all_isotopes: boolean. True -> display all isotopes signal
+                               False -> not displayed
+        items_to_plot: array that descibes what to plot
+            ex:
+                [['CoAg','Ag','107-Ag'], ['CoAg']]
+            if the dictionary is empty, everything is plotted
+        '''
+        plt.figure(figsize=[10,10])
+        
+        _stack_signal = self.stack_signal
+        _stack = self.stack
+        
+        if transmission:
+            y_axis_label = 'Neutron Transmission'
+            y_axis_tag = 'transmission'
+        else:
+            y_axis_label = 'Neutron Attenuation'
+            y_axis_tag = 'attenuation'
+            
+        if energy:
+            x_axis_label = 'Energy (eV)'
+        else:
+            x_axis_label = u"Wavelength (\u212B)"
+        
+        if all_layers:
+            for _compound in _stack.keys():
+                _x_axis = _stack_signal[_compound]['energy_eV']
+                _y_axis = _stack_signal[_compound][y_axis_tag]
+                plt.plot(_x_axis, _y_axis, label=_compound)
+        
+        if all_elements:
+            for _compound in _stack.keys():
+                for _element in _stack[_compound]['elements']:
+                    _x_axis = _stack_signal[_compound][_element]['energy_eV']
+                    _y_axis = _stack_signal[_compound][_element][y_axis_tag]
+                    plt.plot(_x_axis, _y_axis, label="{}/{}".format(_compound, _element))
+                    
+        if all_isotopes:
+            for _compound in _stack.keys():
+                for _element in _stack[_compound]['elements']:
+                    for _isotope in _stack[_compound][_element]['isotopes']['list']:
+                        _x_axis = _stack_signal[_compound][_element][_isotope]['energy_eV']
+                        _y_axis = _stack_signal[_compound][_element][_isotope][y_axis_tag]
+                        plt.plot(_x_axis, _y_axis, label="{}/{}/{}".format(_compound, _element, _isotope))
+        
+        for _path_to_plot in items_to_plot:
+            _path_to_plot = list(_path_to_plot)
+            _live_path = _stack_signal
+            _label = "/".join(_path_to_plot)
+            while _path_to_plot:
+                _item = _path_to_plot.pop(0)
+                _live_path = _live_path[_item]
+        
+            _x_axis = _live_path['energy_eV']
+            _y_axis = _live_path[y_axis_tag]
+            plt.plot(_x_axis, _y_axis, label=_label)
+        
+        plt.ylim(-0.01, 1.01)
+        plt.xlabel(x_axis_label)
+        plt.ylabel(y_axis_label)
+        plt.legend(loc='best')
+        plt.show()
