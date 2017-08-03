@@ -54,7 +54,7 @@ class TestInitialization(unittest.TestCase):
         self.assertEqual(stack_sigma['Ag']['Ag']['107-Ag']['energy_eV'][0], 10.1978)
 
         # for elements
-        self.assertAlmostEqual(stack_sigma['Ag']['Ag']['energy_ev'][0], 10.14, delta=0.01)
+        self.assertAlmostEqual(stack_sigma['Ag']['Ag']['energy_eV'][0], 10.14, delta=0.01)
 
     def test_correct_initialization_of_stack(self):
         '''assert correct defined stack is correctly saved'''
@@ -380,17 +380,147 @@ class TestGetterSetter(unittest.TestCase):
         _returned_density = self.o_reso.get_density(compound='CoAg', element='Ag')
         self.assertEqual(_expected_density, _returned_density)
         
-    def test_calculate_transmission(self):
-        '''assert calculation of transmission'''
+class TestTransmissionAttenuation(unittest.TestCase):
+    
+    def setUp(self):
         _stack = {'CoAg': {'elements': ['Co','Ag'],
                                'stochiometric_ratio': [1, 2],
-                               'thickness': {'value': 0.025,
-                                             'units': 'mm'},
-                               },
-                      'Ag': {'elements': ['Ag'],
-                             'stochiometric_ratio': [1],
-                             'thickness': {'value': 0.03,
-                                           'units': 'mm'},
-                             },
-                      }
-        o_reso = Resonance(stack=_stack)          
+                                   'thickness': {'value': 0.025,
+                                                 'units': 'mm'},
+                                   'density': {'value': np.NaN,
+                                               'units': 'g/cm3'},
+                                   },
+                      'U': {'elements': ['U'],
+                                 'stochiometric_ratio': [1],
+                                 'thickness': {'value': 0.03,
+                                               'units': 'mm'},
+                                 'density': {'value': np.NaN,
+                                            'units': 'g/cm3'},
+                                 },
+                          }
+        self.o_reso = Resonance(stack=_stack)        
+
+    def test_calculate_transmission_isotopes(self):
+        '''assert calculation of transmission for isotopes works'''
+        #pprint.pprint(self.o_reso.stack_signal)
+        energy_eV = self.o_reso.stack_signal['CoAg']['Ag']['107-Ag']['energy_eV']
+        transmission = self.o_reso.stack_signal['CoAg']['Ag']['107-Ag']['transmission']
+        
+        expected_eV_0 = 1.00000000e-5
+        expected_eV_1 = 9.99983261e-2
+        expected_eV_2 = 1.99986652e-1
+        
+        expected_tran_0 = 0.80909022
+        expected_tran_1 = 0.99715848
+        expected_tran_2 = 0.99777858
+        
+        self.assertAlmostEqual(expected_eV_0, energy_eV[0], delta=0.001)
+        self.assertAlmostEqual(expected_eV_1, energy_eV[1], delta=0.001)
+        self.assertAlmostEqual(expected_eV_2, energy_eV[2], delta=0.001)
+        self.assertAlmostEqual(expected_tran_0, transmission[0], delta=0.001)
+        self.assertAlmostEqual(expected_tran_1, transmission[1], delta=0.001)
+        self.assertAlmostEqual(expected_tran_2, transmission[2], delta=0.001)
+        
+    def test_calculate_attenuation_isotopes(self):
+        '''assert calculation of attenuation for isotopes works'''
+        #pprint.pprint(self.o_reso.stack_signal)
+        energy_eV = self.o_reso.stack_signal['CoAg']['Ag']['107-Ag']['energy_eV']
+        attenuation = self.o_reso.stack_signal['CoAg']['Ag']['107-Ag']['attenuation']
+        
+        expected_eV_0 = 1.00000000e-5
+        expected_eV_1 = 9.99983261e-2
+        expected_eV_2 = 1.99986652e-1
+        
+        expected_tran_0 = 1. - 0.80909022
+        expected_tran_1 = 1. - 0.99715848
+        expected_tran_2 = 1. - 0.99777858
+        
+        self.assertAlmostEqual(expected_eV_0, energy_eV[0], delta=0.001)
+        self.assertAlmostEqual(expected_eV_1, energy_eV[1], delta=0.001)
+        self.assertAlmostEqual(expected_eV_2, energy_eV[2], delta=0.001)
+        self.assertAlmostEqual(expected_tran_0, attenuation[0], delta=0.001)
+        self.assertAlmostEqual(expected_tran_1, attenuation[1], delta=0.001)
+        self.assertAlmostEqual(expected_tran_2, attenuation[2], delta=0.001)
+
+    def test_calculate_transmission_element(self):
+        '''assert calculation of transmission for element works'''
+        #pprint.pprint(self.o_reso.stack_signal)
+        energy_eV = self.o_reso.stack_signal['CoAg']['Ag']['energy_eV']
+        transmission = self.o_reso.stack_signal['CoAg']['Ag']['transmission']
+        
+        expected_eV_0 = 1.00000000e-5
+        expected_eV_1 = 9.99983261e-2
+        expected_eV_2 = 1.99986652e-1
+        
+        expected_tran_0 = 0.70664631
+        expected_tran_1 = 0.99594548
+        expected_tran_2 = 0.99777858
+        
+        self.assertAlmostEqual(expected_eV_0, energy_eV[0], delta=0.001)
+        self.assertAlmostEqual(expected_eV_1, energy_eV[1], delta=0.001)
+        self.assertAlmostEqual(expected_eV_2, energy_eV[2], delta=0.001)
+        self.assertAlmostEqual(expected_tran_0, transmission[0], delta=0.001)
+        self.assertAlmostEqual(expected_tran_1, transmission[1], delta=0.001)
+        self.assertAlmostEqual(expected_tran_2, transmission[2], delta=0.001)
+        
+    def test_calculate_attenuation_element(self):
+        '''assert calculation of attenuation for element works'''
+        #pprint.pprint(self.o_reso.stack_signal)
+        energy_eV = self.o_reso.stack_signal['CoAg']['Ag']['energy_eV']
+        attenuation = self.o_reso.stack_signal['CoAg']['Ag']['attenuation']
+        
+        expected_eV_0 = 1.00000000e-5
+        expected_eV_1 = 9.99983261e-2
+        expected_eV_2 = 1.99986652e-1
+        
+        expected_tran_0 = 1. - 0.70664631
+        expected_tran_1 = 1. - 0.99594548
+        expected_tran_2 = 1. - 0.99777858
+        
+        self.assertAlmostEqual(expected_eV_0, energy_eV[0], delta=0.001)
+        self.assertAlmostEqual(expected_eV_1, energy_eV[1], delta=0.001)
+        self.assertAlmostEqual(expected_eV_2, energy_eV[2], delta=0.001)
+        self.assertAlmostEqual(expected_tran_0, attenuation[0], delta=0.001)
+        self.assertAlmostEqual(expected_tran_1, attenuation[1], delta=0.001)
+        self.assertAlmostEqual(expected_tran_2, attenuation[2], delta=0.001)
+
+    def test_calculate_transmission_compound(self):
+        '''assert calculation of transmission for compounds works'''
+        energy_eV = self.o_reso.stack_signal['CoAg']['energy_eV']
+        transmission = self.o_reso.stack_signal['CoAg']['transmission']
+        
+        expected_eV_0 = 1.00000000e-5
+        expected_eV_1 = 9.99983261e-2
+        expected_eV_2 = 1.99986652e-1
+        
+        expected_tran_0 = 0.63649450
+        expected_tran_1 = 0.99460048
+        expected_tran_2 = 0.99587088
+        
+        self.assertAlmostEqual(expected_eV_0, energy_eV[0], delta=0.001)
+        self.assertAlmostEqual(expected_eV_1, energy_eV[1], delta=0.001)
+        self.assertAlmostEqual(expected_eV_2, energy_eV[2], delta=0.001)
+        self.assertAlmostEqual(expected_tran_0, transmission[0], delta=0.001)
+        self.assertAlmostEqual(expected_tran_1, transmission[1], delta=0.001)
+        self.assertAlmostEqual(expected_tran_2, transmission[2], delta=0.001)
+        
+    def test_calculate_attenuation_compound(self):
+        '''assert calculation of attenuation for compounds works'''
+        energy_eV = self.o_reso.stack_signal['CoAg']['energy_eV']
+        attenuation = self.o_reso.stack_signal['CoAg']['attenuation']
+        
+        expected_eV_0 = 1.00000000e-5
+        expected_eV_1 = 9.99983261e-2
+        expected_eV_2 = 1.99986652e-1
+        
+        expected_tran_0 = 1. - 0.63649450
+        expected_tran_1 = 1. - 0.99460048
+        expected_tran_2 = 1. - 0.99587088
+        
+        self.assertAlmostEqual(expected_eV_0, energy_eV[0], delta=0.001)
+        self.assertAlmostEqual(expected_eV_1, energy_eV[1], delta=0.001)
+        self.assertAlmostEqual(expected_eV_2, energy_eV[2], delta=0.001)
+        self.assertAlmostEqual(expected_tran_0, attenuation[0], delta=0.001)
+        self.assertAlmostEqual(expected_tran_1, attenuation[1], delta=0.001)
+        self.assertAlmostEqual(expected_tran_2, attenuation[2], delta=0.001)
+    

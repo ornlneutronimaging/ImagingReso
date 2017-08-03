@@ -263,32 +263,62 @@ class Resonance(object):
         self.__calculate_atoms_per_cm3()
         
         # calculate transmission and attenuation
-        self.__calculate_transmission()
+        self.__calculate_transmission_attenuation()
 
-    def __calculate_transmission(self):
+    def __calculate_transmission_attenuation(self):
         '''  '''
         stack = self.stack
         stack_sigma = self.stack_sigma
         stack_signal = {}
         
         stack_signal = {}
+        
+        # compound level
         for _name_of_compound in stack.keys():
             stack_signal[_name_of_compound] = {}
+            transmission_compound = 1.
+            energy_compound = []
+            
             _list_element = stack[_name_of_compound]['elements']
             _thickness_cm = _utilities.set_distance_units(value=stack[_name_of_compound]['thickness']['value'],
                                                           from_units=stack[_name_of_compound]['thickness']['units'],
                                                           to_units='cm')
+
+            # element level
             for _element in _list_element:
                 stack_signal[_name_of_compound][_element] = {}
                 _atoms_per_cm3 = stack[_name_of_compound]['atoms_per_cm3'][_element]
+
+                # isotope level
                 for _iso in stack[_name_of_compound][_element]['isotopes']['list']:
                     stack_signal[_name_of_compound][_element][_iso] = {}
-                    _sigma = stack_sigma[_name_of_compound][_element][_iso]['sigma_b']
-                    _transmission = _utilities.calculate_transmission(
+                    _sigma_iso = stack_sigma[_name_of_compound][_element][_iso]['sigma_b']
+                    _transmission_iso = _utilities.calculate_transmission(
                         thickness_cm=_thickness_cm, 
                         atoms_per_cm3=_atoms_per_cm3, 
-                        sigma_b=_sigma)
-                    stack_signal[_name_of_compound][_element][_iso]['transmission'] = _transmission
+                        sigma_b=_sigma_iso)
+                    stack_signal[_name_of_compound][_element][_iso]['transmission'] = _transmission_iso
+                    stack_signal[_name_of_compound][_element][_iso]['attenuation'] = 1. - _transmission_iso
+                    stack_signal[_name_of_compound][_element][_iso]['energy_eV'] = stack_sigma[_name_of_compound][_element][_iso]['energy_eV']
+                
+                _sigma_ele = stack_sigma[_name_of_compound][_element]['sigma_b']
+                _transmission_ele = _utilities.calculate_transmission(
+                    thickness_cm=_thickness_cm, 
+                    atoms_per_cm3=_atoms_per_cm3, 
+                    sigma_b=_sigma_ele)
+                stack_signal[_name_of_compound][_element]['transmission'] = _transmission_ele
+                stack_signal[_name_of_compound][_element]['attenuation'] = 1. - _transmission_ele
+                stack_signal[_name_of_compound][_element]['energy_eV'] = stack_sigma[_name_of_compound][_element]['energy_eV']
+
+                transmission_compound *= _transmission_ele
+                if energy_compound == []:
+                    energy_compound = stack_sigma[_name_of_compound][_element]['energy_eV']
+
+            stack_signal[_name_of_compound]['transmission'] = transmission_compound
+            stack_signal[_name_of_compound]['attenuation'] = 1. - transmission_compound
+            stack_signal[_name_of_compound]['energy_eV'] = energy_compound
+
+        self.stack_signal = stack_signal
         
     def __calculate_atoms_per_cm3(self):
         '''calculate for each element, the atoms per cm3'''
@@ -405,17 +435,17 @@ class Resonance(object):
                                                 E_min=self.energy_min, 
                                                 E_max=self.energy_max, 
                                                 E_step=self.energy_step)
-                    stack_sigma[_compound][_element][_iso]['energy_eV'] = _dict['energy']
-                    stack_sigma[_compound][_element][_iso]['sigma_b'] = _dict['sigma']
+                    stack_sigma[_compound][_element][_iso]['energy_eV'] = _dict['energy_eV']
+                    stack_sigma[_compound][_element][_iso]['sigma_b'] = _dict['sigma_b']
 
                     # sigma for all isotopes with their isotopic ratio
-                    _sigma_all_isotopes += _dict['sigma'] * _ratio
-                    _energy_all_isotpes += _dict['energy']
+                    _sigma_all_isotopes += _dict['sigma_b'] * _ratio
+                    _energy_all_isotpes += _dict['energy_eV']
 
                 # energy axis (x-axis) is averaged to take into account differences between x-axis of isotopes
                 _mean_energy_all_isotopes = _energy_all_isotpes/len(_list_isotopes)
-                stack_sigma[_compound][_element]['energy_ev'] = _mean_energy_all_isotopes
-                stack_sigma[_compound][_element]['sigma'] = _sigma_all_isotopes
+                stack_sigma[_compound][_element]['energy_eV'] = _mean_energy_all_isotopes
+                stack_sigma[_compound][_element]['sigma_b'] = _sigma_all_isotopes
                     
         self.stack_sigma = stack_sigma
                     

@@ -309,16 +309,16 @@ class TestUtilities_2(unittest.TestCase):
                                   E_step=10)
         
         # first value
-        energy_0_returned = _dict_returned['energy'][0]
-        sigma_0_returned = _dict_returned['sigma'][0]
+        energy_0_returned = _dict_returned['energy_eV'][0]
+        sigma_0_returned = _dict_returned['sigma_b'][0]
         energy_0_expected = 300.17
         sigma_0_expected = 4.08687
         self.assertEqual(energy_0_expected, energy_0_returned)
         self.assertAlmostEqual(sigma_0_expected, sigma_0_returned, delta=0.001)
         
         # last value
-        energy_last_returned = _dict_returned['energy'][-1]
-        sigma_last_returned = _dict_returned['sigma'][-1]
+        energy_last_returned = _dict_returned['energy_eV'][-1]
+        sigma_last_returned = _dict_returned['sigma_b'][-1]
         energy_last_expected = 599.967
         sigma_last_expected = 7.17933
         self.assertEqual(energy_last_expected, energy_last_returned)

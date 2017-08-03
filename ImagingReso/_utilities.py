@@ -330,8 +330,8 @@ def get_sigma(database_file_name='', E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
     _df = get_database_data(file_name=database_file_name)
     _dict = get_interpolated_data(df=_df, E_min=E_min, E_max=E_max, 
                                  E_step=E_step)
-    return {'energy': _dict['x_axis'],
-            'sigma': _dict['y_axis']}
+    return {'energy_eV': _dict['x_axis'],
+            'sigma_b': _dict['y_axis']}
 
 def get_atoms_per_cm3_of_layer(compound_dict={}):
     '''calculate the atoms per cm3 of the given compound (layer)
