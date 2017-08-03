@@ -267,16 +267,17 @@ class Resonance(object):
 
     def __calculate_transmission(self):
         '''  '''
-        stack = self.stack
-        stack_signal = {}
-        for _name_of_compound in stack.keys():
-            _list_element = stack[_name_of_compound]['elements']
-            for _element in list_element:
+        pass
+        #stack = self.stack
+        #stack_signal = {}
+        #for _name_of_compound in stack.keys():
+            #_list_element = stack[_name_of_compound]['elements']
+            #for _element in list_element:
                 
-                # get thickness in cm !!!!!!!
-                _thickness = 10 # ! fix me
-                for _iso in stack[_name_of_compound][_element]['isotopes']['list']:
-                    pass
+                ## get thickness in cm !!!!!!!
+                #_thickness = 10 # ! fix me
+                #for _iso in stack[_name_of_compound][_element]['isotopes']['list']:
+                    #pass
         
         
         

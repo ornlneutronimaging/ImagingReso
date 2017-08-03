@@ -5,19 +5,8 @@ import pprint
 import pandas as pd
 
 from ImagingReso.resonance import Resonance
-from ImagingReso._utilities import is_element_in_database
-from ImagingReso._utilities import get_list_element_from_database
-from ImagingReso._utilities import checking_stack
-from ImagingReso._utilities import formula_to_dictionary
-from ImagingReso._utilities import get_isotope_dicts
-from ImagingReso._utilities import get_mass
-from ImagingReso._utilities import get_density
-from ImagingReso._utilities import get_database_data
-from ImagingReso._utilities import get_interpolated_data
-from ImagingReso._utilities import get_sigma
-from ImagingReso._utilities import get_compound_density
-from ImagingReso._utilities import get_atoms_per_cm3_of_layer
-from ImagingReso._utilities import calculate_transmission
+from ImagingReso._utilities import *
+
 
 class TestUtilities_1(unittest.TestCase):
     
@@ -365,3 +354,23 @@ class TestUtilities_2(unittest.TestCase):
                                                       sigma_b=sigma_b)
         transmission_expected = np.array([np.exp(-thickness * 1e-24 * _b * atoms_per_cm3) for _b in sigma_b])
         self.assertTrue((transmission_expected == transmission_returned).all())
+        
+    def test_set_distance_units(self):
+        '''asset set_distance_units works'''
+        # cm -> mm
+        value = 10
+        from_units = 'cm'
+        to_units = 'mm'
+        new_value = set_distance_units(value=value, 
+                                       from_units=from_units, 
+                                       to_units=to_units)
+        self.assertEqual(new_value, 100)
+        
+        # mm -> cm
+        value = 10
+        from_units = 'mm'
+        to_units = 'cm'
+        new_value = set_distance_units(value=value, 
+                                           from_units=from_units, 
+                                           to_units=to_units)
+        self.assertEqual(new_value, 1)        

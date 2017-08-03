@@ -380,7 +380,7 @@ def calculate_transmission(thickness_cm=np.NaN, atoms_per_cm3=np.NaN, sigma_b=[]
     transmission = np.exp( -thickness_cm * 1e-24 * sigma_b * atoms_per_cm3)
     return np.array(transmission)
 
-def set_distance_units(value, from_units='mm', to_units='cm'):
+def set_distance_units(value=np.NaN, from_units='mm', to_units='cm'):
     '''convert distance into new units
     
     Parameters:
