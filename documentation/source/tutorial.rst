@@ -287,5 +287,44 @@ And now we can change the value of the density for the **Co** element
 {'CoAg': {'Ag': 10.5, 'Co': 20}, 'U': {'U': 18.680428927650006}}
 
 
+Retrieve the Transmission and Attenuation signals
+-------------------------------------------------
 
+Those arrays for each Compound, element and isotopes are calculated during initialization of the object, but also 
+every time one of the parameters is modified, such as density, stochiometric coefficient.
 
+Those arrays are store in the **stack_signal** dictionary
+
+>>> pprint.pprint(o_reso.stack_signal)
+{'CoAg': {'Ag': {'107-Ag': {'attenuation': array([  8.71204643e-03,   3.02257699e-05,   3.14737842e-05,
+        ...
+         2.29850072e-05,   2.13506105e-05,   1.85609896e-05]),
+                            'energy_eV': array([  1.00000000e-05,   1.03401821e+01,   2.06803541e+01,
+         ...
+         2.79184656e+02,   2.89524828e+02,   2.99865000e+02]),
+                            'transmission': array([ 0.99128795,  0.99996977,  0.99996853,  0.99997616,  0.99823286,
+         ...
+         0.99997299,  0.99997427,  0.99997701,  0.99997865,  0.99998144])},
+                 '109-Ag': {'attenuation': array([  2.01550894e-02,   5.41237178e-05,   2.48723558e-05,
+         ...
+         1.95348051e-05,   5.37967523e-05,   2.44259480e-05]),
+         ...
+         ...
+         }}}}
+         
+You can retrieve any of those arrays, transmission, attenuation and Energy (eV) (x-axis) arrays as followed
+
+for the compound CoAg
+
+>>> transmission_CoAg = o_reso.stack_signal['CoAg']['transmission']
+>>> energy_CoAg = o_reso.stack_signal['CoAg']['energy_eV']
+
+for the element Ag
+
+>>> transmission_CoAg_Ag = o_reso.stack_signal['CoAg']['Ag']['transmission']
+>>> energy_CoAg_Ag = o_reso.stack_signal['CoAg']['Ag']['energy_eV']
+
+or for the isotope 107-Ag
+
+>>> transmission_CoAg_Ag_107Ag = o_reso.stack_signal['CoAg']['Ag']['107-Ag']['transmission']
+>>> energy_CoAg_Ag_107Ag = o_reso.stack_signal['CoAg']['Ag']['107-Ag']['energy_eV']

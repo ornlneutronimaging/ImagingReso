@@ -314,6 +314,46 @@ We need to change this value.</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="retrieve-the-transmission-and-attenuation-signals">
+<h3>Retrieve the Transmission and Attenuation signals<a class="headerlink" href="#retrieve-the-transmission-and-attenuation-signals" title="Permalink to this headline">¶</a></h3>
+<p>Those arrays for each Compound, element and isotopes are calculated during initialization of the object, but also
+every time one of the parameters is modified, such as density, stochiometric coefficient.</p>
+<p>Those arrays are store in the <strong>stack_signal</strong> dictionary</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">stack_signal</span><span class="p">)</span>
+<span class="go">{&#39;CoAg&#39;: {&#39;Ag&#39;: {&#39;107-Ag&#39;: {&#39;attenuation&#39;: array([  8.71204643e-03,   3.02257699e-05,   3.14737842e-05,</span>
+<span class="go">        ...</span>
+<span class="go">         2.29850072e-05,   2.13506105e-05,   1.85609896e-05]),</span>
+<span class="go">                            &#39;energy_eV&#39;: array([  1.00000000e-05,   1.03401821e+01,   2.06803541e+01,</span>
+<span class="go">         ...</span>
+<span class="go">         2.79184656e+02,   2.89524828e+02,   2.99865000e+02]),</span>
+<span class="go">                            &#39;transmission&#39;: array([ 0.99128795,  0.99996977,  0.99996853,  0.99997616,  0.99823286,</span>
+<span class="go">         ...</span>
+<span class="go">         0.99997299,  0.99997427,  0.99997701,  0.99997865,  0.99998144])},</span>
+<span class="go">                 &#39;109-Ag&#39;: {&#39;attenuation&#39;: array([  2.01550894e-02,   5.41237178e-05,   2.48723558e-05,</span>
+<span class="go">         ...</span>
+<span class="go">         1.95348051e-05,   5.37967523e-05,   2.44259480e-05]),</span>
+<span class="go">         ...</span>
+<span class="go">         ...</span>
+<span class="go">         }}}}</span>
+</pre></div>
+</div>
+<p>You can retrieve any of those arrays, transmission, attenuation and Energy (eV) (x-axis) arrays as followed</p>
+<p>for the compound CoAg</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">transmission_CoAg</span> <span class="o">=</span> <span class="n">o_reso</span><span class="o">.</span><span class="n">stack_signal</span><span class="p">[</span><span class="s1">&#39;CoAg&#39;</span><span class="p">][</span><span class="s1">&#39;transmission&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">energy_CoAg</span> <span class="o">=</span> <span class="n">o_reso</span><span class="o">.</span><span class="n">stack_signal</span><span class="p">[</span><span class="s1">&#39;CoAg&#39;</span><span class="p">][</span><span class="s1">&#39;energy_eV&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>for the element Ag</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">transmission_CoAg_Ag</span> <span class="o">=</span> <span class="n">o_reso</span><span class="o">.</span><span class="n">stack_signal</span><span class="p">[</span><span class="s1">&#39;CoAg&#39;</span><span class="p">][</span><span class="s1">&#39;Ag&#39;</span><span class="p">][</span><span class="s1">&#39;transmission&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">energy_CoAg_Ag</span> <span class="o">=</span> <span class="n">o_reso</span><span class="o">.</span><span class="n">stack_signal</span><span class="p">[</span><span class="s1">&#39;CoAg&#39;</span><span class="p">][</span><span class="s1">&#39;Ag&#39;</span><span class="p">][</span><span class="s1">&#39;energy_eV&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>or for the isotope 107-Ag</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">transmission_CoAg_Ag_107Ag</span> <span class="o">=</span> <span class="n">o_reso</span><span class="o">.</span><span class="n">stack_signal</span><span class="p">[</span><span class="s1">&#39;CoAg&#39;</span><span class="p">][</span><span class="s1">&#39;Ag&#39;</span><span class="p">][</span><span class="s1">&#39;107-Ag&#39;</span><span class="p">][</span><span class="s1">&#39;transmission&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">energy_CoAg_Ag_107Ag</span> <span class="o">=</span> <span class="n">o_reso</span><span class="o">.</span><span class="n">stack_signal</span><span class="p">[</span><span class="s1">&#39;CoAg&#39;</span><span class="p">][</span><span class="s1">&#39;Ag&#39;</span><span class="p">][</span><span class="s1">&#39;107-Ag&#39;</span><span class="p">][</span><span class="s1">&#39;energy_eV&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 
