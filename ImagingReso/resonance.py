@@ -90,11 +90,13 @@ class Resonance(object):
         ValueError if element is not defined in the stack
         '''
         _stack = self.stack
+        compound = str(compound)
         
         if compound == '':
             _list_compounds = _stack.keys()
             list_all_dict = {}
             for _compound in _list_compounds:
+                _compound = str(_compound)
                 _list_element = _stack[_compound]['elements']
                 list_all_dict[_compound] = {}
                 for _element in _list_element:
@@ -107,7 +109,7 @@ class Resonance(object):
         list_compounds = _stack.keys()
         if not compound in list_compounds:
             list_compounds_joined = ', '.join(list_compounds)
-            raise ValueError("Compound '{}' could not be find in {}".format(compile, list_compounds_joined))
+            raise ValueError("Compound '{}' could not be find in {}".format(compound, list_compounds_joined))
         
         # checking element is valid
         if element == '': 
@@ -148,7 +150,7 @@ class Resonance(object):
         list_compounds = _stack.keys()
         if not compound in _stack.keys():
             list_compounds_joined = ', '.join(list_compounds)
-            raise ValueError("Compound '{}' could not be find in {}".format(compile, list_compounds_joined))
+            raise ValueError("Compound '{}' could not be find in {}".format(compound, list_compounds_joined))
 
         if element == '': 
             # we assume that the element and compounds names matched

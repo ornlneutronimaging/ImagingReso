@@ -269,6 +269,14 @@ class TestGetterSetter(unittest.TestCase):
         self.o_reso = Resonance(stack=_stack)        
         
     # stochiometric ratio
+    def test_retrieve_stochiometric_of_UO3_sample(self):
+        '''assert retrieve stochiometric work for complex sample such as UO3'''
+        o_reso = Resonance()
+        o_reso.add_layer(formula='UO3', thickness=0.25, density=0.5)
+        o_reso.add_layer(formula='AgCo', thickness=0.5, density=0.8)
+        _stochiometric_ratio = o_reso.get_stochiometric_ratio(compound='UO3', 
+            element='U')
+    
     def test_retrieve_stochiometric_ratio_raises_error_if_unknown_compound(self):
         '''assert ValueError raised if wrong compound when getting stochiometric ratio'''
         self.assertRaises(ValueError, self.o_reso.get_stochiometric_ratio, compound='unknown')
