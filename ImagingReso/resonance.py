@@ -501,13 +501,14 @@ class Resonance(object):
             x_axis_label = 'Energy (eV)'
         else:
             x_axis_label = u"Wavelength (\u212B)"
+            plt.xlim(0, 20)
         
         if mixed:
             _x_axis = self.total_signal['energy_eV']
             if x_axis == 'lambda':
                 _x_axis = _utilities.energy_to_lambda(energy_ev=_x_axis)
             _y_axis = self.total_signal[y_axis_tag]
-            plt.plot(_x_axis, _y_axis, label="full sample")
+            plt.plot(_x_axis, _y_axis, label="Total")
         
         if all_layers:
             for _compound in _stack.keys():
