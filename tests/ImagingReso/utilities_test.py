@@ -19,7 +19,7 @@ class TestUtilities_1(unittest.TestCase):
         self.assertFalse(_answer)
     
         # element not in database
-        _element = 'Fe'
+        _element = 'Ne'
         _answer = is_element_in_database(element=_element)
         self.assertFalse(_answer)
         
@@ -27,27 +27,6 @@ class TestUtilities_1(unittest.TestCase):
         _element = 'Co'
         _answer = is_element_in_database(element=_element)
         self.assertTrue(_answer)
-        
-        _element = 'C'
-        _answer = is_element_in_database(element=_element)
-        self.assertFalse(_answer)
-
-    def test_get_list_element_from_database(self):
-        '''assert the correct list of element is retrieved from the database'''
-
-        # ENDF_VIII
-        _database_1 = 'ENDF_VIII'
-        list_elements = get_list_element_from_database(database=_database_1)
-        _expected_list = ['Pb','Cd','Gd','Ta','Au','Ag','Eu','Sm','Co','O','Hf','B','In','W','U']
-        _expected_list = set([_element.lower() for _element in _expected_list])
-        self.assertEqual(_expected_list, list_elements)
-        
-        # ENDF_VII
-        _database_1 = 'ENDF_VII'
-        list_elements = get_list_element_from_database(database=_database_1)
-        _expected_list = ['Ag','Gd','U','Au','O','Co']
-        _expected_list = set([_element.lower() for _element in _expected_list])
-        self.assertEqual(_expected_list, list_elements)
         
     def test_get_list_of_element_raise_error_if_wrong_database(self):
         '''assert ValueError if wrong database passed to get_list_element_from_database'''
@@ -84,7 +63,7 @@ class TestUtilities_1(unittest.TestCase):
         
     def test_checking_stack_raises_value_error_if_element_missing_from_database(self):
         '''assert checking_stack raises an error if elements can not be found in database'''
-        stack_2 = {'Al': {'elements': ['Al'],
+        stack_2 = {'Ne': {'elements': ['Ne'],
                           'stochiometric_ratio': [1],
                           'thickness': {'value': 0.03,
                                         'units': 'mm'},
@@ -129,7 +108,7 @@ class TestUtilities_1(unittest.TestCase):
         
     def test_formula_to_dictionary_raises_error_when_unknow_element(self):
         '''assert formula_to_dictionary raises error if element is unknown'''
-        _formula = 'AlCo'
+        _formula = 'NeCo'
         self.assertRaises(ValueError, formula_to_dictionary, formula=_formula)
         
     def test_formula_to_dictionary_works_with_various_cases(self):
@@ -214,7 +193,7 @@ class TestUtilities_1(unittest.TestCase):
         
     def test_get_isotope_returns_empty_dict_if_missing_element(self):
         '''assert get_isotopes_dict returns empty dict if element can not be found such as Al'''
-        _element = 'Al'
+        _element = 'Ne'
         _dict_returned = get_isotope_dicts(element=_element)
         _dict_expected = {'isotopes': {'list': [],
                                        'file_names': [],
