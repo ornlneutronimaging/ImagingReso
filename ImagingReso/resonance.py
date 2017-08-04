@@ -325,8 +325,9 @@ class Resonance(object):
             stack_signal[_name_of_compound]['energy_eV'] = energy_compound
             
             total_transmisison *= transmission_compound
-            total_attenuation *=  (1. - transmission_compound)
-            
+        
+        total_attenuation *=  (1. - transmission_compound)
+
         self.stack_signal = stack_signal
         total_signal['transmission'] = total_transmisison
         total_signal['attenuation'] = total_attenuation
