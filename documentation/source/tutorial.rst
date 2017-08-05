@@ -358,5 +358,6 @@ So here are a few examples of plot commands
 >>> o_reso.plot(transmission=False, items_to_plot= [['CoAg', 'Co'],['CoAg','Ag','107-Ag']])
 >>> o_reso.plot(items_to_plot=[['CoAg','Co']])
 
-.. image:: __static/plot1.png
+.. image:: _static/plot1.png
     :align: center
+    :alt: typical attenuation plot

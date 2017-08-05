@@ -360,3 +360,4 @@ So here are a few examples of plot commands
 
 .. image:: __static/plot1.png
     :align: center
+    :alt: this is my text
