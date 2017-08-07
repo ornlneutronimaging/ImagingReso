@@ -100,7 +100,7 @@ class Resonance(object):
                 _list_element = _stack[_compound]['elements']
                 list_all_dict[_compound] = {}
                 for _element in _list_element:
-                    list_all_dict[_compound][_element] = self.get_stochiometric_ratio(
+                    list_all_dict[_compound][_element] = self.get_isotopic_ratio(
                         compound = _compound, 
                         element = _element)     
             return list_all_dict
@@ -124,11 +124,11 @@ class Resonance(object):
         list_ratio = _stack[compound][element]['isotopes']['isotopic_ratio']
         iso_ratio = zip(list_istopes, list_ratio)
         
-        _stochiometric_ratio = {}
+        _stoichiometric_ratio = {}
         for _iso, _ratio in iso_ratio:
-            _stochiometric_ratio[_iso] = _ratio
+            _stoichiometric_ratio[_iso] = _ratio
             
-        return _stochiometric_ratio
+        return _stoichiometric_ratio
         
     def set_isotopic_ratio(self, compound='', element='', list_ratio=[]):
         '''defines the new set of ratio of the compound/element and trigger the calculation to update the density
@@ -137,7 +137,7 @@ class Resonance(object):
         ===========
         compound: string (default is ''). Name of compound
         elememnt: string (defualt is ''). Name of element
-        list_ratio: list (default is []). list of new stochiometric_ratio
+        list_ratio: list (default is []). list of new stoichiometric_ratio
         
         Raises:
         =======
@@ -363,7 +363,7 @@ class Resonance(object):
         list_compound = _stack.keys()
         for _key in list_compound:
             if np.isnan(_stack[_key]['density']['value']):
-                _list_ratio = _stack[_key]['stochiometric_ratio']
+                _list_ratio = _stack[_key]['stoichiometric_ratio']
                 _list_density = []
                 for _element in _stack[_key]['elements']:
                     _list_density.append(_stack[_key][_element]['density']['value'])
