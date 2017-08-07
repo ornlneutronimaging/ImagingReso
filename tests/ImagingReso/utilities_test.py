@@ -38,7 +38,7 @@ class TestUtilities_1(unittest.TestCase):
         
         # normal simple stack
         stack_1 = {'Ag': {'elements': ['Ag'],
-                          'stochiometric_ratio': [1],
+                          'stoichiometric_ratio': [1],
                           'thickness': {'value': 0.025,
                                         'units': 'mm'},
                           },
@@ -48,12 +48,12 @@ class TestUtilities_1(unittest.TestCase):
         
         # complex set of stacks
         stack_2 = {'Co': {'elements': ['Co'],
-                          'stochiometric_ratio': [1],
+                          'stoichiometric_ratio': [1],
                           'thickness': {'value': 0.03,
                                         'units': 'mm'},
                           },
                    'GdEu': {'elements': ['Gd','Eu'],
-                            'stochiometric_ratio': [1,1],
+                            'stoichiometric_ratio': [1,1],
                             'thickness': {'value': 0.025,
                                           'units': 'mm'},
                             },
@@ -64,12 +64,12 @@ class TestUtilities_1(unittest.TestCase):
     def test_checking_stack_raises_value_error_if_element_missing_from_database(self):
         '''assert checking_stack raises an error if elements can not be found in database'''
         stack_2 = {'Ne': {'elements': ['Ne'],
-                          'stochiometric_ratio': [1],
+                          'stoichiometric_ratio': [1],
                           'thickness': {'value': 0.03,
                                         'units': 'mm'},
                           },
                        'GdEu': {'elements': ['Gd','Eu'],
-                                'stochiometric_ratio': [1,1],
+                                'stoichiometric_ratio': [1,1],
                                 'thickness': {'value': 0.025,
                                               'units': 'mm'},
                                 },
@@ -79,27 +79,27 @@ class TestUtilities_1(unittest.TestCase):
     def test_checking_stack_raises_value_error_if_thickness_has_wrong_format(self):
         '''assert checking_stack raises an error if thickness is not a number'''
         stack_2 = {'Ag': {'elements': ['Ag'],
-                          'stochiometric_ratio': [1],
+                          'stoichiometric_ratio': [1],
                           'thickness': {'value': '0.025',
                                         'units': 'mm'},
                           },
                    'GdEu': {'elements': ['Gd','Eu'],
-                            'stochiometric_ratio': [1,1],
+                            'stoichiometric_ratio': [1,1],
                             'thickness': {'value': 0.025,
                                           'units': 'mm'},
                             },
                    }
         self.assertRaises(ValueError, checking_stack, stack=stack_2)
         
-    def test_raises_error_when_size_stochiometric_ratio_is_different_from_elements(self):
-        '''assert checking_stack raises error if size of stochiometric_ratio and elements do not match'''
+    def test_raises_error_when_size_stoichiometric_ratio_is_different_from_elements(self):
+        '''assert checking_stack raises error if size of stoichiometric_ratio and elements do not match'''
         stack = {'Ag': {'elements': ['Ag'],
-                        'stochiometric_ratio': [1],
+                        'stoichiometric_ratio': [1],
                         'thickness': {'value': 0.025,
                                       'units': 'mm'},
                         },
                  'GdEu': {'elements': ['Gd','Eu'],
-                          'stochiometric_ratio': [1],
+                          'stoichiometric_ratio': [1],
                           'thickness': {'value': 0.025,
                                         'units': 'mm'},
                           },
@@ -118,7 +118,7 @@ class TestUtilities_1(unittest.TestCase):
         _formula_1 = 'Ag'
         _dict_returned = formula_to_dictionary(formula=_formula_1)
         _dict_expected = {'Ag': {'elements': ['Ag'], 
-                                 'stochiometric_ratio': [1], 
+                                 'stoichiometric_ratio': [1],
                                  'thickness': {'value': np.NaN, 'units': 'mm'},
                                  'density': {'value': np.NaN, 'units': 'g/cm3'},
                                  },
@@ -129,7 +129,7 @@ class TestUtilities_1(unittest.TestCase):
         _formula_2 = 'Ag2Co'
         _dict_returned = formula_to_dictionary(formula=_formula_2, thickness=10)
         _dict_expected = {'Ag2Co': {'elements': ['Ag','Co'], 
-                                    'stochiometric_ratio': [2,1], 
+                                    'stoichiometric_ratio': [2,1],
                                     'thickness': {'value': 10, 'units': 'mm'},
                                     'density': {'value': np.NaN, 'units': 'g/cm3'},
                                     },
@@ -140,7 +140,7 @@ class TestUtilities_1(unittest.TestCase):
         _formula_3 = 'Ag2CoU3'
         _dict_returned = formula_to_dictionary(formula=_formula_3, density=20)
         _dict_expected = {'Ag2CoU3': {'elements': ['Ag','Co','U'], 
-                                      'stochiometric_ratio': [2,1,3], 
+                                      'stoichiometric_ratio': [2,1,3],
                                       'thickness': {'value': np.NaN, 'units': 'mm'},
                                       'density': {'value': 20, 'units': 'g/cm3'},
                                     },
@@ -151,7 +151,7 @@ class TestUtilities_1(unittest.TestCase):
         _formula_2 = 'Ag2Co'
         _dict_returned = formula_to_dictionary(formula=_formula_2, thickness=0.025)
         _dict_expected = {'Ag2Co': {'elements': ['Ag','Co'], 
-                                    'stochiometric_ratio': [2,1], 
+                                    'stoichiometric_ratio': [2,1],
                                     'thickness': {'value': 0.025, 'units': 'mm'},
                                     'density': {'value': np.NaN, 'units': 'g/cm3'},
                                     },
@@ -327,14 +327,14 @@ class TestUtilities_2(unittest.TestCase):
     def test_get_atoms_per_cm3_of_layer(self):
         '''assert get_atoms_per_cm3_of_layer works'''
         _stack = {'CoAg': {'elements': ['Co','Ag'],
-                           'stochiometric_ratio': [1, 1],
+                           'stoichiometric_ratio': [1, 1],
                            'thickness': {'value': 0.025,
                                          'units': 'mm'},
                            'density': {'value': 9.8,
                                        'units': 'g/cm3'},
                            },
                   'Ag': {'elements': ['Ag'],
-                         'stochiometric_ratio': [1],
+                         'stoichiometric_ratio': [1],
                          'thickness': {'value': 0.03,
                                        'units': 'mm'},
                          },
