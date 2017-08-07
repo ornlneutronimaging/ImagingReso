@@ -428,7 +428,7 @@ def set_distance_units(value=np.NaN, from_units='mm', to_units='cm'):
     return coeff * value
 
 def energy_to_lambda(energy_ev=[]):
-    '''convert into lambda the energy array
+    '''convert into lambda from the energy array
     
     Parameters:
     ===========
@@ -439,5 +439,5 @@ def energy_to_lambda(energy_ev=[]):
     array in Angstroms
     '''
     energy_mev = energy_ev * 1000
-    lambda_array = np.sqrt(81.787) / energy_mev
+    lambda_array = np.sqrt(81.787/energy_mev)
     return lambda_array
