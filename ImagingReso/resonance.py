@@ -277,8 +277,7 @@ class Resonance(object):
         
         total_signal = {}
         total_transmisison = 1.
-        total_attenuation = 1.
-        
+
         # compound level
         for _name_of_compound in stack.keys():
             stack_signal[_name_of_compound] = {}
@@ -501,8 +500,8 @@ class Resonance(object):
             x_axis_label = 'Energy (eV)'
         else:
             x_axis_label = u"Wavelength (\u212B)"
-            plt.xlim(0, 20)
-        
+            plt.xlim(0, 1)
+
         if mixed:
             _x_axis = self.total_signal['energy_eV']
             if x_axis == 'lambda':
