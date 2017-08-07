@@ -53,7 +53,7 @@ class Resonance(object):
             self.stack = new_stack
             
             # if layer density has been defined, lock it
-            self.__lock_density_if_defined()
+            self.__lock_density_if_defined(stack=self.stack)
             
             # calculate stack_sigma, layer density, atoms_per_cm3 ...
             self.__math_on_stack()
@@ -286,12 +286,11 @@ class Resonance(object):
         stack: dictionary (optional)
           if not provided, the entire stack will be used
         '''
-        if stack == {}:
-            stack = self.stack
+        if self.stack == {}:
             density_lock = {}
         else:
             density_lock = self.density_lock
-            
+        
         for _compound in stack.keys():
             _density = stack[_compound]['density']['value']
             if np.isnan(_density):
@@ -443,7 +442,7 @@ class Resonance(object):
         self.stack[compound][element]['density']['value'] = _density_element
         
         _density_lock = self.density_lock
-        if not _density[compound]:
+        if not _density_lock[compound]:
             self.__update_layer_density
         
     def __update_molar_mass(self, compound='', element=''):
