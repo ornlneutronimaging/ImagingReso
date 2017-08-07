@@ -10,12 +10,12 @@ class TestInitialization(unittest.TestCase):
     def test_initialization_of_object(self):
         '''assert object is correctly initialized with energy min, max and step'''
         _stack = {'CoAg': {'elements': ['Co','Ag'],
-                               'stochiometric_ratio': [1, 2],
+                               'stoichiometric_ratio': [1, 2],
                                'thickness': {'value': 0.025,
                                              'units': 'mm'},
                                },
                       'Ag': {'elements': ['Ag'],
-                             'stochiometric_ratio': [1],
+                             'stoichiometric_ratio': [1],
                              'thickness': {'value': 0.03,
                                            'units': 'mm'},
                              },
@@ -32,12 +32,12 @@ class TestInitialization(unittest.TestCase):
     def test_get_sigma_isotopes(self):
         '''assert get_sigma works'''
         _stack = {'CoAg': {'elements': ['Co','Ag'],
-                               'stochiometric_ratio': [1, 2],
+                               'stoichiometric_ratio': [1, 2],
                                    'thickness': {'value': 0.025,
                                                  'units': 'mm'},
                                    },
                       'Ag': {'elements': ['Ag'],
-                                 'stochiometric_ratio': [1],
+                                 'stoichiometric_ratio': [1],
                                  'thickness': {'value': 0.03,
                                                'units': 'mm'},
                                  },
@@ -59,12 +59,12 @@ class TestInitialization(unittest.TestCase):
     def test_correct_initialization_of_stack(self):
         '''assert correct defined stack is correctly saved'''
         _stack = {'CoAg': {'elements': ['Co','Ag'],
-                           'stochiometric_ratio': [1, 2],
+                           'stoichiometric_ratio': [1, 2],
                            'thickness': {'value': 0.025,
                                          'units': 'mm'},
                            },
                   'Ag': {'elements': ['Ag'],
-                         'stochiometric_ratio': [1],
+                         'stoichiometric_ratio': [1],
                          'thickness': {'value': 0.03,
                                        'units': 'mm'},
                          },
@@ -91,7 +91,7 @@ class TestInitialization(unittest.TestCase):
         returned_stack = o_reso.stack
         
         expected_stack = {'CoAg': {'elements':['Co','Ag'],
-                                   'stochiometric_ratio': [1,1],
+                                   'stoichiometric_ratio': [1,1],
                                    'thickness': {'value': 0.025,
                                                  'units': 'mm'},
                                    'density': {'value': 9.7,
@@ -122,7 +122,7 @@ class TestInitialization(unittest.TestCase):
                                           },
                                    },
                           'Ag': {'elements': ['Ag'],
-                                 'stochiometric_ratio': [1],
+                                 'stoichiometric_ratio': [1],
                                  'thickness': {'value': 0.1,
                                                'units': 'mm'},
                                  'density': {'value': 0.5,
@@ -146,7 +146,7 @@ class TestInitialization(unittest.TestCase):
         # elements
         self.assertEqual(returned_stack['CoAg']['elements'], expected_stack['CoAg']['elements'])
         # atomic_atomic_ratio
-        self.assertEqual(returned_stack['CoAg']['stochiometric_ratio'], expected_stack['CoAg']['stochiometric_ratio'])
+        self.assertEqual(returned_stack['CoAg']['stoichiometric_ratio'], expected_stack['CoAg']['stoichiometric_ratio'])
         # thickness
         self.assertEqual(returned_stack['CoAg']['thickness']['value'], expected_stack['CoAg']['thickness']['value'])
         self.assertEqual(returned_stack['CoAg']['thickness']['units'], expected_stack['CoAg']['thickness']['units'])
@@ -199,12 +199,12 @@ class TestInitialization(unittest.TestCase):
         '''assert __element_metadata is correctly populated using stack initialization'''
 
         _stack = {'CoAg': {'elements': ['Co','Ag'],
-                           'stochiometric_ratio': [1, 2],
+                           'stoichiometric_ratio': [1, 2],
                            'thickness': {'value': 0.025,
                                          'units': 'mm'},
                            },
                   'Ag': {'elements': ['Ag'],
-                         'stochiometric_ratio': [1],
+                         'stoichiometric_ratio': [1],
                          'thickness': {'value': 0.03,
                                        'units': 'mm'},
                          },
@@ -252,14 +252,14 @@ class TestGetterSetter(unittest.TestCase):
     
     def setUp(self):
         _stack = {'CoAg': {'elements': ['Co','Ag'],
-                               'stochiometric_ratio': [1, 2],
+                               'stoichiometric_ratio': [1, 2],
                                    'thickness': {'value': 0.025,
                                                  'units': 'mm'},
                                    'density': {'value': np.NaN,
                                                'units': 'g/cm3'},
                                    },
                       'U': {'elements': ['U'],
-                                 'stochiometric_ratio': [1],
+                                 'stoichiometric_ratio': [1],
                                  'thickness': {'value': 0.03,
                                                'units': 'mm'},
                                  'density': {'value': np.NaN,
@@ -268,37 +268,37 @@ class TestGetterSetter(unittest.TestCase):
                           }
         self.o_reso = Resonance(stack=_stack)        
         
-    # stochiometric ratio
-    def test_retrieve_stochiometric_of_UO3_sample(self):
-        '''assert retrieve stochiometric work for complex sample such as UO3'''
+    # stoichiometric ratio
+    def test_retrieve_stoichiometric_of_UO3_sample(self):
+        '''assert retrieve stoichiometric work for complex sample such as UO3'''
         o_reso = Resonance()
         o_reso.add_layer(formula='UO3', thickness=0.25, density=0.5)
         o_reso.add_layer(formula='AgCo', thickness=0.5, density=0.8)
-        _stochiometric_ratio = o_reso.get_stochiometric_ratio(compound='UO3', 
+        _stoichiometric_ratio = o_reso.get_isotopic_ratio(compound='UO3',
             element='U')
     
-    def test_retrieve_stochiometric_ratio_raises_error_if_unknown_compound(self):
-        '''assert ValueError raised if wrong compound when getting stochiometric ratio'''
-        self.assertRaises(ValueError, self.o_reso.get_stochiometric_ratio, compound='unknown')
+    def test_retrieve_stoichiometric_ratio_raises_error_if_unknown_compound(self):
+        '''assert ValueError raised if wrong compound when getting stoichiometric ratio'''
+        self.assertRaises(ValueError, self.o_reso.get_isotopic_ratio, compound='unknown')
         
     def test_if_element_misssing_use_compound_and_raises_error_if_wrong(self):
         '''assert ValueError raised if element does not exist'''
-        self.assertRaises(ValueError, self.o_reso.get_stochiometric_ratio, compound='CoAg')
+        self.assertRaises(ValueError, self.o_reso.get_isotopic_ratio, compound='CoAg')
         
-    def test_stochiometric_ratio_returned(self):
-        '''assert the stochiometric ratio are correctly returned'''
-        _stochiometric_ratio = self.o_reso.get_stochiometric_ratio(compound='U')
+    def test_stoichiometric_ratio_returned(self):
+        '''assert the stoichiometric ratio are correctly returned'''
+        _stoichiometric_ratio = self.o_reso.get_isotopic_ratio(compound='U')
         _expected_dict = {'233-U': 0.0,
                           '234-U': 5.5e-5,
                           '235-U': 0.0072,
                           '238-U': 0.992745}
-        self.assertEqual(_expected_dict['233-U'], _stochiometric_ratio['233-U'])
-        self.assertEqual(_expected_dict['235-U'], _stochiometric_ratio['235-U'])
-        self.assertEqual(_expected_dict['238-U'], _stochiometric_ratio['238-U'])
+        self.assertEqual(_expected_dict['233-U'], _stoichiometric_ratio['233-U'])
+        self.assertEqual(_expected_dict['235-U'], _stoichiometric_ratio['235-U'])
+        self.assertEqual(_expected_dict['238-U'], _stoichiometric_ratio['238-U'])
         
-    def test_list_all_stochiometric_ratio(self):
-        '''assert the entire stochiometric list is returned'''
-        _stochiometric_ratio = self.o_reso.get_stochiometric_ratio()
+    def test_list_all_stoichiometric_ratio(self):
+        '''assert the entire stoichiometric list is returned'''
+        _stoichiometric_ratio = self.o_reso.get_isotopic_ratio()
         _expected_dict = {'U': {'U': {'233-U': 0.0,
                                       '234-U': 5.5e-5,
                                       '235-U': 0.0072,
@@ -310,27 +310,27 @@ class TestGetterSetter(unittest.TestCase):
                                           '59-Co': 1.0},
                                    },
                           }
-        self.assertEqual(_expected_dict['U']['U']['233-U'], _stochiometric_ratio['U']['U']['233-U'])
-        self.assertEqual(_expected_dict['U']['U']['238-U'], _stochiometric_ratio['U']['U']['238-U'])
-        self.assertEqual(_expected_dict['CoAg']['Ag']['107-Ag'], _stochiometric_ratio['CoAg']['Ag']['107-Ag'])
+        self.assertEqual(_expected_dict['U']['U']['233-U'], _stoichiometric_ratio['U']['U']['233-U'])
+        self.assertEqual(_expected_dict['U']['U']['238-U'], _stoichiometric_ratio['U']['U']['238-U'])
+        self.assertEqual(_expected_dict['CoAg']['Ag']['107-Ag'], _stoichiometric_ratio['CoAg']['Ag']['107-Ag'])
         
-    def test_set_stochiometric_ratio_raises_value_error_if_wrong_compound(self):
-        '''assert ValueError raised if wrong compound in stochiometric ratio setter'''
-        self.assertRaises(ValueError, self.o_reso.set_stochiometric_ratio)
-        self.assertRaises(ValueError, self.o_reso.set_stochiometric_ratio, compound='unknown')
+    def test_set_stoichiometric_ratio_raises_value_error_if_wrong_compound(self):
+        '''assert ValueError raised if wrong compound in stoichiometric ratio setter'''
+        self.assertRaises(ValueError, self.o_reso.set_isotopic_ratio)
+        self.assertRaises(ValueError, self.o_reso.set_isotopic_ratio, compound='unknown')
         
-    def test_set_stochiometric_ratio_raises_value_error_if_wrong_element(self):
-        '''assert ValueError raised if wrong element in stochiometric ratio setter'''
-        self.assertRaises(ValueError, self.o_reso.set_stochiometric_ratio, compound='CoAg')
-        self.assertRaises(ValueError, self.o_reso.set_stochiometric_ratio, compound='CoAg', element='unknown')
+    def test_set_stoichiometric_ratio_raises_value_error_if_wrong_element(self):
+        '''assert ValueError raised if wrong element in stoichiometric ratio setter'''
+        self.assertRaises(ValueError, self.o_reso.set_isotopic_ratio, compound='CoAg')
+        self.assertRaises(ValueError, self.o_reso.set_isotopic_ratio, compound='CoAg', element='unknown')
         
-    def test_set_stochiometric_ratio_has_correct_new_list_size(self):
+    def test_set_stoichiometric_ratio_has_correct_new_list_size(self):
         '''assert ValueRror raised if new list of ratio does not match old list size'''
-        self.assertRaises(ValueError, self.o_reso.set_stochiometric_ratio, compound='U', element='U', list_ratio=[0, 1, 2])
+        self.assertRaises(ValueError, self.o_reso.set_isotopic_ratio, compound='U', element='U', list_ratio=[0, 1, 2])
         
-    def test_set_stochiometric_ratio_correctly_calculates_new_molar_mass(self):
-        '''assert molar mass is correctly calculated for new set of stochiometric coefficient'''
-        self.o_reso.set_stochiometric_ratio(compound='CoAg', element='Co', list_ratio=[0.5, 0.5])
+    def test_set_stoichiometric_ratio_correctly_calculates_new_molar_mass(self):
+        '''assert molar mass is correctly calculated for new set of stoichiometric coefficient'''
+        self.o_reso.set_isotopic_ratio(compound='CoAg', element='Co', list_ratio=[0.5, 0.5])
         new_molar_mass = self.o_reso.stack['CoAg']['Co']['molar_mass']['value']
         list_isotopes_mass = self.o_reso.stack['CoAg']['Co']['isotopes']['mass']['value']
         list_isotopes_ratio = self.o_reso.stack['CoAg']['Co']['isotopes']['isotopic_ratio']
@@ -338,9 +338,9 @@ class TestGetterSetter(unittest.TestCase):
         expected_molar_mass = np.array([_m * _r for _m, _r in mass_ratio]).sum()
         self.assertAlmostEqual(new_molar_mass, expected_molar_mass, delta=0.0001)
         
-    def test_set_stochiometric_ratio_correctly_calculates_new_density(self):
-        '''assert density is correctly calculated for new set of stochiometric coefficient'''
-        self.o_reso.set_stochiometric_ratio(compound='CoAg', element='Co', list_ratio=[0.5, 0.5])
+    def test_set_stoichiometric_ratio_correctly_calculates_new_density(self):
+        '''assert density is correctly calculated for new set of stoichiometric coefficient'''
+        self.o_reso.set_isotopic_ratio(compound='CoAg', element='Co', list_ratio=[0.5, 0.5])
         new_density = self.o_reso.stack['CoAg']['Co']['density']['value']
         list_density = self.o_reso.stack['CoAg']['Co']['isotopes']['density']['value']
         list_isotopes_ratio = self.o_reso.stack['CoAg']['Co']['isotopes']['isotopic_ratio']
@@ -392,14 +392,14 @@ class TestTransmissionAttenuation(unittest.TestCase):
     
     def setUp(self):
         _stack = {'CoAg': {'elements': ['Co','Ag'],
-                               'stochiometric_ratio': [1, 2],
+                               'stoichiometric_ratio': [1, 2],
                                    'thickness': {'value': 0.025,
                                                  'units': 'mm'},
                                    'density': {'value': np.NaN,
                                                'units': 'g/cm3'},
                                    },
                       'U': {'elements': ['U'],
-                                 'stochiometric_ratio': [1],
+                                 'stoichiometric_ratio': [1],
                                  'thickness': {'value': 0.03,
                                                'units': 'mm'},
                                  'density': {'value': np.NaN,

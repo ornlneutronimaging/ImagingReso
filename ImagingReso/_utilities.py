@@ -66,7 +66,7 @@ def checking_stack(stack={}, database='ENDF_VIII'):
     ======
     ValueError if one of the element in one of the stack can not be found 
     ValueError if thickness is not a float
-    ValueError if elements and stochiometric ratio arrays do not have the same size
+    ValueError if elements and stoichiometric ratio arrays do not have the same size
     
     Return:
     ======
@@ -82,9 +82,9 @@ def checking_stack(stack={}, database='ENDF_VIII'):
         if not isinstance(_thickness, numbers.Number):
             raise ValueError("Thickness {} should be a number!".format(_thickness))
     
-        _stochiometric_ratio = stack[_keys]['stochiometric_ratio']
-        if len(_stochiometric_ratio) != len(_elements):
-            raise ValueError("Stochiometric Ratio and Elements should have the same size!")
+        _stoichiometric_ratio = stack[_keys]['stoichiometric_ratio']
+        if len(_stoichiometric_ratio) != len(_elements):
+            raise ValueError("stoichiometric Ratio and Elements should have the same size!")
     
     return True    
 
@@ -108,7 +108,7 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
     =======
     the dictionary of the elements passed
       ex: {'AgCo2': {'elements': ['Ag','Co'],
-                     'stochiometric_ratio': [1,2],
+                     'stoichiometric_ratio': [1,2],
                      'thickness': {'value': thickness,
                                    'units': 'mm',
                                    },
@@ -134,7 +134,7 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
         _elements_array.append(_single_element)
 
     return {formula: {'elements': _elements_array,
-                      'stochiometric_ratio': _atomic_ratio_array,
+                      'stoichiometric_ratio': _atomic_ratio_array,
                       'thickness': {'value': thickness,
                                     'units': 'mm'},
                       'density': {'value': density,
@@ -347,17 +347,17 @@ def get_atoms_per_cm3_of_layer(compound_dict={}):
     atoms_per_cm3 = {}
     
     _list_of_elements = compound_dict['elements']
-    _stochiometric_list = compound_dict['stochiometric_ratio']
+    _stoichiometric_list = compound_dict['stoichiometric_ratio']
 
-    _element_stochio = zip(_list_of_elements, _stochiometric_list)
+    _element_stochio = zip(_list_of_elements, _stoichiometric_list)
     _molar_mass_sum = 0
     for _element, _stochio in _element_stochio:
         _molar_mass_sum += _stochio * compound_dict[_element]['molar_mass']['value']
 
-    _element_stochio = zip(_list_of_elements, _stochiometric_list)
+    _element_stochio = zip(_list_of_elements, _stoichiometric_list)
     for _element, _stochio in _element_stochio:
         _step1 = (compound_dict['density']['value'] * _stochio) / _molar_mass_sum
-        atoms_per_cm3[_element] = Avogadro * _step1 
+        atoms_per_cm3[_element] = Avogadro * _step1
     
     return atoms_per_cm3
 
