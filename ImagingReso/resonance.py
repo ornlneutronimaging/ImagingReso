@@ -15,6 +15,8 @@ class Resonance(object):
     stack_signal = {} # transmission and attenuation signal for every isotope and compound
     total_signal = {}  # transmission and attenuation of the entire sample
     
+    density_lock = {} # dictionary that will defined the densities locked
+    
     energy_max = np.NaN
     energy_min = np.NaN
     energy_step = np.NaN
@@ -50,6 +52,9 @@ class Resonance(object):
             new_stack = self.__update_stack_with_isotopes_infos(stack=stack)
             self.stack = new_stack
             
+            # if layer density has been defined, lock it
+            self.__lock_density_if_defined()
+            
             # calculate stack_sigma, layer density, atoms_per_cm3 ...
             self.__math_on_stack()
                 
@@ -71,6 +76,9 @@ class Resonance(object):
                                                       thickness=thickness, 
                                                       density=density,
                                                       database=self.database)      
+        # check if density has been defined
+        self.__lock_density_if_defined(stack=_new_stack)
+        
         new_stack = self.__update_stack_with_isotopes_infos(stack=_new_stack)
         self.stack = {**self.stack, **new_stack}
         
@@ -216,12 +224,12 @@ class Resonance(object):
         return _stack[compound][element]['density']['value']
 
     def set_density(self, compound='', element='', density=np.NaN):
-        '''defines the new density f the compound/element 
+        '''defines the new density of the compound/element 
         
         Parameters:
         ===========
         compound: string (default is ''). Name of compound
-        elememnt: string (defualt is ''). Name of element
+        element: string (defualt is ''). Name of element
         density: float (default is np.NaN). New density
         
         Raises:
@@ -251,9 +259,9 @@ class Resonance(object):
         self.stack[compound][element]['density']['value'] = density
 
         # update entire stack
-        self.__math_on_stack()
+        self.__math_on_stack(used_lock=True)
         
-    def __math_on_stack(self):
+    def __math_on_stack(self, used_lock=False):
         '''will perform all the various update of the stack, such as populating the stack_sigma, caluclate the density of the
         layers....etc. '''
 
@@ -264,10 +272,33 @@ class Resonance(object):
         self.__update_layer_density()
 
         # populate atoms_per_cm3
-        self.__calculate_atoms_per_cm3()
+        self.__calculate_atoms_per_cm3(used_lock=used_lock)
         
         # calculate transmission and attenuation
         self.__calculate_transmission_attenuation()
+
+    def __lock_density_if_defined(self, stack={}):
+        '''lock (True) the density lock if the density has been been defined during initialization
+        Store the resulting dictionary into density_lock
+
+        Parameters:
+        ===========
+        stack: dictionary (optional)
+          if not provided, the entire stack will be used
+        '''
+        if stack == {}:
+            stack = self.stack
+            density_lock = {}
+        else:
+            density_lock = self.density_lock
+            
+        for _compound in stack.keys():
+            _density = stack[_compound]['density']['value']
+            if np.isnan(_density):
+                density_lock[_compound] = False
+            else:
+                density_lock[_compound] = True
+        self.density_lock = density_lock
 
     def __calculate_transmission_attenuation(self):
         '''  '''
@@ -333,10 +364,14 @@ class Resonance(object):
         total_signal['energy_eV'] = energy_compound
         self.total_signal = total_signal
         
-    def __calculate_atoms_per_cm3(self):
+    def __calculate_atoms_per_cm3(self, used_lock=False):
         '''calculate for each element, the atoms per cm3'''
         stack = self.stack
+        _density_lock = self.density_lock
+        
         for _name_of_compound in stack.keys():
+            if used_lock and _density_lock[_name_of_compound]:
+                continue
             atoms_per_cm3 = _utilities.get_atoms_per_cm3_of_layer(compound_dict=stack[_name_of_compound])
             stack[_name_of_compound]['atoms_per_cm3'] = atoms_per_cm3
         self.stack = stack
@@ -357,10 +392,15 @@ class Resonance(object):
         return stack
         
     def __update_layer_density(self):
-        '''calculate the layer density if the user did not provide any'''
+        '''calculate or update the layer density'''
         _stack = self.stack
+        _density_lock = self.density_lock
+
         list_compound = _stack.keys()
         for _key in list_compound:
+            if _density_lock[_key]:
+                continue
+
             if np.isnan(_stack[_key]['density']['value']):
                 _list_ratio = _stack[_key]['stoichiometric_ratio']
                 _list_density = []
@@ -385,7 +425,8 @@ class Resonance(object):
         return stack
 
     def __update_density(self, compound='', element=''):
-        '''Re-calculate the density of the element given due to stoichiometric changes
+        '''Re-calculate the density of the element given due to stoichiometric changes as 
+        well as the compound density (if density is not locked)
         
         Parameters:
         ===========
@@ -399,6 +440,10 @@ class Resonance(object):
         for _ratio, _density in ratio_density:
             _density_element += np.float(_ratio) * np.float(_density)
         self.stack[compound][element]['density']['value'] = _density_element
+        
+        _density_lock = self.density_lock
+        if not _density[compound]:
+            self.__update_layer_density
         
     def __update_molar_mass(self, compound='', element=''):
         '''Re-calculate the molar mass of the element given due to stoichiometric changes

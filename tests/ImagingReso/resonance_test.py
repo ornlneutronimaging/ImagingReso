@@ -247,6 +247,56 @@ class TestInitialization(unittest.TestCase):
         self.assertEqual(co_density_expected, stack['CoAg']['Co']['density']['value'])
         self.assertEqual(ag_density_expected, stack['Ag']['Ag']['density']['value'])
         
+    def test_layer_density_locked_if_defined_during_initialization_init(self):
+        '''assert the layer density is locked if defined at the beginning using init'''
+        _stack = {'CoAg': {'elements': ['Co','Ag'],
+                               'stochiometric_ratio': [1, 2],
+                               'thickness': {'value': 0.025,
+                                             'units': 'mm'},
+                               'density' :{'value': 8.9,
+                                           'units': 'g/cm3'},
+                               },
+                      'Ag': {'elements': ['Ag'],
+                             'stochiometric_ratio': [1],
+                             'thickness': {'value': 0.03,
+                                           'units': 'mm'},
+                             'density' :{'value': np.NaN,
+                                         'units': 'g/cm3'},
+                             },
+                      }
+        o_reso = Resonance(stack=_stack)    
+        
+        density_lock_before = 8.9
+        density_lock_after = o_reso.stack['CoAg']['density']['value']
+        self.assertEqual(density_lock_after, density_lock_before)
+        
+        density_unlock_expected = 10.5
+        density_unlock_after = o_reso.stack['Ag']['density']['value']
+        self.assertEqual(density_unlock_after, density_unlock_expected)
+        
+    def test_layer_density_locked_if_defined_during_initialization_add_layer(self):
+        '''assert the layer density is locked if defined at the beginning using add_layer'''
+        o_reso = Resonance()
+    
+        # layer 1
+        layer1 = 'CoAg'
+        thickness1 = 0.025
+        density = 8.9
+        o_reso.add_layer(formula=layer1, thickness=thickness1)
+    
+        # layer 2
+        layer2 = 'Ag'
+        thickness2 = 0.1
+        o_reso.add_layer(formula=layer2, thickness=thickness2)        
+    
+        density_lock_before = 8.9
+        density_lock_after = o_reso.stack['CoAg']['density']['value']
+        self.assertEqual(density_lock_after, density_lock_before)
+    
+        density_unlock_expected = 10.5
+        density_unlock_after = o_reso.stack['Ag']['density']['value']
+        self.assertEqual(density_unlock_after, density_unlock_expected)
+
 
 class TestGetterSetter(unittest.TestCase):
     
@@ -381,12 +431,40 @@ class TestGetterSetter(unittest.TestCase):
         self.assertRaises(ValueError, self.o_reso.set_density, compound='CoAg', element='unknown')
         self.assertRaises(ValueError, self.o_reso.set_density, compound='CoAg', element='Co', density='not_a_number')
         
-    def test_set_density_works(self):
-        '''assert set density works'''
-        self.o_reso.set_density(compound='CoAg', element='Ag', density=50)
-        _expected_density = 50
-        _returned_density = self.o_reso.get_density(compound='CoAg', element='Ag')
-        self.assertEqual(_expected_density, _returned_density)
+    def test_set_isotopic_ratio_only_change_unlock_compound_density(self):
+        '''assert set isotopic ratio only change unlock compound density'''
+        _stack = {'CoAg': {'elements': ['Co','Ag'],
+                            'stochiometric_ratio': [1, 2],
+                            'thickness': {'value': 0.025,
+                                          'units': 'mm'},
+                            'density': {'value': 8.5,
+                                        'units': 'g/cm3'},
+                            },
+                  'U': {'elements': ['U'],
+                        'stochiometric_ratio': [1],
+                        'thickness': {'value': 0.03,
+                                      'units': 'mm'},
+                        'density': {'value': np.NaN,
+                                    'units': 'g/cm3'},
+                    },
+                  }
+        o_reso = Resonance(stack=_stack)        
+        
+        lock_density_before = o_reso.stack['CoAg']['density']['value']
+        unlock_density_before = o_reso.stack['U']['density']['value']
+        
+        # defining new density
+        self.o_reso.set_density(compound='CoAg', element='Ag', density=9)
+        
+        lock_density_after = o_reso.stack['CoAg']['density']['value']
+        unlock_density_after = o_reso.stack['U']['density']['value']
+        
+        self.assertEqual(lock_density_after, lock_density_before)
+        print(unlock_density_before)
+        print(unlock_density_after)
+        
+
+
         
 class TestTransmissionAttenuation(unittest.TestCase):
     
