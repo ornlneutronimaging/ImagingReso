@@ -192,8 +192,8 @@ class TestUtilities_1(unittest.TestCase):
         self.assertEqual(_dict_returned['molar_mass']['value'], _dict_expected['molar_mass']['value'])
         
     def test_get_isotope_returns_empty_dict_if_missing_element(self):
-        '''assert get_isotopes_dict returns empty dict if element can not be found such as Al'''
-        _element = 'Ne'
+        '''assert get_isotopes_dict returns empty dict if element can not be found such as Xo'''
+        _element = 'Xo'
         _dict_returned = get_isotope_dicts(element=_element)
         _dict_expected = {'isotopes': {'list': [],
                                        'file_names': [],
@@ -209,6 +209,27 @@ class TestUtilities_1(unittest.TestCase):
                                          'units': 'g/mol',
                                          },
                           }
+        self.assertEqual(_dict_returned, _dict_expected)
+
+    def test_get_isotope_dicts_returns_correct_element(self):
+        '''assert get_isotopes_dict returns correct isotopes if element with single symbol such as C'''
+        _element = 'C'
+        _dict_returned = get_isotope_dicts(element=_element)
+        _dict_expected = {'isotopes': {'list': ['12-C', '13-C'],
+                                       'file_names': ['C-12.csv', 'C-13.csv'],
+                                       'mass': {'value': [12.0, 13.0033548378],
+                                                'units': 'g/mol',
+                                                },
+                                       'density': {'value': [2.0981291681583922, 2.27355983909181],
+                                                   'units': 'g/cm3'},
+                                       'isotopic_ratio': [0.9893000000000001, 0.010700000000000001]},
+                          'density': {'value': 2.1,
+                                      'units': 'g/cm3'},
+                          'molar_mass': {'value': 12.0107,
+                                         'units': 'g/mol',
+                                         },
+                          }
+
         self.assertEqual(_dict_returned, _dict_expected)
         
     def test_get_mass(self):

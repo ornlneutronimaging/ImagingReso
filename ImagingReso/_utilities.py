@@ -161,7 +161,7 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
     '''
     _file_path = os.path.abspath(os.path.dirname(__file__))
     _database_folder = os.path.join(_file_path, 'reference_data', database)
-    _element_search_path = os.path.join(_database_folder, element + '*.csv')
+    _element_search_path = os.path.join(_database_folder, element + '-*.csv')
     list_files = glob.glob(_element_search_path)
     isotope_dict = {'isotopes': {'list': [], 
                                  'file_names': [],
@@ -348,7 +348,6 @@ def get_atoms_per_cm3_of_layer(compound_dict={}):
     
     _list_of_elements = compound_dict['elements']
     _stochiometric_list = compound_dict['stochiometric_ratio']
-    _element_stochio = zip(_list_of_elements, _stochiometric_list)
 
     _element_stochio = zip(_list_of_elements, _stochiometric_list)
     _molar_mass_sum = 0
