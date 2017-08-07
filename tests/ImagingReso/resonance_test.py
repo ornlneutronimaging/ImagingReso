@@ -247,6 +247,39 @@ class TestInitialization(unittest.TestCase):
         self.assertEqual(co_density_expected, stack['CoAg']['Co']['density']['value'])
         self.assertEqual(ag_density_expected, stack['Ag']['Ag']['density']['value'])
         
+    def test_layer_density_locked_if_defined_during_initialization_init(self):
+        '''assert the layer density is locked if defined at the beginning using init'''
+        _stack = {'CoAg': {'elements': ['Co','Ag'],
+                               'stochiometric_ratio': [1, 2],
+                               'thickness': {'value': 0.025,
+                                             'units': 'mm'},
+                               'density' :{'value': 8.9,
+                                           'units': 'g/cm3'},
+                               },
+                      'Ag': {'elements': ['Ag'],
+                             'stochiometric_ratio': [1],
+                             'thickness': {'value': 0.03,
+                                           'units': 'mm'},
+                             },
+                      }
+        o_reso = Resonance(stack=_stack)             
+        
+    def test_layer_density_locked_if_defined_during_initialization_add_layer(self):
+        '''assert the layer density is locked if defined at the beginning using add_layer'''
+        o_reso = Resonance()
+    
+        # layer 1
+        layer1 = 'CoAg'
+        thickness1 = 0.025
+        density = 8.9
+        o_reso.add_layer(formula=layer1, thickness=thickness1)
+    
+        # layer 2
+        layer2 = 'Ag'
+        thickness2 = 0.1
+        o_reso.add_layer(formula=layer2, thickness=thickness2)        
+        
+        
 
 class TestGetterSetter(unittest.TestCase):
     

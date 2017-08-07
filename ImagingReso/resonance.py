@@ -15,6 +15,8 @@ class Resonance(object):
     stack_signal = {} # transmission and attenuation signal for every isotope and compound
     total_signal = {}  # transmission and attenuation of the entire sample
     
+    density_lock = {} # dictionary that will defined the densities locked
+    
     energy_max = np.NaN
     energy_min = np.NaN
     energy_step = np.NaN
@@ -50,6 +52,9 @@ class Resonance(object):
             new_stack = self.__update_stack_with_isotopes_infos(stack=stack)
             self.stack = new_stack
             
+            # if layer density has been defined, lock it
+            self.__lock_density_if_defined()
+            
             # calculate stack_sigma, layer density, atoms_per_cm3 ...
             self.__math_on_stack()
                 
@@ -71,6 +76,9 @@ class Resonance(object):
                                                       thickness=thickness, 
                                                       density=density,
                                                       database=self.database)      
+        # check if density has been defined
+        self.__lock_density_if_defined(stack=_new_stack)
+        
         new_stack = self.__update_stack_with_isotopes_infos(stack=_new_stack)
         self.stack = {**self.stack, **new_stack}
         
@@ -268,6 +276,29 @@ class Resonance(object):
         
         # calculate transmission and attenuation
         self.__calculate_transmission_attenuation()
+
+    def __lock_density_if_defined(self, stack={}):
+        '''lock (True) the density lock if the density has been been defined during initialization
+        Store the resulting dictionary into density_lock
+
+        Parameters:
+        ===========
+        stack: dictionary (optional)
+          if not provided, the entire stack will be used
+        '''
+        if stack == {}:
+            stack = self.stack
+            density_lock = {}
+        else:
+            density_lock = self.density_lock
+            
+        for _compound in stack.keys():
+            _density = stack[_compound]['density']['value']
+            if np.isnan(_density):
+                density_lock[_compound] = False
+            else:
+                density_lock[_compound] = True
+        self.density_lock = density_lock
 
     def __calculate_transmission_attenuation(self):
         '''  '''
