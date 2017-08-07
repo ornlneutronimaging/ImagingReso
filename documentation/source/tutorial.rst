@@ -40,7 +40,9 @@ Then you can now initialize the object as followed, in this case we use a energy
 10 eV of energy step.
 
 As noted that if the density is omitted, the program will use the stochiometri_ratio and theoretical density of each element to 
-estimage the density of the compound (layer)
+estimage the density of the compound (layer), and changing the isotope density, or isotopic coefficient will affect the layer/compound density. 
+But if you provide the density, this value won't be affected by any other changes. If you provide the density, we suppose that you 
+know what you are doing and that you know your component enough to make sure its density value should not be changed.
 
 >>> o_reso = ImagingReso.Resonance(stack = _stack, energy_min=0, energy_max=300, energy_step=10)
 
@@ -86,7 +88,7 @@ the elements you defined, for each layer.
                             'Co': 1.8051829472054791e+21},
           'density': {'units': 'g/cm3', 'value': 0.5},
           'elements': ['Co', 'Ag'],
-          'stochiometric_ratio': [1, 1],
+          'stoichiometric_ratio': [1, 1],
           'thickness': {'units': 'mm', 'value': 0.025}},
  'U': {'U': {'density': {'units': 'g/cm3', 'value': 18.95},
              'isotopes': {'density': {'units': 'g/cm3',
@@ -112,7 +114,7 @@ the elements you defined, for each layer.
        'atoms_per_cm3': {'U': 4.7943575106128917e+22},
        'density': {'units': 'g/cm3', 'value': 18.949999999999999},
        'elements': ['U'],
-       'stochiometric_ratio': [1],
+       'stoichiometric_ratio': [1],
        'thickness': {'units': 'mm', 'value': 0.3}}}       
 
 The energy range defined
@@ -181,7 +183,7 @@ It's possible to display the current list of isotopic ratio
 
 To display the entire list
 
->>> pprint.pprint(o_reso.get_stochiometric_ratio())
+>>> pprint.pprint(o_reso.get_isotopic_ratio())
 {'CoAg': {'Ag': {'107-Ag': 0.51839, '109-Ag': 0.48161000000000004},
           'Co': {'58-Co': 0.0, '59-Co': 1.0}},
  'U': {'U': {'233-U': 0.0,
@@ -191,14 +193,14 @@ To display the entire list
              
 From there, it's possible to narrow down the search to the compound and element we are looking for
 
->>> pprint.pprint(o_reso.get_stochiometric_ratio(compound='U', element='U'))  
+>>> pprint.pprint(o_reso.get_isotopic_ratio(compound='U', element='U'))  
 {'233-U': 0.0,
  '234-U': 5.4999999999999995e-05,
  '235-U': 0.0072,
  '238-U': 0.992745}
  
 if compound is composed of only 1 element, **element** paremeter can be omitted
->>> pprint.pprint(o_reso.get_stochiometric_ratio(compound='U'))
+>>> pprint.pprint(o_reso.get_isotopic_ratio(compound='U'))
 {'233-U': 0.0,
  '234-U': 5.4999999999999995e-05,
  '235-U': 0.0072,
@@ -239,7 +241,7 @@ Let's define the new stochiomettric ratio
                             'Co': 1.8051829472054791e+21},
           'density': {'units': 'g/cm3', 'value': 0.5},
           'elements': ['Co', 'Ag'],
-          'stochiometric_ratio': [1, 1],
+          'stoichiometric_ratio': [1, 1],
           'thickness': {'units': 'mm', 'value': 0.025}},
  'U': {'U': {'density': {'units': 'g/cm3', 'value': 18.680428927650006},
              'isotopes': {'density': {'units': 'g/cm3',
@@ -262,7 +264,7 @@ Let's define the new stochiomettric ratio
        'atoms_per_cm3': {'U': 4.7943575106128917e+22},
        'density': {'units': 'g/cm3', 'value': 18.949999999999999},
        'elements': ['U'],
-       'stochiometric_ratio': [1],
+       'stoichiometric_ratio': [1],
        'thickness': {'units': 'mm', 'value': 0.3}}}
        
 As you can see, the **density** and **molar_mass** values of the *U* compound/element have been updated.
@@ -280,12 +282,17 @@ or of all the compounds
 >>> pprint.pprint(o_reso.get_density())
 {'CoAg': {'Ag': 10.5, 'Co': 8.9}, 'U': {'U': 18.680428927650006}}
 
-And now we can change the value of the density for the **Co** element
+Because you defined the density of **Co** during initialization of the layers, using set_density won't change the density. 
+The program will even complain to you that you are changing something you fixed before. you can use the *set_density* only for
+element for which you did not define the density during initialization
 
->>> o_reso.set_density(compound='CoAg', element='Co', density=8.5)
->>> pprint.pprint(o_reso.get_density())
-{'CoAg': {'Ag': 10.5, 'Co': 20}, 'U': {'U': 18.680428927650006}}
+Example:
 
+o_reso = ImagingReso.Resonance(energy_min=0, energy_max=300, energy_step=10)
+>>> stack1 = 'CO'
+>>> thickness1 = 0.025 #mm
+>>> o_reso.add_layer(formula=stack1, thickness=thickness1)
+>>> o_reso.set_density(compound='CO', element='O', density=8.5)
 
 Retrieve the Transmission and Attenuation signals
 -------------------------------------------------

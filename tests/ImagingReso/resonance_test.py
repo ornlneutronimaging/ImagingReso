@@ -452,19 +452,19 @@ class TestGetterSetter(unittest.TestCase):
                     },
                   }
         o_reso = Resonance(stack=_stack)        
-        
         lock_density_before = o_reso.stack['CoAg']['density']['value']
         unlock_density_before = o_reso.stack['U']['density']['value']
         
-        # defining new density
-        self.o_reso.set_density(compound='CoAg', element='Ag', density=9)
-        
+        # defining new density on lock compound raises error
+        self.assertRaises(IOError, self.o_reso.set_density, compound='CoAg', element='Ag', density=9)
+
+        new_set_density = 10
+        o_reso.set_density(compound='U', element='U', density=new_set_density, debug=True)
         lock_density_after = o_reso.stack['CoAg']['density']['value']
         unlock_density_after = o_reso.stack['U']['density']['value']
         
         self.assertEqual(lock_density_after, lock_density_before)
-
-
+        self.assertEqual(unlock_density_after, new_set_density)
         
 class TestTransmissionAttenuation(unittest.TestCase):
     

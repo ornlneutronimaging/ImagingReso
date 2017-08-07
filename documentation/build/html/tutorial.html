@@ -204,7 +204,9 @@ thickness is defined in mm, the density in g/cm3 and the ratio is the stochiomet
 <p>Then you can now initialize the object as followed, in this case we use a energy range of 0 to 300 eV with
 10 eV of energy step.</p>
 <p>As noted that if the density is omitted, the program will use the stochiometri_ratio and theoretical density of each element to
-estimage the density of the compound (layer)</p>
+estimage the density of the compound (layer), and changing the isotope density, or isotopic coefficient will affect the layer/compound density.
+But if you provide the density, this value won’t be affected by any other changes. If you provide the density, we suppose that you
+know what you are doing and that you know your component enough to make sure its density value should not be changed.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span> <span class="o">=</span> <span class="n">ImagingReso</span><span class="o">.</span><span class="n">Resonance</span><span class="p">(</span><span class="n">stack</span> <span class="o">=</span> <span class="n">_stack</span><span class="p">,</span> <span class="n">energy_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">energy_max</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">energy_step</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -248,7 +250,7 @@ the elements you defined, for each layer.</p>
 <span class="go">                            &#39;Co&#39;: 1.8051829472054791e+21},</span>
 <span class="go">          &#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;, &#39;value&#39;: 0.5},</span>
 <span class="go">          &#39;elements&#39;: [&#39;Co&#39;, &#39;Ag&#39;],</span>
-<span class="go">          &#39;stochiometric_ratio&#39;: [1, 1],</span>
+<span class="go">          &#39;stoichiometric_ratio&#39;: [1, 1],</span>
 <span class="go">          &#39;thickness&#39;: {&#39;units&#39;: &#39;mm&#39;, &#39;value&#39;: 0.025}},</span>
 <span class="go"> &#39;U&#39;: {&#39;U&#39;: {&#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;, &#39;value&#39;: 18.95},</span>
 <span class="go">             &#39;isotopes&#39;: {&#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;,</span>
@@ -274,7 +276,7 @@ the elements you defined, for each layer.</p>
 <span class="go">       &#39;atoms_per_cm3&#39;: {&#39;U&#39;: 4.7943575106128917e+22},</span>
 <span class="go">       &#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;, &#39;value&#39;: 18.949999999999999},</span>
 <span class="go">       &#39;elements&#39;: [&#39;U&#39;],</span>
-<span class="go">       &#39;stochiometric_ratio&#39;: [1],</span>
+<span class="go">       &#39;stoichiometric_ratio&#39;: [1],</span>
 <span class="go">       &#39;thickness&#39;: {&#39;units&#39;: &#39;mm&#39;, &#39;value&#39;: 0.3}}}</span>
 </pre></div>
 </div>
@@ -339,7 +341,7 @@ the elements you defined, for each layer.</p>
 <h3>Display current isotopic ratio<a class="headerlink" href="#display-current-isotopic-ratio" title="Permalink to this headline">¶</a></h3>
 <p>It’s possible to display the current list of isotopic ratio</p>
 <p>To display the entire list</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">get_stochiometric_ratio</span><span class="p">())</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">get_isotopic_ratio</span><span class="p">())</span>
 <span class="go">{&#39;CoAg&#39;: {&#39;Ag&#39;: {&#39;107-Ag&#39;: 0.51839, &#39;109-Ag&#39;: 0.48161000000000004},</span>
 <span class="go">          &#39;Co&#39;: {&#39;58-Co&#39;: 0.0, &#39;59-Co&#39;: 1.0}},</span>
 <span class="go"> &#39;U&#39;: {&#39;U&#39;: {&#39;233-U&#39;: 0.0,</span>
@@ -349,7 +351,7 @@ the elements you defined, for each layer.</p>
 </pre></div>
 </div>
 <p>From there, it’s possible to narrow down the search to the compound and element we are looking for</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">get_stochiometric_ratio</span><span class="p">(</span><span class="n">compound</span><span class="o">=</span><span class="s1">&#39;U&#39;</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="s1">&#39;U&#39;</span><span class="p">))</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">get_isotopic_ratio</span><span class="p">(</span><span class="n">compound</span><span class="o">=</span><span class="s1">&#39;U&#39;</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="s1">&#39;U&#39;</span><span class="p">))</span>
 <span class="go">{&#39;233-U&#39;: 0.0,</span>
 <span class="go"> &#39;234-U&#39;: 5.4999999999999995e-05,</span>
 <span class="go"> &#39;235-U&#39;: 0.0072,</span>
@@ -357,7 +359,7 @@ the elements you defined, for each layer.</p>
 </pre></div>
 </div>
 <p>if compound is composed of only 1 element, <strong>element</strong> paremeter can be omitted
-&gt;&gt;&gt; pprint.pprint(o_reso.get_stochiometric_ratio(compound=’U’))
+&gt;&gt;&gt; pprint.pprint(o_reso.get_isotopic_ratio(compound=’U’))
 {‘233-U’: 0.0,</p>
 <blockquote>
 <div>‘234-U’: 5.4999999999999995e-05,
@@ -397,7 +399,7 @@ the elements you defined, for each layer.</p>
 <span class="go">                            &#39;Co&#39;: 1.8051829472054791e+21},</span>
 <span class="go">          &#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;, &#39;value&#39;: 0.5},</span>
 <span class="go">          &#39;elements&#39;: [&#39;Co&#39;, &#39;Ag&#39;],</span>
-<span class="go">          &#39;stochiometric_ratio&#39;: [1, 1],</span>
+<span class="go">          &#39;stoichiometric_ratio&#39;: [1, 1],</span>
 <span class="go">          &#39;thickness&#39;: {&#39;units&#39;: &#39;mm&#39;, &#39;value&#39;: 0.025}},</span>
 <span class="go"> &#39;U&#39;: {&#39;U&#39;: {&#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;, &#39;value&#39;: 18.680428927650006},</span>
 <span class="go">             &#39;isotopes&#39;: {&#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;,</span>
@@ -420,7 +422,7 @@ the elements you defined, for each layer.</p>
 <span class="go">       &#39;atoms_per_cm3&#39;: {&#39;U&#39;: 4.7943575106128917e+22},</span>
 <span class="go">       &#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;, &#39;value&#39;: 18.949999999999999},</span>
 <span class="go">       &#39;elements&#39;: [&#39;U&#39;],</span>
-<span class="go">       &#39;stochiometric_ratio&#39;: [1],</span>
+<span class="go">       &#39;stoichiometric_ratio&#39;: [1],</span>
 <span class="go">       &#39;thickness&#39;: {&#39;units&#39;: &#39;mm&#39;, &#39;value&#39;: 0.3}}}</span>
 </pre></div>
 </div>
@@ -437,12 +439,15 @@ We need to change this value.</p>
 <span class="go">{&#39;CoAg&#39;: {&#39;Ag&#39;: 10.5, &#39;Co&#39;: 8.9}, &#39;U&#39;: {&#39;U&#39;: 18.680428927650006}}</span>
 </pre></div>
 </div>
-<p>And now we can change the value of the density for the <strong>Co</strong> element</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span><span class="o">.</span><span class="n">set_density</span><span class="p">(</span><span class="n">compound</span><span class="o">=</span><span class="s1">&#39;CoAg&#39;</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="s1">&#39;Co&#39;</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="mf">8.5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">get_density</span><span class="p">())</span>
-<span class="go">{&#39;CoAg&#39;: {&#39;Ag&#39;: 10.5, &#39;Co&#39;: 20}, &#39;U&#39;: {&#39;U&#39;: 18.680428927650006}}</span>
-</pre></div>
-</div>
+<p>Because you defined the density of <strong>Co</strong> during initialization of the layers, using set_density won’t change the density.
+The program will even complain to you that you are changing something you fixed before. you can use the <em>set_density</em> only for
+element for which you did not define the density during initialization</p>
+<p>Example:</p>
+<p>o_reso = ImagingReso.Resonance(energy_min=0, energy_max=300, energy_step=10)
+&gt;&gt;&gt; stack1 = ‘CO’
+&gt;&gt;&gt; thickness1 = 0.025 #mm
+&gt;&gt;&gt; o_reso.add_layer(formula=stack1, thickness=thickness1)
+&gt;&gt;&gt; o_reso.set_density(compound=’CO’, element=’O’, density=8.5)</p>
 </div>
 <div class="section" id="retrieve-the-transmission-and-attenuation-signals">
 <h3>Retrieve the Transmission and Attenuation signals<a class="headerlink" href="#retrieve-the-transmission-and-attenuation-signals" title="Permalink to this headline">¶</a></h3>
