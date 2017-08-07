@@ -77,12 +77,12 @@ class Resonance(object):
         # calculate stack_sigma, layer density, atoms_per_cm3 ...
         self.__math_on_stack()
 
-    def get_stochiometric_ratio(self, compound='', element=''):
-        '''returns the list of isotopes for the element of the compound defined with their stochiometric values
+    def get_isotopic_ratio(self, compound='', element=''):
+        '''returns the list of isotopes for the element of the compound defined with their stoichiometric values
         
         Parameters:
         ===========
-        compound: string (default is empty). If empty, all the stochiometric will be displayed
+        compound: string (default is empty). If empty, all the stoichiometric will be displayed
         element: string (default is same as compound). 
         
         Raises:
@@ -130,7 +130,7 @@ class Resonance(object):
             
         return _stochiometric_ratio
         
-    def set_stochiometric_ratio(self, compound='', element='', list_ratio=[]):
+    def set_isotopic_ratio(self, compound='', element='', list_ratio=[]):
         '''defines the new set of ratio of the compound/element and trigger the calculation to update the density
         
         Parameters:
@@ -177,7 +177,7 @@ class Resonance(object):
         
         Parameters:
         ===========
-        compound: string (default is empty). If empty, all the stochiometric will be displayed
+        compound: string (default is empty). If empty, all the stoichiometric will be displayed
         element: string (default is same as compound). 
         
         Raises:
@@ -326,7 +326,7 @@ class Resonance(object):
             
             total_transmisison *= transmission_compound
         
-        total_attenuation *=  (1. - transmission_compound)
+        total_attenuation = 1. - transmission_compound
 
         self.stack_signal = stack_signal
         total_signal['transmission'] = total_transmisison
@@ -386,7 +386,7 @@ class Resonance(object):
         return stack
 
     def __update_density(self, compound='', element=''):
-        '''Re-calculate the density of the compound / element given due to stochiometric changes
+        '''Re-calculate the density of the element given due to stoichiometric changes
         
         Parameters:
         ===========
@@ -402,7 +402,7 @@ class Resonance(object):
         self.stack[compound][element]['density']['value'] = _density_element
         
     def __update_molar_mass(self, compound='', element=''):
-        '''Re-calculate the molar moass of the compound / element given due to stochiometric changes
+        '''Re-calculate the molar mass of the element given due to stoichiometric changes
         
         Parameters:
         ==========
