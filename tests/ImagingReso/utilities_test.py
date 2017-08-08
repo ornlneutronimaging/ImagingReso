@@ -380,10 +380,10 @@ class TestUtilities_2(unittest.TestCase):
         energy_ev = np.linspace(1, 10, 10)
         energy_lambda = energy_to_lambda(energy_ev=energy_ev)
         
-        expected_energy_lambda_0 = 0.0090436
-        expected_energy_lambda_1 = 0.0045218
-        expected_energy_lambda_2 = 0.0030145
-        expected_energy_lambda_3 = 0.0022609
+        expected_energy_lambda_0 = 0.28598427
+        expected_energy_lambda_1 = 0.20222141
+        expected_energy_lambda_2 = 0.16511309
+        expected_energy_lambda_3 = 0.14299213
         self.assertAlmostEquals(expected_energy_lambda_0, energy_lambda[0], delta=0.0001)
         self.assertAlmostEquals(expected_energy_lambda_1, energy_lambda[1], delta=0.0001)
         self.assertAlmostEquals(expected_energy_lambda_2, energy_lambda[2], delta=0.0001)
