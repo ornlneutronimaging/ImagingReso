@@ -496,9 +496,9 @@ class TestTransmissionAttenuation(unittest.TestCase):
         expected_eV_1 = 9.99983261e-2
         expected_eV_2 = 1.99986652e-1
         
-        expected_tran_0 = 0.80909022
-        expected_tran_1 = 0.99715848
-        expected_tran_2 = 0.99777858
+        expected_tran_0 = 0.89599697
+        expected_tran_1 = 0.99852597
+        expected_tran_2 = 0.99884782
         
         self.assertAlmostEqual(expected_eV_0, energy_eV[0], delta=0.001)
         self.assertAlmostEqual(expected_eV_1, energy_eV[1], delta=0.001)
@@ -517,16 +517,16 @@ class TestTransmissionAttenuation(unittest.TestCase):
         expected_eV_1 = 9.99983261e-2
         expected_eV_2 = 1.99986652e-1
         
-        expected_tran_0 = 1. - 0.80909022
-        expected_tran_1 = 1. - 0.99715848
-        expected_tran_2 = 1. - 0.99777858
+        expected_attenu_0 = 1. - 0.89599697
+        expected_attenu_1 = 1. - 0.99852597
+        expected_attenu_2 = 1. - 0.99884782
         
         self.assertAlmostEqual(expected_eV_0, energy_eV[0], delta=0.001)
         self.assertAlmostEqual(expected_eV_1, energy_eV[1], delta=0.001)
         self.assertAlmostEqual(expected_eV_2, energy_eV[2], delta=0.001)
-        self.assertAlmostEqual(expected_tran_0, attenuation[0], delta=0.001)
-        self.assertAlmostEqual(expected_tran_1, attenuation[1], delta=0.001)
-        self.assertAlmostEqual(expected_tran_2, attenuation[2], delta=0.001)
+        self.assertAlmostEqual(expected_attenu_0, attenuation[0], delta=0.001)
+        self.assertAlmostEqual(expected_attenu_1, attenuation[1], delta=0.001)
+        self.assertAlmostEqual(expected_attenu_2, attenuation[2], delta=0.001)
 
     def test_calculate_transmission_element(self):
         '''assert calculation of transmission for element works'''

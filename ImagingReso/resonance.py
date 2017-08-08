@@ -260,13 +260,7 @@ class Resonance(object):
         if _density_lock[compound]: 
             raise IOError("You are not authorized to change the density!")
 
-        self.stack[compound][element]['density']['value'] = density
-
-        # update entire stack
-        #self.__math_on_stack(used_lock=True)
-
-        # forget isotope density and directly moves to layer level to calculate density
-        self.__update_layer_density(debug=debug)
+        self.stack[compound]['density']['value'] = density
     
         # populate atoms_per_cm3
         self.__calculate_atoms_per_cm3(used_lock=True)
@@ -344,7 +338,7 @@ class Resonance(object):
                     _sigma_iso = stack_sigma[_name_of_compound][_element][_iso]['sigma_b']
                     _transmission_iso = _utilities.calculate_transmission(
                         thickness_cm=_thickness_cm, 
-                        atoms_per_cm3=_atoms_per_cm3, 
+                        atoms_per_cm3=_atoms_per_cm3,
                         sigma_b=_sigma_iso)
                     stack_signal[_name_of_compound][_element][_iso]['transmission'] = _transmission_iso
                     stack_signal[_name_of_compound][_element][_iso]['attenuation'] = 1. - _transmission_iso
@@ -509,7 +503,7 @@ class Resonance(object):
                                                  E_max=self.energy_max,
                                                  E_step=self.energy_step)
                     stack_sigma[_compound][_element][_iso]['energy_eV'] = _dict['energy_eV']
-                    stack_sigma[_compound][_element][_iso]['sigma_b'] = _dict['sigma_b']
+                    stack_sigma[_compound][_element][_iso]['sigma_b'] = _dict['sigma_b'] * _ratio
 
                     # sigma for all isotopes with their isotopic ratio
                     _sigma_all_isotopes += _dict['sigma_b'] * _ratio
@@ -609,7 +603,7 @@ class Resonance(object):
                 _x_axis = _utilities.energy_to_lambda(energy_ev=_x_axis)
             _y_axis = _live_path[y_axis_tag]
             plt.plot(_x_axis, _y_axis, label=_label)
-        
+
         plt.ylim(-0.01, 1.01)
         plt.xlabel(x_axis_label)
         plt.ylabel(y_axis_label)
