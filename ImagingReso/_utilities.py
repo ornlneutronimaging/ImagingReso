@@ -314,7 +314,7 @@ def get_interpolated_data(df=[], E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
     return {'x_axis': x_axis, 'y_axis': y_axis}
 
 def get_sigma(database_file_name='', E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
-    '''retrieve the Energy and sigma axis for the given isotop
+    '''retrieve the Energy and sigma axis for the given isotope
     
     Paramters:
     ==========

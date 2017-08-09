@@ -7,6 +7,46 @@ from ImagingReso.resonance import Resonance
 
 class TestInitialization(unittest.TestCase):
 
+    def test_str(self):
+        '''assert print(object) works'''
+        _stack = {'CoAg': {'elements': ['Co','Ag'],
+                               'stoichiometric_ratio': [1, 2],
+                                   'thickness': {'value': 0.025,
+                                                 'units': 'mm'},
+                                   },
+                      'Ag': {'elements': ['Ag'],
+                                 'stoichiometric_ratio': [1],
+                                 'thickness': {'value': 0.03,
+                                               'units': 'mm'},
+                                 },
+                          }
+        energy_min = 10
+        energy_max = 150
+        energy_step = 1
+        o_reso = Resonance(stack=_stack, energy_max=energy_max, energy_min=energy_min, 
+                               energy_step=energy_step)
+        self.assertIsInstance(o_reso.__str__(), str)
+
+    def test_repr(self):
+        '''assert object works'''
+        _stack = {'CoAg': {'elements': ['Co','Ag'],
+                               'stoichiometric_ratio': [1, 2],
+                                   'thickness': {'value': 0.025,
+                                                 'units': 'mm'},
+                                   },
+                      'Ag': {'elements': ['Ag'],
+                                 'stoichiometric_ratio': [1],
+                                 'thickness': {'value': 0.03,
+                                               'units': 'mm'},
+                                 },
+                          }
+        energy_min = 10
+        energy_max = 150
+        energy_step = 1
+        o_reso = Resonance(stack=_stack, energy_max=energy_max, energy_min=energy_min, 
+                               energy_step=energy_step)
+        self.assertIsInstance(o_reso.__repr__(), str)
+        
     def test_initialization_of_object(self):
         '''assert object is correctly initialized with energy min, max and step'''
         _stack = {'CoAg': {'elements': ['Co','Ag'],
@@ -284,13 +324,11 @@ class TestInitialization(unittest.TestCase):
         thickness1 = 0.025
         density = 8.9
         o_reso.add_layer(formula=layer1, thickness=thickness1, density=density)
-        print(o_reso.density_lock)
     
         # layer 2
         layer2 = 'Ag'
         thickness2 = 0.1
         o_reso.add_layer(formula=layer2, thickness=thickness2)        
-        print(o_reso.density_lock)
     
         density_lock_before = 8.9
         density_lock_after = o_reso.stack['CoAg']['density']['value']

@@ -2,6 +2,7 @@ import numpy as np
 import numbers
 import os
 import matplotlib.pyplot as plt
+import json
 
 from ImagingReso import _utilities
 
@@ -20,6 +21,22 @@ class Resonance(object):
     energy_max = np.NaN
     energy_min = np.NaN
     energy_step = np.NaN
+    
+    def __str__(self):
+        '''what to display if user does
+        
+        >>> o_reso = Resolution()
+        >>> print(o_reso)
+        '''
+        return json.dumps(self.stack, indent=4)
+    
+    def __repr__(self):
+        '''what to display if user does
+        
+        >>> o_reso = Resolution()
+        >>> o_reso
+        '''
+        return json.dumps(self.stack, indent=4)
     
     def __init__(self, stack={}, energy_max=300, energy_min=0, energy_step=0.1):
         """initialize resonance object

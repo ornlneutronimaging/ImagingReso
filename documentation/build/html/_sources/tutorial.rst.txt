@@ -21,20 +21,20 @@ example:
 --------
 
 >>> _stack = {'CoAg': {'elements': ['Co','Ag'],
-                   'stochiometric_ratio': [1,1],
-                   'thickness': {'value': 0.025,
-                                'units': 'mm'},
-                   'density': {'value': 0.5,
-                              'units': 'g/cm3'},
-                  },
-         'U': {'elements': ['U'],
-               'stochiometric_ratio': [1],
-              'thickness': {'value': 0.3,
-                            'units': 'mm'},
-                'density': {'value': np.NaN,
-                            'units': 'g/cm3'},
-              },
-         }
+                       'stochiometric_ratio': [1,1],
+                       'thickness': {'value': 0.025,
+                                     'units': 'mm'},
+                       'density': {'value': 0.5,
+                                   'units': 'g/cm3'},
+                       },
+              'U': {'elements': ['U'],
+                    'stochiometric_ratio': [1],
+                    'thickness': {'value': 0.3,
+                                  'units': 'mm'},
+                    'density': {'value': np.NaN,
+                                'units': 'g/cm3'},
+                   },
+             }
          
 Then you can now initialize the object as followed, in this case we use a energy range of 0 to 300 eV with 
 10 eV of energy step.
@@ -116,6 +116,38 @@ the elements you defined, for each layer.
        'elements': ['U'],
        'stoichiometric_ratio': [1],
        'thickness': {'units': 'mm', 'value': 0.3}}}       
+
+or you can also simply print the object
+
+>>> print(o_reso)
+{
+    "CoAg": {
+        "elements": [
+            "Co",
+            "Ag"
+        ],
+        "stoichiometric_ratio": [
+            1,
+            1
+        ],
+   ...
+}
+
+or using only the object name
+
+>>> o_reso
+{
+    "CoAg": {
+        "elements": [
+            "Co",
+            "Ag"
+        ],
+        "stoichiometric_ratio": [
+            1,
+            1
+        ],
+   ...
+}
 
 The energy range defined
 
