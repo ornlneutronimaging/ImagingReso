@@ -439,15 +439,6 @@ We need to change this value.</p>
 <span class="go">{&#39;CoAg&#39;: {&#39;Ag&#39;: 10.5, &#39;Co&#39;: 8.9}, &#39;U&#39;: {&#39;U&#39;: 18.680428927650006}}</span>
 </pre></div>
 </div>
-<p>Because you defined the density of <strong>Co</strong> during initialization of the layers, using set_density won’t change the density.
-The program will even complain to you that you are changing something you fixed before. you can use the <em>set_density</em> only for
-element for which you did not define the density during initialization</p>
-<p>Example:</p>
-<p>o_reso = ImagingReso.Resonance(energy_min=0, energy_max=300, energy_step=10)
-&gt;&gt;&gt; stack1 = ‘CO’
-&gt;&gt;&gt; thickness1 = 0.025 #mm
-&gt;&gt;&gt; o_reso.add_layer(formula=stack1, thickness=thickness1)
-&gt;&gt;&gt; o_reso.set_density(compound=’CO’, element=’O’, density=8.5)</p>
 </div>
 <div class="section" id="retrieve-the-transmission-and-attenuation-signals">
 <h3>Retrieve the Transmission and Attenuation signals<a class="headerlink" href="#retrieve-the-transmission-and-attenuation-signals" title="Permalink to this headline">¶</a></h3>

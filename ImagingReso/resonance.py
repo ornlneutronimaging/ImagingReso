@@ -223,7 +223,7 @@ class Resonance(object):
         
         return _stack[compound][element]['density']['value']
 
-    def set_density(self, compound='', element='', density=np.NaN, debug=False):
+    def __set_density(self, compound='', element='', density=np.NaN, debug=False):
         '''defines the new density of the compound/element 
         
         Parameters:

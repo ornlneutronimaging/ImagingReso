@@ -282,18 +282,6 @@ or of all the compounds
 >>> pprint.pprint(o_reso.get_density())
 {'CoAg': {'Ag': 10.5, 'Co': 8.9}, 'U': {'U': 18.680428927650006}}
 
-Because you defined the density of **Co** during initialization of the layers, using set_density won't change the density. 
-The program will even complain to you that you are changing something you fixed before. you can use the *set_density* only for
-element for which you did not define the density during initialization
-
-Example:
-
-o_reso = ImagingReso.Resonance(energy_min=0, energy_max=300, energy_step=10)
->>> stack1 = 'CO'
->>> thickness1 = 0.025 #mm
->>> o_reso.add_layer(formula=stack1, thickness=thickness1)
->>> o_reso.set_density(compound='CO', element='O', density=8.5)
-
 Retrieve the Transmission and Attenuation signals
 -------------------------------------------------
 

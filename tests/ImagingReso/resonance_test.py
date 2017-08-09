@@ -427,44 +427,44 @@ class TestGetterSetter(unittest.TestCase):
                              }
         self.assertEqual(_expected_density, _density_list)
         
-    def test_set_density_raises_error_if_bad_compound_element_or_density(self):
-        '''assert set density raises error if any of the parameters is wrong'''
-        self.assertRaises(ValueError, self.o_reso.set_density)
-        self.assertRaises(ValueError, self.o_reso.set_density, compound='unknown')
-        self.assertRaises(ValueError, self.o_reso.set_density, compound='CoAg', element='unknown')
-        self.assertRaises(ValueError, self.o_reso.set_density, compound='CoAg', element='Co', density='not_a_number')
+    #def test_set_density_raises_error_if_bad_compound_element_or_density(self):
+        #'''assert set density raises error if any of the parameters is wrong'''
+        #self.assertRaises(ValueError, self.o_reso.set_density)
+        #self.assertRaises(ValueError, self.o_reso.set_density, compound='unknown')
+        #self.assertRaises(ValueError, self.o_reso.set_density, compound='CoAg', element='unknown')
+        #self.assertRaises(ValueError, self.o_reso.set_density, compound='CoAg', element='Co', density='not_a_number')
         
-    def test_set_isotopic_ratio_only_change_unlock_compound_density(self):
-        '''assert set isotopic ratio only change unlock compound density'''
-        _stack = {'CoAg': {'elements': ['Co','Ag'],
-                            'stoichiometric_ratio': [1, 2],
-                            'thickness': {'value': 0.025,
-                                          'units': 'mm'},
-                            'density': {'value': 8.5,
-                                        'units': 'g/cm3'},
-                            },
-                  'U': {'elements': ['U'],
-                        'stoichiometric_ratio': [1],
-                        'thickness': {'value': 0.03,
-                                      'units': 'mm'},
-                        'density': {'value': np.NaN,
-                                    'units': 'g/cm3'},
-                    },
-                  }
-        o_reso = Resonance(stack=_stack)        
-        lock_density_before = o_reso.stack['CoAg']['density']['value']
-        unlock_density_before = o_reso.stack['U']['density']['value']
+    #def test_set_isotopic_ratio_only_change_unlock_compound_density(self):
+        #'''assert set isotopic ratio only change unlock compound density'''
+        #_stack = {'CoAg': {'elements': ['Co','Ag'],
+                            #'stoichiometric_ratio': [1, 2],
+                            #'thickness': {'value': 0.025,
+                                          #'units': 'mm'},
+                            #'density': {'value': 8.5,
+                                        #'units': 'g/cm3'},
+                            #},
+                  #'U': {'elements': ['U'],
+                        #'stoichiometric_ratio': [1],
+                        #'thickness': {'value': 0.03,
+                                      #'units': 'mm'},
+                        #'density': {'value': np.NaN,
+                                    #'units': 'g/cm3'},
+                    #},
+                  #}
+        #o_reso = Resonance(stack=_stack)        
+        #lock_density_before = o_reso.stack['CoAg']['density']['value']
+        #unlock_density_before = o_reso.stack['U']['density']['value']
         
-        # defining new density on lock compound raises error
-        self.assertRaises(IOError, self.o_reso.set_density, compound='CoAg', element='Ag', density=9)
+        ## defining new density on lock compound raises error
+        #self.assertRaises(IOError, self.o_reso.set_density, compound='CoAg', element='Ag', density=9)
 
-        new_set_density = 10
-        o_reso.set_density(compound='U', element='U', density=new_set_density, debug=True)
-        lock_density_after = o_reso.stack['CoAg']['density']['value']
-        unlock_density_after = o_reso.stack['U']['density']['value']
+        #new_set_density = 10
+        #o_reso.set_density(compound='U', element='U', density=new_set_density, debug=True)
+        #lock_density_after = o_reso.stack['CoAg']['density']['value']
+        #unlock_density_after = o_reso.stack['U']['density']['value']
         
-        self.assertEqual(lock_density_after, lock_density_before)
-        self.assertEqual(unlock_density_after, new_set_density)
+        #self.assertEqual(lock_density_after, lock_density_before)
+        #self.assertEqual(unlock_density_after, new_set_density)
         
 class TestTransmissionAttenuation(unittest.TestCase):
     
