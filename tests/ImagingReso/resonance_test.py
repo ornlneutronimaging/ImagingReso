@@ -7,6 +7,16 @@ from ImagingReso.resonance import Resonance
 
 class TestInitialization(unittest.TestCase):
 
+    def test_E_min(self):
+        '''assert E can not be set below a given threshold'''
+        energy_min = 1e-5
+        self.assertRaises(ValueError, Resonance, energy_min=energy_min)
+
+    def test_E_max(self):
+        '''assert E can not be set above a given threshold'''
+        energy_max = 10000
+        self.assertRaises(ValueError, Resonance, energy_max=energy_max)
+
     def test_str(self):
         '''assert print(object) works'''
         _stack = {'CoAg': {'elements': ['Co','Ag'],
@@ -308,7 +318,6 @@ class TestInitialization(unittest.TestCase):
         o_reso = Resonance(stack=_stack)    
         
         density_lock_before = 8.9
-        print(o_reso.stack)
         density_lock_after = o_reso.stack['CoAg']['density']['value']
         self.assertEqual(density_lock_after, density_lock_before)
         

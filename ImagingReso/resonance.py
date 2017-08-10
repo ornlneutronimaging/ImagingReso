@@ -11,6 +11,9 @@ class Resonance(object):
     
     database = 'ENDF_VIII'
 
+    E_MIN = 1e-4
+    E_MAX = 3e3
+
     stack = {}  # compound, thickness, atomic_ratio of each layer with isotopes information
     stack_sigma = {}  # all the energy and sigma of the isotopes and compounds
     stack_signal = {}  # transmission and attenuation signal for every isotope and compound
@@ -21,23 +24,7 @@ class Resonance(object):
     energy_max = np.NaN
     energy_min = np.NaN
     energy_step = np.NaN
-    
-    def __str__(self):
-        '''what to display if user does
-        
-        >>> o_reso = Resolution()
-        >>> print(o_reso)
-        '''
-        return json.dumps(self.stack, indent=4)
-    
-    def __repr__(self):
-        '''what to display if user does
-        
-        >>> o_reso = Resolution()
-        >>> o_reso
-        '''
-        return json.dumps(self.stack, indent=4)
-    
+
     def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001):
         """initialize resonance object
         
@@ -59,8 +46,14 @@ class Resonance(object):
         """
         self.__element_metadata = {}
         
-        self.energy_max = energy_max
+        if energy_min < self.E_MIN:
+            raise ValueError("Energy min (eV) must be >= {}".format(self.E_MIN))
         self.energy_min = energy_min
+
+        if energy_max > self.E_MAX:
+            raise ValueError("Energy max (eV) must be <= {}".format(self.E_MAX))
+        self.energy_max = energy_max
+
         self.energy_step = energy_step
 
         if not stack == {}:
@@ -74,6 +67,22 @@ class Resonance(object):
             
             # calculate stack_sigma, layer density, atoms_per_cm3 ...
             self.__math_on_stack()
+              
+    def __str__(self):
+        '''what to display if user does
+        
+        >>> o_reso = Resolution()
+        >>> print(o_reso)
+        '''
+        return json.dumps(self.stack, indent=4)
+    
+    def __repr__(self):
+        '''what to display if user does
+        
+        >>> o_reso = Resolution()
+        >>> o_reso
+        '''
+        return json.dumps(self.stack, indent=4)    
                 
     def add_layer(self, formula='', thickness=np.NaN, density=np.NaN): 
         """provide another way to define the layers (stack)
