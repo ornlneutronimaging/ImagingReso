@@ -38,7 +38,7 @@ class Resonance(object):
         '''
         return json.dumps(self.stack, indent=4)
     
-    def __init__(self, stack={}, energy_max=300, energy_min=0, energy_step=0.1):
+    def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001):
         """initialize resonance object
         
         Paramters:

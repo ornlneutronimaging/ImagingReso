@@ -91,10 +91,11 @@ class TestInitialization(unittest.TestCase):
         
         # for isotopes
         self.assertEqual(len(stack_sigma), 2)
-        self.assertEqual(stack_sigma['Ag']['Ag']['107-Ag']['energy_eV'][0], 10.1978)
+        self.assertEqual(stack_sigma['Ag']['Ag']['107-Ag']['energy_eV'][0], 10)
+        self.assertEqual(stack_sigma['Ag']['Ag']['107-Ag']['energy_eV'][-1], 150)
 
         # for elements
-        self.assertAlmostEqual(stack_sigma['Ag']['Ag']['energy_eV'][0], 10.14, delta=0.01)
+        self.assertEqual(stack_sigma['Ag']['Ag']['energy_eV'][0], 10)
 
     def test_correct_initialization_of_stack(self):
         '''assert correct defined stack is correctly saved'''
@@ -529,14 +530,14 @@ class TestTransmissionAttenuation(unittest.TestCase):
         #pprint.pprint(self.o_reso.stack_signal)
         energy_eV = self.o_reso.stack_signal['CoAg']['Ag']['107-Ag']['energy_eV']
         transmission = self.o_reso.stack_signal['CoAg']['Ag']['107-Ag']['transmission']
-        
-        expected_eV_0 = 1.00000000e-5
-        expected_eV_1 = 9.99983261e-2
-        expected_eV_2 = 1.99986652e-1
-        
-        expected_tran_0 = 0.89599697
-        expected_tran_1 = 0.99852597
-        expected_tran_2 = 0.99884782
+
+        expected_eV_0 = 0.0001
+        expected_eV_1 = 0.002001
+        expected_eV_2 = 0.003002
+                
+        expected_tran_0 = 0.98884717
+        expected_tran_1 = 0.99199331
+        expected_tran_2 = 0.99338488
         
         self.assertAlmostEqual(expected_eV_0, energy_eV[0], delta=0.001)
         self.assertAlmostEqual(expected_eV_1, energy_eV[1], delta=0.001)
@@ -551,13 +552,13 @@ class TestTransmissionAttenuation(unittest.TestCase):
         energy_eV = self.o_reso.stack_signal['CoAg']['Ag']['107-Ag']['energy_eV']
         attenuation = self.o_reso.stack_signal['CoAg']['Ag']['107-Ag']['attenuation']
         
-        expected_eV_0 = 1.00000000e-5
-        expected_eV_1 = 9.99983261e-2
-        expected_eV_2 = 1.99986652e-1
+        expected_eV_0 = 0.0001
+        expected_eV_1 = 0.002001
+        expected_eV_2 = 0.003002
         
-        expected_attenu_0 = 1. - 0.89599697
-        expected_attenu_1 = 1. - 0.99852597
-        expected_attenu_2 = 1. - 0.99884782
+        expected_attenu_0 = 1. - 0.98884717
+        expected_attenu_1 = 1. - 0.99199331
+        expected_attenu_2 = 1. - 0.99338488
         
         self.assertAlmostEqual(expected_eV_0, energy_eV[0], delta=0.001)
         self.assertAlmostEqual(expected_eV_1, energy_eV[1], delta=0.001)
@@ -572,13 +573,13 @@ class TestTransmissionAttenuation(unittest.TestCase):
         energy_eV = self.o_reso.stack_signal['CoAg']['Ag']['energy_eV']
         transmission = self.o_reso.stack_signal['CoAg']['Ag']['transmission']
         
-        expected_eV_0 = 1.00000000e-5
-        expected_eV_1 = 9.99983261e-2
-        expected_eV_2 = 1.99986652e-1
+        expected_eV_0 = 0.0001
+        expected_eV_1 = 0.002001
+        expected_eV_2 = 0.003002
         
-        expected_tran_0 = 0.70664631
-        expected_tran_1 = 0.99594548
-        expected_tran_2 = 0.99777858
+        expected_tran_0 = 0.96556401
+        expected_tran_1 = 0.97538374
+        expected_tran_2 = 0.9797517
         
         self.assertAlmostEqual(expected_eV_0, energy_eV[0], delta=0.001)
         self.assertAlmostEqual(expected_eV_1, energy_eV[1], delta=0.001)
@@ -593,13 +594,13 @@ class TestTransmissionAttenuation(unittest.TestCase):
         energy_eV = self.o_reso.stack_signal['CoAg']['Ag']['energy_eV']
         attenuation = self.o_reso.stack_signal['CoAg']['Ag']['attenuation']
         
-        expected_eV_0 = 1.00000000e-5
-        expected_eV_1 = 9.99983261e-2
-        expected_eV_2 = 1.99986652e-1
-        
-        expected_tran_0 = 1. - 0.70664631
-        expected_tran_1 = 1. - 0.99594548
-        expected_tran_2 = 1. - 0.99777858
+        expected_eV_0 = 0.0001
+        expected_eV_1 = 0.002001
+        expected_eV_2 = 0.003002
+
+        expected_tran_0 = 1. - 0.96556401
+        expected_tran_1 = 1. - 0.97538374
+        expected_tran_2 = 1. - 0.9797517
         
         self.assertAlmostEqual(expected_eV_0, energy_eV[0], delta=0.001)
         self.assertAlmostEqual(expected_eV_1, energy_eV[1], delta=0.001)
@@ -613,13 +614,13 @@ class TestTransmissionAttenuation(unittest.TestCase):
         energy_eV = self.o_reso.stack_signal['CoAg']['energy_eV']
         transmission = self.o_reso.stack_signal['CoAg']['transmission']
         
-        expected_eV_0 = 1.00000000e-5
-        expected_eV_1 = 9.99983261e-2
-        expected_eV_2 = 1.99986652e-1
+        expected_eV_0 = 0.0001
+        expected_eV_1 = 0.002001
+        expected_eV_2 = 0.003002
         
-        expected_tran_0 = 0.63649450
-        expected_tran_1 = 0.99460048
-        expected_tran_2 = 0.99587088
+        expected_tran_0 = 0.95537379
+        expected_tran_1 = 0.96801669
+        expected_tran_2 = 0.97365037
         
         self.assertAlmostEqual(expected_eV_0, energy_eV[0], delta=0.001)
         self.assertAlmostEqual(expected_eV_1, energy_eV[1], delta=0.001)
@@ -633,13 +634,13 @@ class TestTransmissionAttenuation(unittest.TestCase):
         energy_eV = self.o_reso.stack_signal['CoAg']['energy_eV']
         attenuation = self.o_reso.stack_signal['CoAg']['attenuation']
         
-        expected_eV_0 = 1.00000000e-5
-        expected_eV_1 = 9.99983261e-2
-        expected_eV_2 = 1.99986652e-1
+        expected_eV_0 = 0.0001
+        expected_eV_1 = 0.002001
+        expected_eV_2 = 0.003002
         
-        expected_tran_0 = 1. - 0.63649450
-        expected_tran_1 = 1. - 0.99460048
-        expected_tran_2 = 1. - 0.99587088
+        expected_tran_0 = 1. - 0.95537379
+        expected_tran_1 = 1. - 0.96801669
+        expected_tran_2 = 1. - 0.97365037
         
         self.assertAlmostEqual(expected_eV_0, energy_eV[0], delta=0.001)
         self.assertAlmostEqual(expected_eV_1, energy_eV[1], delta=0.001)

@@ -288,18 +288,18 @@ class TestUtilities_2(unittest.TestCase):
         # first value
         x_axis_0_returned = _dict['x_axis'][0]
         y_axis_0_returned = _dict['y_axis'][0]
-        x_axis_0_expected = 300.17
-        y_axis_0_expected = 4.08687
+        x_axis_0_expected = 300
+        y_axis_0_expected = 4.101356
         self.assertEqual(x_axis_0_expected, x_axis_0_returned)
         self.assertAlmostEqual(y_axis_0_expected, y_axis_0_returned, delta=0.001)
         
         # last value
         x_axis_last_returned = _dict['x_axis'][-1]
         y_axis_last_returned = _dict['y_axis'][-1]
-        x_axis_last_expected = 599.967
-        y_axis_last_expected = 7.17933
+        x_axis_last_expected = 600
+        y_axis_last_expected = 7.237503
         self.assertEqual(x_axis_last_expected, x_axis_last_returned)
-        self.assertEqual(y_axis_last_expected, y_axis_last_returned)
+        self.assertAlmostEqual(y_axis_last_expected, y_axis_last_returned, delta=0.00001)
         
     def test_get_sigma(self):
         '''assert get_sigma returns the correct dictionary of energy and sigma keys'''
@@ -311,18 +311,18 @@ class TestUtilities_2(unittest.TestCase):
         # first value
         energy_0_returned = _dict_returned['energy_eV'][0]
         sigma_0_returned = _dict_returned['sigma_b'][0]
-        energy_0_expected = 300.17
-        sigma_0_expected = 4.08687
+        energy_0_expected = 300
+        sigma_0_expected = 4.101356
         self.assertEqual(energy_0_expected, energy_0_returned)
         self.assertAlmostEqual(sigma_0_expected, sigma_0_returned, delta=0.001)
         
         # last value
         energy_last_returned = _dict_returned['energy_eV'][-1]
         sigma_last_returned = _dict_returned['sigma_b'][-1]
-        energy_last_expected = 599.967
-        sigma_last_expected = 7.17933
+        energy_last_expected = 600
+        sigma_last_expected = 7.2375030
         self.assertEqual(energy_last_expected, energy_last_returned)
-        self.assertEqual(sigma_last_expected, sigma_last_returned)        
+        self.assertAlmostEquals(sigma_last_expected, sigma_last_returned, delta=0.0001)        
         
     def test_get_atoms_per_cm3_of_layer(self):
         '''assert get_atoms_per_cm3_of_layer works'''

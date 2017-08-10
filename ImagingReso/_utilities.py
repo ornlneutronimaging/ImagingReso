@@ -300,15 +300,17 @@ def get_interpolated_data(df=[], E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
     nbr_point = (E_max - E_min) / E_step
     
     # remove data outside specified range [x_min, x_max]
-    df = df.drop(df[df.E_eV < E_min].index)
-    df = df.drop(df[df.E_eV > E_max].index)
+    #df = df.drop(df[df.E_eV < E_min].index)
+    #df = df.drop(df[df.E_eV > E_max].index)
 
     # reset index
     df = df.reset_index(drop=True)
     
     # energy x_axis
-    x_axis = np.linspace(df['E_eV'].min(), df['E_eV'].max(), nbr_point)
+    #x_axis = np.linspace(df['E_eV'].min(), df['E_eV'].max(), nbr_point)
+    x_axis = np.linspace(E_min, E_max, nbr_point)
     y_axis_function = interp1d(x=df['E_eV'], y=df['Sig_b'], kind='linear')
+    
     y_axis = y_axis_function(x_axis)   
     
     return {'x_axis': x_axis, 'y_axis': y_axis}
