@@ -9,7 +9,7 @@ class TestInitialization(unittest.TestCase):
 
     def test_E_min(self):
         '''assert E can not be set below a given threshold'''
-        energy_min = 1e-5
+        energy_min = 1e-6
         self.assertRaises(ValueError, Resonance, energy_min=energy_min)
 
     def test_E_max(self):

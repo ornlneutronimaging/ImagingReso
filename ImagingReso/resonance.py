@@ -11,7 +11,7 @@ class Resonance(object):
     
     database = 'ENDF_VIII'
 
-    E_MIN = 1e-4
+    E_MIN = 1e-5
     E_MAX = 3e3
 
     stack = {}  # compound, thickness, atomic_ratio of each layer with isotopes information
