@@ -4,7 +4,7 @@
 
 # ImagingReso
 
-This package provides various feasibility for plotting and manipulating 
+This package provides feasibility of plotting and manipulating 
 neutron resonance signal from the published online database,
 [National Nuclear Data Center](http://www.nndc.bnl.gov/).
 
@@ -24,6 +24,8 @@ The neutron transmission calculation algorithm is base on Beer-Lambert law:
 
 ![BeerLambert_law_1](documentation/source/_static/Beer_lambert_law_1.png)
 
+<img src="documentation/source/_static/Beer_lambert_law_3.png" width=467 height=73 />
+
 *N<sub>i</sub>* : number of atoms of element *i* per unit volume, 
 
 *d<sub>i</sub>* : the effective thickness element *i* integrated along the neutron path, 
@@ -36,6 +38,9 @@ The neutron transmission calculation algorithm is base on Beer-Lambert law:
 For solid materials the number of atoms per unit volume can be calculated from:
 
 ![BeerLambert_law_2](documentation/source/_static/Beer_lambert_law_2.png)
+
+<img src="documentation/source/_static/Beer_lambert_law_4.png" width=170 height=73 />
+
 
 *ρ<sub>i</sub>* : known density of the material,
 
