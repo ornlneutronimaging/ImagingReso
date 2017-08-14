@@ -9,12 +9,13 @@ neutron resonance signal from the published online database,
 [National Nuclear Data Center](http://www.nndc.bnl.gov/).
 
 [Evaluated Nuclear Data File (ENDF.VIII)](http://www.nndc.bnl.gov/exfor/endf00.jsp) 
-is currently supported and more database will be supported in the future.
+is currently supported and more database will be supported in future.
 
 In this package, by defining the sample information such as density, effective thickness and isotopic ratios of each element,
-one can easily obtain an expected plot of resonance signal of various sample types 
+one can easily obtain a plot of expected resonance signal of various sample types 
 such as layers of single element (Ag, Co, etc. in solid form),
-chemical compound (UO<sub>3</sub>, Gd<sub>2</sub>O<sub>3</sub>, etc.), or even multiple layers including both types). 
+chemical compound (UO<sub>3</sub>, Gd<sub>2</sub>O<sub>3</sub>, etc.), or even multiple layers including both types. 
+
 Plotting options such as transmission or attenuation as y-axis and energy or wavelength as x-axis are provided. 
 One can also make the program to show/hide elemental and isotopic contributions in the total resonance signal.
 
