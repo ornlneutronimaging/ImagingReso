@@ -21,14 +21,14 @@ example:
 --------
 
 >>> _stack = {'CoAg': {'elements': ['Co','Ag'],
-                       'stochiometric_ratio': [1,1],
+                       'stoichiometric_ratio': [1,1],
                        'thickness': {'value': 0.025,
                                      'units': 'mm'},
                        'density': {'value': 0.5,
                                    'units': 'g/cm3'},
                        },
               'U': {'elements': ['U'],
-                    'stochiometric_ratio': [1],
+                    'stoichiometric_ratio': [1],
                     'thickness': {'value': 0.3,
                                   'units': 'mm'},
                     'density': {'value': np.NaN,

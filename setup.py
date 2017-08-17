@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "ImagingReso",
-    version = "1.0.0",
+    version = "1.1.0",
     author = "Yuxuan (Shawn) Zhang, Jean Bilheux",
     author_email = "zhangy6@ornl.gov, bilheuxjm@ornl.gov",
     packages = find_packages(exclude=['tests', 'notebooks']),

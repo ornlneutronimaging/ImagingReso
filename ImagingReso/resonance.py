@@ -541,6 +541,11 @@ class Resonance(object):
                 stack_sigma[_compound][_element]['sigma_b'] = _sigma_all_isotopes
                     
         self.stack_sigma = stack_sigma
+              
+    def convert_x_axis(self, array=[], from_units='eV', to_units='Angstroms'):
+        '''allow to convert 
+        '''
+        pass
                     
     def plot(self, transmission=False, x_axis='energy', mixed=False, all_layers=False, all_elements=False, 
              all_isotopes=False, items_to_plot=[]):
