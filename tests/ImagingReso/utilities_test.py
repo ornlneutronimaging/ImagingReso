@@ -390,4 +390,62 @@ class TestUtilities_2(unittest.TestCase):
         self.assertAlmostEquals(expected_energy_lambda_2, energy_lambda[2], delta=0.0001)
         self.assertAlmostEquals(expected_energy_lambda_3, energy_lambda[3], delta=0.0001)
 
+class TestUtilities_xaxis_convertor(unittest.TestCase):
+
+    def test_complains_if_wrong_units(self):
+        '''assert ValueError raised if wrong units given'''
+        _from_units = 'eV'
+        _to_units = 'unknown'
+        _array = np.linspace(1,10)
+        self.assertRaises(ValueError, convert_x_axis, array=_array, from_units=_from_units,
+                          to_units=_to_units)
         
+        _to_units = 'eV'
+        _from_units = 'unknown'
+        _array = np.linspace(1,10)
+        self.assertRaises(ValueError, convert_x_axis, array=_array, from_units=_from_units,
+                              to_units=_to_units)        
+        
+    def test_units_not_case_sensitivie(self):
+        '''assert from and to units are not case sensitives '''
+        _from_units = 'EV'
+        _to_units = 'tof'
+        _array = np.linspace(1,10)
+        _array_returned = convert_x_axis(array=_array, 
+                                         from_units=_from_units, 
+                                        to_units=_to_units)
+        self.assertTrue(isinstance(_array_returned, list))
+        
+        _from_units = 'EV'
+        _to_units = 'ToF'
+        _array = np.linspace(1,10)
+        _array_returned = convert_x_axis(array=_array, 
+                                             from_units=_from_units, 
+                                             to_units=_to_units)
+        self.assertTrue(isinstance(_array_returned, list))        
+        
+        _from_units = 'angStrOms'
+        _to_units = 'toF'
+        _array = np.linspace(1,10)
+        _array_returned = convert_x_axis(array=_array, 
+                                             from_units=_from_units, 
+                                             to_units=_to_units)
+        self.assertTrue(isinstance(_array_returned, list))        
+        
+    def test_array_not_changed_if_same_units_before_and_after(self):
+        '''assert array untouched if from_units is identical to to_units'''
+        _from_units = 'ev'
+        _to_units = 'ev'
+        _array = np.linspace(1,10)
+        _array_returned = convert_x_axis(array=_array, 
+                                             from_units=_from_units, 
+                                             to_units=_to_units)        
+        self.assertTrue((_array_returned == _array).all())
+        
+        _from_units = 'angstroms'
+        _to_units = 'angstroms'
+        _array = np.linspace(1,10)
+        _array_returned = convert_x_axis(array=_array, 
+                                             from_units=_from_units, 
+                                                 to_units=_to_units)        
+        self.assertTrue((_array_returned == _array).all())        

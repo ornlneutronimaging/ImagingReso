@@ -443,3 +443,48 @@ def energy_to_lambda(energy_ev=[]):
     energy_mev = energy_ev * 1000
     lambda_array = np.sqrt(81.787/energy_mev)
     return lambda_array
+
+def convert_x_axis(array=[], from_units='ev', to_units='Angstroms'):
+    '''allow to convert the x-axis into eV, TOF or Angstroms units
+
+    Parameters:
+    ===========
+    array: array to convert
+    from_units: string (default is eV)
+    to_units: string (default is Angstroms)
+
+    from eV to Angstroms:   E(Angstroms) = np.sqrt(81.787 / E(eV)*1000)
+    from Angstroms to eV:   E(eV) = (81.787 / E(Angstroms)**2) / 1000
+    
+    from eV to 
+
+
+    Returns:
+    ========
+    converted array
+    '''
+    units_allowed = ['ev','angstroms','tof']
+
+    if array == []:
+        return []
+
+    from_units = from_units.lower()
+    if not from_units in units_allowed:
+        raise ValueError("Units {} not supported!".format(from_units))
+
+    to_units = to_units.lower()
+    if not to_units in units_allowed:
+        raise ValueError("Units {} not supported!".format(to_units))
+    
+    if from_units == to_units:
+        return array
+    
+    if from_units == 'ev':
+        if to_units == 'angstroms':
+            pass
+    
+    
+    
+    
+    
+    return []

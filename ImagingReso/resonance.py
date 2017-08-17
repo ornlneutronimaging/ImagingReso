@@ -543,9 +543,21 @@ class Resonance(object):
         self.stack_sigma = stack_sigma
               
     def convert_x_axis(self, array=[], from_units='eV', to_units='Angstroms'):
-        '''allow to convert 
+        '''allow to convert the x-axis into eV, TOF or Angstroms units
+        
+        Parameters:
+        ===========
+        array: array to convert
+        from_units: string (default is eV)
+        to_units: string (default is Angstroms)
+        
+        Returns:
+        ========
+        converted array
         '''
-        pass
+        return _utilities.convert_x_axis(array=array, 
+                                         from_units=from_units,
+                                         to_units=to_units)
                     
     def plot(self, transmission=False, x_axis='energy', mixed=False, all_layers=False, all_elements=False, 
              all_isotopes=False, items_to_plot=[]):
