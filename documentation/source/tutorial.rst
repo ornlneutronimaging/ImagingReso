@@ -356,6 +356,11 @@ or for the isotope 107-Ag
 >>> transmission_CoAg_Ag_107Ag = o_reso.stack_signal['CoAg']['Ag']['107-Ag']['transmission']
 >>> energy_CoAg_Ag_107Ag = o_reso.stack_signal['CoAg']['Ag']['107-Ag']['energy_eV']
 
+In case you prefer having the x_axis in *Angstroms* instead of *eV*
+>>> x_axis_ev = energy_CoAg_Ag_107Ag
+>>> lambda_CoAg_Ag_107Ag = o_reso.convert_x_axis(array=x_axis_ev, from_units='ev', to_units='angstroms')
+
+
 Display Transmission and Attenuation
 ####################################
 

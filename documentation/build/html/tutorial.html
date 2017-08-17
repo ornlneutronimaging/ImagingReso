@@ -185,14 +185,14 @@ thickness is defined in mm, the density in g/cm3 and the ratio is the stochiomet
 <div class="section" id="example">
 <h3>example:<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">_stack</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;CoAg&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;elements&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Co&#39;</span><span class="p">,</span><span class="s1">&#39;Ag&#39;</span><span class="p">],</span>
-<span class="go">                       &#39;stochiometric_ratio&#39;: [1,1],</span>
+<span class="go">                       &#39;stoichiometric_ratio&#39;: [1,1],</span>
 <span class="go">                       &#39;thickness&#39;: {&#39;value&#39;: 0.025,</span>
 <span class="go">                                     &#39;units&#39;: &#39;mm&#39;},</span>
 <span class="go">                       &#39;density&#39;: {&#39;value&#39;: 0.5,</span>
 <span class="go">                                   &#39;units&#39;: &#39;g/cm3&#39;},</span>
 <span class="go">                       },</span>
 <span class="go">              &#39;U&#39;: {&#39;elements&#39;: [&#39;U&#39;],</span>
-<span class="go">                    &#39;stochiometric_ratio&#39;: [1],</span>
+<span class="go">                    &#39;stoichiometric_ratio&#39;: [1],</span>
 <span class="go">                    &#39;thickness&#39;: {&#39;value&#39;: 0.3,</span>
 <span class="go">                                  &#39;units&#39;: &#39;mm&#39;},</span>
 <span class="go">                    &#39;density&#39;: {&#39;value&#39;: np.NaN,</span>
@@ -511,6 +511,9 @@ every time one of the parameters is modified, such as density, stochiometric coe
 <span class="gp">&gt;&gt;&gt; </span><span class="n">energy_CoAg_Ag_107Ag</span> <span class="o">=</span> <span class="n">o_reso</span><span class="o">.</span><span class="n">stack_signal</span><span class="p">[</span><span class="s1">&#39;CoAg&#39;</span><span class="p">][</span><span class="s1">&#39;Ag&#39;</span><span class="p">][</span><span class="s1">&#39;107-Ag&#39;</span><span class="p">][</span><span class="s1">&#39;energy_eV&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
+<p>In case you prefer having the x_axis in <em>Angstroms</em> instead of <em>eV</em>
+&gt;&gt;&gt; x_axis_ev = energy_CoAg_Ag_107Ag
+&gt;&gt;&gt; lambda_CoAg_Ag_107Ag = o_reso.convert_x_axis(array=x_axis_ev, from_units=’ev’, to_units=’angstroms’)</p>
 </div>
 </div>
 <div class="section" id="display-transmission-and-attenuation">

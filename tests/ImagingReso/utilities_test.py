@@ -409,7 +409,7 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
     def test_units_not_case_sensitivie(self):
         '''assert from and to units are not case sensitives '''
         _from_units = 'EV'
-        _to_units = 'tof'
+        _to_units = 'Angstroms'
         _array = np.linspace(1,10)
         _array_returned = convert_x_axis(array=_array, 
                                          from_units=_from_units, 
@@ -417,7 +417,7 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
         self.assertTrue(isinstance(_array_returned, list))
         
         _from_units = 'EV'
-        _to_units = 'ToF'
+        _to_units = 'anGSTRoms'
         _array = np.linspace(1,10)
         _array_returned = convert_x_axis(array=_array, 
                                              from_units=_from_units, 
@@ -425,7 +425,7 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
         self.assertTrue(isinstance(_array_returned, list))        
         
         _from_units = 'angStrOms'
-        _to_units = 'toF'
+        _to_units = 'eV'
         _array = np.linspace(1,10)
         _array_returned = convert_x_axis(array=_array, 
                                              from_units=_from_units, 
@@ -449,3 +449,34 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
                                              from_units=_from_units, 
                                                  to_units=_to_units)        
         self.assertTrue((_array_returned == _array).all())        
+        
+    def test_conversion_from_ev_to_angstroms_works(self):
+        '''assert conversion from eV to Angstroms works'''
+        _from_units = 'ev'
+        _to_units = 'angstroms'
+        _array = np.linspace(1,10)
+        _array_returned = convert_x_axis(array=_array, 
+                                         from_units=_from_units, 
+                                         to_units=_to_units)        
+        _array_expected = []
+        for _value in _array:
+            _tmp = 81.787 / (np.float(_value) * 1000.)
+            _array_expected.append(np.sqrt(_tmp))
+
+        self.assertEqual(_array_expected, _array_returned)
+        
+    def test_conversion_from_angstroms_to_ev_works(self):
+        '''assert conversion from Angsroms to eV works'''
+        _from_units = 'angstroms'
+        _to_units = 'ev'
+        _array = np.linspace(1,10)
+        _array_returned = convert_x_axis(array=_array, 
+                                         from_units=_from_units, 
+                                         to_units=_to_units)        
+        _array_expected = []
+        for _value in _array:
+            _tmp = 81.787 / np.float(_value)**2
+            _array_expected.append(_tmp / 1000.)
+
+        self.assertEqual(_array_expected, _array_returned)
+    
