@@ -164,16 +164,17 @@ class TestUtilities_1(unittest.TestCase):
         _dict_returned = get_isotope_dicts(element=_element)
         _dict_expected = {'density': {'value': 10.5,
                                       'units': 'g/cm3'},
-                          'isotopes': {'list': ['107-Ag','109-Ag'],
-                                       'file_names': ['Ag-107.csv','Ag-109.csv'],
-                                       'mass': {'value': [106.905093, 108.904756],
+                          'isotopes': {'list': ['107-Ag','109-Ag','110-Ag', '111-Ag'],
+                                       'file_names': ['Ag-107.csv','Ag-109.csv','Ag-110.csv','Ag-111.csv'],
+                                       'mass': {'value': [106.905093,108.904756,109.90611,110.905295],
                                                 'units': 'g/mol'},
-                                       'density': {'value': [10.406, 10.600],
+                                       'density': {'value': [10.406, 10.600, 10.698, 10.795],
                                                    'units': 'g/cm3'},
-                                       'isotopic_ratio': [0.51839, 0.481610]},
+                                       'isotopic_ratio': [0.51839, 0.481610, 0.0, 0.0]},
                           'molar_mass': {'value': 107.8682,
                                          'units': 'g/cm3'},
                           }
+
         # list of isotopes
         self.assertEqual(_dict_returned['isotopes']['list'], _dict_expected['isotopes']['list'])
         # names of isotopes
