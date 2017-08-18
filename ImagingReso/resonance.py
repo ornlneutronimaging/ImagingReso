@@ -558,11 +558,11 @@ class Resonance(object):
         return _utilities.convert_x_axis(array=array, 
                                          from_units=from_units,
                                          to_units=to_units)
-                    
-    def plot(self, transmission=False, x_axis='energy', mixed=False, all_layers=False, all_elements=False, 
+
+    def plot(self, transmission=False, x_axis='energy', mixed=True, all_layers=False, all_elements=False,
              all_isotopes=False, items_to_plot=[]):
         """display the transmission or attenuation of compound, element and/or isotopes specified
-        
+
         Parameters:
         ===========
         transmission: boolean. True -> display transmission signal
@@ -581,48 +581,66 @@ class Resonance(object):
                 [['CoAg','Ag','107-Ag'], ['CoAg']]
             if the dictionary is empty, everything is plotted
         """
-        plt.figure(figsize=[10,10])
-        
+        plt.figure(figsize=[5, 5])
+
         _stack_signal = self.stack_signal
         _stack = self.stack
-        
+
+        # determine to plot transmission or attenuation
+        # determine to put transmission or attenuation words for y-axis
         if transmission:
             y_axis_label = 'Neutron Transmission'
             y_axis_tag = 'transmission'
         else:
             y_axis_label = 'Neutron Attenuation'
             y_axis_tag = 'attenuation'
-            
+
         if x_axis == 'energy':
             x_axis_label = 'Energy (eV)'
-        else:
+        if x_axis == 'lambda':
             x_axis_label = u"Wavelength (\u212B)"
             plt.xlim(0, 1)
+        if x_axis == 'time':
+            x_axis_label = 'Time (us)'
+        if x_axis == 'number':
+            x_axis_label = 'Image number (#)'
 
         if mixed:
             _x_axis = self.total_signal['energy_eV']
             if x_axis == 'lambda':
                 _x_axis = _utilities.energy_to_lambda(energy_ev=_x_axis)
+            if x_axis == 'time':
+                _x_axis = _utilities.energy_to_time(energy_ev=_x_axis)
+            if x_axis == 'number':
+                _x_axis = _utilities.energy_to_image_number(energy_ev=_x_axis)
             _y_axis = self.total_signal[y_axis_tag]
             plt.plot(_x_axis, _y_axis, label="Total")
-        
+
         if all_layers:
             for _compound in _stack.keys():
                 _x_axis = _stack_signal[_compound]['energy_eV']
                 if x_axis == 'lambda':
                     _x_axis = _utilities.energy_to_lambda(energy_ev=_x_axis)
+                if x_axis == 'time':
+                    _x_axis = _utilities.energy_to_time(energy_ev=_x_axis)
+                if x_axis == 'number':
+                    _x_axis = _utilities.energy_to_image_number(energy_ev=_x_axis)
                 _y_axis = _stack_signal[_compound][y_axis_tag]
                 plt.plot(_x_axis, _y_axis, label=_compound)
-        
+
         if all_elements:
             for _compound in _stack.keys():
                 for _element in _stack[_compound]['elements']:
                     _x_axis = _stack_signal[_compound][_element]['energy_eV']
                     if x_axis == 'lambda':
                         _x_axis = _utilities.energy_to_lambda(energy_ev=_x_axis)
+                    if x_axis == 'time':
+                        _x_axis = _utilities.energy_to_time(energy_ev=_x_axis)
+                    if x_axis == 'number':
+                        _x_axis = _utilities.energy_to_image_number(energy_ev=_x_axis)
                     _y_axis = _stack_signal[_compound][_element][y_axis_tag]
                     plt.plot(_x_axis, _y_axis, label="{}/{}".format(_compound, _element))
-                    
+
         if all_isotopes:
             for _compound in _stack.keys():
                 for _element in _stack[_compound]['elements']:
@@ -630,9 +648,13 @@ class Resonance(object):
                         _x_axis = _stack_signal[_compound][_element][_isotope]['energy_eV']
                         if x_axis == 'lambda':
                             _x_axis = _utilities.energy_to_lambda(energy_ev=_x_axis)
+                        if x_axis == 'time':
+                            _x_axis = _utilities.energy_to_time(energy_ev=_x_axis)
+                        if x_axis == 'number':
+                            _x_axis = _utilities.energy_to_image_number(energy_ev=_x_axis)
                         _y_axis = _stack_signal[_compound][_element][_isotope][y_axis_tag]
                         plt.plot(_x_axis, _y_axis, label="{}/{}/{}".format(_compound, _element, _isotope))
-        
+
         for _path_to_plot in items_to_plot:
             _path_to_plot = list(_path_to_plot)
             _live_path = _stack_signal
@@ -640,10 +662,14 @@ class Resonance(object):
             while _path_to_plot:
                 _item = _path_to_plot.pop(0)
                 _live_path = _live_path[_item]
-        
+
             _x_axis = _live_path['energy_eV']
             if x_axis == 'lambda':
                 _x_axis = _utilities.energy_to_lambda(energy_ev=_x_axis)
+            if x_axis == 'time':
+                _x_axis = _utilities.energy_to_time(energy_ev=_x_axis)
+            if x_axis == 'number':
+                _x_axis = _utilities.energy_to_image_number(energy_ev=_x_axis)
             _y_axis = _live_path[y_axis_tag]
             plt.plot(_x_axis, _y_axis, label=_label)
 

@@ -430,19 +430,72 @@ def set_distance_units(value=np.NaN, from_units='mm', to_units='cm'):
     return coeff * value
 
 def energy_to_lambda(energy_ev=[]):
-    '''convert into lambda from the energy array
-    
+    """convert into lambda from the energy array
+
     Parameters:
     ===========
     energy: array (in eV)
-    
+
     Returns:
     ========
-    array in Angstroms
-    '''
+    lambda: array (in Angstroms)
+    """
     energy_mev = energy_ev * 1000
-    lambda_array = np.sqrt(81.787/energy_mev)
+    lambda_array = np.sqrt(81.787 / energy_mev)
     return lambda_array
+
+def energy_to_time(energy_ev=[], delay_us=2.99, source_to_detector_cm=1612.5):
+    # delay values is normal 2.99 us with NONE actual MCP delay settings
+    """convert energy (eV) to time (us)
+
+    Parameters:
+    ===========
+    energy: array (in eV)
+
+    Returns:
+    ========
+    time: array in us (micro seconds)
+    """
+    energy_mev = energy_ev * 1000
+    time_tot_us = np.sqrt(81.787 / energy_mev) * source_to_detector_cm / 0.3956
+    time_record_us = (time_tot_us - delay_us) / 0.16
+    time_record_ns = time_record_us * 1000
+    time_record_s = time_record_us / 1e6
+    return time_record_us
+
+def energy_to_image_number(energy_ev=[], delay_us=2.99, time_resolution_us=0.16, source_to_detector_cm=1612.5):
+    # delay values is normal 2.99 us with NONE actual MCP delay settings
+    """convert energy (eV) to image numbers (#)
+
+    Parameters:
+    ===========
+    energy: array (in eV)
+
+    Returns:
+    ========
+    image numbers: array in (micro seconds)
+    """
+    energy_mev = energy_ev * 1000
+    time_tot_us = np.sqrt(81.787 / energy_mev) * source_to_detector_cm / 0.3956
+    time_record_us = (time_tot_us - delay_us)
+    image_number = time_record_us / time_resolution_us
+    return image_number
+
+
+def time_to_energy(time_record_s, delay_us=2.99, source_to_detector_cm=1612.5):
+    """convert time (s) to energy (eV)
+    Parameters:
+    ===========
+    time (in s)
+
+    Returns:
+    ========
+    energy: (in eV)
+    """
+    time_tot_us = 1e6 * time_record_s + delay_us
+    energy_mev = 81.787 / (0.3956 * time_tot_us / source_to_detector_cm) ** 2
+    energy_ev = energy_mev / 1000
+    return energy_ev
 
 def convert_x_axis(array=[], from_units='ev', to_units='Angstroms'):
     '''allow to convert the x-axis into eV, Angstroms units
