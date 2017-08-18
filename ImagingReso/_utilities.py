@@ -444,7 +444,7 @@ def energy_to_lambda(energy_ev=[]):
     lambda_array = np.sqrt(81.787 / energy_mev)
     return lambda_array
 
-def energy_to_time(energy_ev=[], delay_us=2.99, source_to_detector_cm=1612.5):
+def energy_to_time(energy_ev=[], delay_us=np.NaN, source_to_detector_cm=np.NaN):
     # delay values is normal 2.99 us with NONE actual MCP delay settings
     """convert energy (eV) to time (us)
 
@@ -463,7 +463,7 @@ def energy_to_time(energy_ev=[], delay_us=2.99, source_to_detector_cm=1612.5):
     time_record_s = time_record_us / 1e6
     return time_record_us
 
-def energy_to_image_number(energy_ev=[], delay_us=2.99, time_resolution_us=0.16, source_to_detector_cm=1612.5):
+def energy_to_image_number(energy_ev=[], delay_us=np.NaN, time_resolution_us=np.NaN, source_to_detector_cm=np.NaN):
     # delay values is normal 2.99 us with NONE actual MCP delay settings
     """convert energy (eV) to image numbers (#)
 
@@ -482,7 +482,7 @@ def energy_to_image_number(energy_ev=[], delay_us=2.99, time_resolution_us=0.16,
     return image_number
 
 
-def time_to_energy(time_record_s, delay_us=2.99, source_to_detector_cm=1612.5):
+def time_to_energy(time_record_s, delay_us=np.NaN, source_to_detector_cm=np.NaN):
     """convert time (s) to energy (eV)
     Parameters:
     ===========
