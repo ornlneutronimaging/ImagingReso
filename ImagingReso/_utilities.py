@@ -444,6 +444,19 @@ def energy_to_lambda(energy_ev=[]):
     lambda_array = np.sqrt(81.787 / energy_mev)
     return lambda_array
 
+def angstroms_to_energy(array_angstroms=[]):
+    """convert lambda array in angstroms to energy in eV
+    
+    Parameters:
+    ===========
+    array_angstroms: numpy array in Angstroms
+    
+    Returns:
+    ========
+    numpy array of energy in eV
+    """
+    return 81.787 / (1000. * array_angstroms**2)
+
 def energy_to_time(energy_ev=[], delay_us=np.NaN, source_to_detector_m=np.NaN):
     # delay values is normal 2.99 us with NONE actual MCP delay settings
     """convert energy (eV) to time (us)
@@ -499,9 +512,10 @@ def time_to_energy(time_record_s, delay_us=np.NaN, source_to_detector_cm=np.NaN)
     energy_ev = energy_mev / 1000
     return energy_ev
 
-def convert_x_axis(array=[], from_units='ev', to_units='Angstroms', delay_us=np.NaN,
+def convert_x_axis(array=[], from_units='ev', to_units='Angstroms', 
+                   delay_us=np.NaN,
                    source_to_detector_m=np.NaN):
-    '''allow to convert the x-axis into eV, Angstroms units, s or file index
+    '''allow to convert the x-axis into eV, Angstroms units, or s
 
     Parameters:
     ===========
@@ -515,10 +529,12 @@ def convert_x_axis(array=[], from_units='ev', to_units='Angstroms', delay_us=np.
     ========
     converted array
     '''
-    units_allowed = ['ev','angstroms','s','file_index']
+    units_allowed = ['ev','angstroms','s']
 
     if array == []:
         return np.ndarray([])
+
+    _array = array.copy()
 
     from_units = from_units.lower()
     if not from_units in units_allowed:
@@ -544,9 +560,23 @@ def convert_x_axis(array=[], from_units='ev', to_units='Angstroms', delay_us=np.
             return energy_to_time(energy_ev=array, delay_us=delay_us, 
                                  source_to_detector_m=source_to_detector_m)
     
+    if from_units == 'angstroms':
+        if to_units == 'ev':
+            return angstroms_to_energy(array_angstroms=array)
+        
+        if to_units == 's':
+            if np.isnan(delay_us):
+                raise ValueError("Please provide a detector offset in microS!")
+            if np.isnan(source_to_detector_m):
+                raise ValueError("Please provide a distance source-detector in m!")
+            
+            return np.ndarray([])
     
-    
-    
-    
+    if from_units == 's':
+        if to_units == 'ev':
+            return np.ndarray([])
+        
+        if  to_units == 'angstroms':
+            return np.ndarray([])
     
     return np.ndarray([])

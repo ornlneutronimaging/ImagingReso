@@ -542,7 +542,7 @@ class Resonance(object):
                     
         self.stack_sigma = stack_sigma
               
-    def convert_x_axis(self, array=[], from_units='eV', to_units='Angstroms'):
+    def convert_x_axis(self, array=[], from_units='eV', to_units='Angstroms', delay_us=0, source_to_detector_m=np.NaN):
         '''allow to convert the x-axis into eV, TOF or Angstroms units
         
         Parameters:
@@ -550,6 +550,8 @@ class Resonance(object):
         array: array to convert
         from_units: string (default is eV)
         to_units: string (default is Angstroms)
+        delay_us: float. Detector offset in microS (used when converting from or to TOF)
+        source_to_detector_m: float. distance in m between source and detector (used when converting from or to TOF)
         
         Returns:
         ========
@@ -557,7 +559,9 @@ class Resonance(object):
         '''
         return _utilities.convert_x_axis(array=array, 
                                          from_units=from_units,
-                                         to_units=to_units)
+                                         to_units=to_units,
+                                         delay_us=delay_us,
+                                         source_to_detector_m=source_to_detector_m)
 
     def plot(self, transmission=False, x_axis='energy', mixed=True, all_layers=False, all_elements=False,
              all_isotopes=False, items_to_plot=[], delay_us=2.99, time_resolution_us=0.16, source_to_detector_cm=1612.5):

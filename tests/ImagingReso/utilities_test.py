@@ -437,7 +437,9 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
         _array = np.linspace(1,10)
         _array_returned = convert_x_axis(array=_array, 
                                              from_units=_from_units, 
-                                                 to_units=_to_units)
+                                                 to_units=_to_units,
+                                                 delay_us=1,
+                                                 source_to_detector_m=1)
         self.assertTrue(isinstance(_array_returned, np.ndarray))        
 
     def test_array_not_changed_if_same_units_before_and_after(self):
@@ -466,14 +468,6 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
                                                  to_units=_to_units)        
         self.assertTrue((_array_returned == _array).all())        
 
-        _from_units = 'file_index'
-        _to_units = 'file_index'
-        _array = np.linspace(1,10)
-        _array_returned = convert_x_axis(array=_array, 
-                                             from_units=_from_units, 
-                                                 to_units=_to_units)        
-        self.assertTrue((_array_returned == _array).all())        
-
     # from eV to Angstroms
     def test_conversion_from_ev_to_angstroms_works(self):
         '''assert conversion from eV to Angstroms works'''
@@ -496,10 +490,12 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
         _from_units = 'ev'
         _to_units = 's'
         _array = np.linspace(1,10)
+        # error raised if delay_us and source_detector missing
         self.assertRaises(ValueError, convert_x_axis, array=_array, 
                           from_units=_from_units, 
                           to_units=_to_units)
 
+        # error raised if source_detector missing
         _delay_us = 5
         self.assertRaises(ValueError, convert_x_axis, array=_array, 
                           from_units=_from_units, 
@@ -520,6 +516,33 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
         time_record_ns = time_record_us * 1000
         _array_expected = time_record_us / 1e6
         self.assertTrue((_array_expected == _array_returned).all())
+
+    # from angstroms to ev
+    def test_conversion_from_angstroms_to_ev(self):
+        '''assert conversion from angstroms to ev works'''
+        _from_units = 'angstroms'
+        _to_units = 'ev'
+        _array = np.linspace(1,10)
+        
+        _array_returned = convert_x_axis(array=_array, from_units=_from_units, to_units=_to_units)
+        _array_expected = (81.787 / (1000. * _array**2))
+        self.assertTrue((_array_expected == _array_returned).all())
+        
+    # from eV to anstroms and back to eV
+    def test_double_conversion_from_ev_to_ev_via_angstroms(self):
+        '''assert double conversion from eV to eV via Anstroms return same array'''
+        _from_units = 'ev'
+        _to_units = 's'
+        _array = np.linspace(1,10)
+        _array_angsroms = convert_x_axis(array=_array, from_units='ev', 
+                                        to_units='Angstroms')
+        _array_ev = convert_x_axis(array=_array_angsroms, from_units='angstroms',
+                                   to_units='ev')
+        # checking one by one every element of the array
+        for _index in np.arange(len(_array)):
+            self.assertAlmostEqual(_array[_index], _array_ev[_index], delta=0.0001)
+
+
         
     #def test_conversion_from_angstroms_to_ev_works(self):
         #'''assert conversion from Angsroms to eV works'''
