@@ -429,7 +429,7 @@ def set_distance_units(value=np.NaN, from_units='mm', to_units='cm'):
 
     return coeff * value
 
-def energy_to_lambda(energy_ev=[]):
+def ev_to_angstroms(energy_ev=[]):
     """convert into lambda from the energy array
 
     Parameters:
@@ -444,7 +444,7 @@ def energy_to_lambda(energy_ev=[]):
     lambda_array = np.sqrt(81.787 / energy_mev)
     return lambda_array
 
-def angstroms_to_energy(array_angstroms=[]):
+def angstroms_to_ev(array_angstroms=[]):
     """convert lambda array in angstroms to energy in eV
     
     Parameters:
@@ -457,7 +457,7 @@ def angstroms_to_energy(array_angstroms=[]):
     """
     return 81.787 / (1000. * array_angstroms**2)
 
-def energy_to_time(energy_ev=[], delay_us=np.NaN, source_to_detector_m=np.NaN):
+def ev_to_s(energy_ev=[], delay_us=2.99, source_to_detector_m=np.NaN):
     # delay values is normal 2.99 us with NONE actual MCP delay settings
     """convert energy (eV) to time (us)
 
@@ -479,6 +479,21 @@ def energy_to_time(energy_ev=[], delay_us=np.NaN, source_to_detector_m=np.NaN):
     time_record_s = time_record_us / 1e6
     return time_record_s
 
+def angstroms_to_s(array_angstroms=[], delay_us=2.99, source_to_detector_m=np.NaN):
+    '''convert array in angstroms into s
+    
+    Parameters:
+    ===========
+    array_angstroms: array in angstroms
+    delay_us: float. Delay of detector in mocros
+    source_to_detector_m: float. Distance source to detector in m
+    
+    Returns:
+    ========
+    array in time (s)
+    '''
+    return (source_to_detector_m * array_angstroms / 3955.4) + delay_us * 1e-6
+
 def energy_to_image_number(energy_ev=[], delay_us=np.NaN, time_resolution_us=np.NaN, source_to_detector_cm=np.NaN):
     # delay values is normal 2.99 us with NONE actual MCP delay settings
     """convert energy (eV) to image numbers (#)
@@ -497,7 +512,7 @@ def energy_to_image_number(energy_ev=[], delay_us=np.NaN, time_resolution_us=np.
     image_number = time_record_us / time_resolution_us
     return image_number
 
-def time_to_energy(time_record_s, delay_us=np.NaN, source_to_detector_cm=np.NaN):
+def s_to_ev(time_record_s, delay_us=np.NaN, source_to_detector_cm=np.NaN):
     """convert time (s) to energy (eV)
     Parameters:
     ===========
@@ -549,28 +564,25 @@ def convert_x_axis(array=[], from_units='ev', to_units='Angstroms',
     
     if from_units == 'ev':
         if to_units == 'angstroms':
-            return energy_to_lambda(energy_ev=array)
+            return ev_to_angstroms(energy_ev=array)
     
         if to_units == 's':
-            if np.isnan(delay_us):
-                raise ValueError("Please provide a detector offset in microS!")
             if np.isnan(source_to_detector_m):
                 raise ValueError("Please provide a distance source-detector in m!")
     
-            return energy_to_time(energy_ev=array, delay_us=delay_us, 
+            return ev_to_s(energy_ev=array, delay_us=delay_us, 
                                  source_to_detector_m=source_to_detector_m)
     
     if from_units == 'angstroms':
         if to_units == 'ev':
-            return angstroms_to_energy(array_angstroms=array)
+            return angstroms_to_ev(array_angstroms=array)
         
         if to_units == 's':
-            if np.isnan(delay_us):
-                raise ValueError("Please provide a detector offset in microS!")
             if np.isnan(source_to_detector_m):
                 raise ValueError("Please provide a distance source-detector in m!")
             
-            return np.ndarray([])
+            return angstroms_to_s(array_angstroms=array, delay_us=delay_us, 
+                                 source_to_detector_m=source_to_detector_m)
     
     if from_units == 's':
         if to_units == 'ev':

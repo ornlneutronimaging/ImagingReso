@@ -490,17 +490,12 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
         _from_units = 'ev'
         _to_units = 's'
         _array = np.linspace(1,10)
-        # error raised if delay_us and source_detector missing
-        self.assertRaises(ValueError, convert_x_axis, array=_array, 
-                          from_units=_from_units, 
-                          to_units=_to_units)
 
         # error raised if source_detector missing
         _delay_us = 5
         self.assertRaises(ValueError, convert_x_axis, array=_array, 
                           from_units=_from_units, 
-                          to_units=_to_units,
-                          delay_us=_delay_us)
+                          to_units=_to_units)
 
         _source_to_detector_m = 15
         _array_returned = convert_x_axis(array=_array, 
@@ -531,8 +526,6 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
     # from eV to anstroms and back to eV
     def test_double_conversion_from_ev_to_ev_via_angstroms(self):
         '''assert double conversion from eV to eV via Anstroms return same array'''
-        _from_units = 'ev'
-        _to_units = 's'
         _array = np.linspace(1,10)
         _array_angsroms = convert_x_axis(array=_array, from_units='ev', 
                                         to_units='Angstroms')
@@ -542,6 +535,23 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
         for _index in np.arange(len(_array)):
             self.assertAlmostEqual(_array[_index], _array_ev[_index], delta=0.0001)
 
+    def test_conversion_from_angstroms_to_s(self):
+        '''assert conversion from angstroms to s works'''
+        _from_units = 'angstroms'
+        _to_units = 's'
+        _delay_us = 1
+        _source_to_detector_m = 15.0
+        _array = np.linspace(1,10)
+        _array_returned = convert_x_axis(array=_array, 
+                                         from_units=_from_units,
+                                         to_units=_to_units, 
+                                         delay_us=_delay_us,
+                                         source_to_detector_m=_source_to_detector_m)
+        
+        _array_expected = (_source_to_detector_m * _array / 3955.4) + _delay_us * 1e-6
+        # checking one by one every element of the array
+        for _index in np.arange(len(_array)):
+            self.assertAlmostEqual(_array_returned[_index], _array_expected[_index], delta=0.0001)
 
         
     #def test_conversion_from_angstroms_to_ev_works(self):
