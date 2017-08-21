@@ -512,17 +512,20 @@ def energy_to_image_number(energy_ev=[], delay_us=np.NaN, time_resolution_us=np.
     image_number = time_record_us / time_resolution_us
     return image_number
 
-def s_to_ev(time_record_s, delay_us=np.NaN, source_to_detector_cm=np.NaN):
+def s_to_ev(array_s=[], delay_us=2.99, source_to_detector_m=np.NaN):
     """convert time (s) to energy (eV)
     Parameters:
     ===========
-    time (in s)
+    array_s: array in s
+    delay_us: float. Delay of detector in micros
+    source_to_detector_m: float. Distance source to detector in m
 
     Returns:
     ========
-    energy: (in eV)
+    array in eV
     """
-    time_tot_us = 1e6 * time_record_s + delay_us
+    source_to_detector_cm = source_to_detector_m * 100
+    time_tot_us = 1e6 * array_s + delay_us
     energy_mev = 81.787 / (0.3956 * time_tot_us / source_to_detector_cm) ** 2
     energy_ev = energy_mev / 1000
     return energy_ev
@@ -586,7 +589,8 @@ def convert_x_axis(array=[], from_units='ev', to_units='Angstroms',
     
     if from_units == 's':
         if to_units == 'ev':
-            return np.ndarray([])
+            return s_to_ev(array_s=array, delay_us=delay_us, 
+                          source_to_detector_m=source_to_detector_m)
         
         if  to_units == 'angstroms':
             return np.ndarray([])
