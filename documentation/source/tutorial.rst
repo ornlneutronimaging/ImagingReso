@@ -393,3 +393,17 @@ So here are a few examples of plot commands
 .. image:: _static/plot1.png
     :align: center
     :alt: typical attenuation plot
+    
+x-axis unit convertor
+#####################
+
+This library also provides a energy/lambda/time_of_flight convertor, used here to change the x-axis of the plot.
+
+>>> energy_ev = o_reso.stack_signal['CoAg']['Ag']['107-Ag']['energy_eV']
+>>> energy_angstroms = o_reso.convert_x_axis(array=energy_ev, from_units='ev', to_units='angstroms')
+
+to convert to time_of_flight, 2 parameters must be provide, the detector_offset (in s, if any) and the distance source to detector (in m)
+
+>>> delay_us = 2.99   #microS
+>>> source_to_detector_m = 15.1 #meters
+>>> energy_tof = o_reso.convert_x_axis(array=energy_ev, from_units='ev', to_units='s', delay_us=delay_us, source_to_detector_m=source_to_detector_m)
