@@ -8,7 +8,7 @@ __pycache__/*
 /dist/*
 /build/*
 .cache/*
-
+/ImagingReso/reference_data
 
 
 
