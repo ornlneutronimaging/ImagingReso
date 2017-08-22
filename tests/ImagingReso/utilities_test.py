@@ -553,6 +553,25 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
         for _index in np.arange(len(_array)):
             self.assertAlmostEqual(_array_returned[_index], _array_expected[_index], delta=0.0001)
 
+    def test_conversion_from_s_to_angstroms(self):
+        '''assert conversion from s to angstroms works'''
+        _from_units = 's'
+        _to_units = 'angstroms'
+        _delay_us = 1
+        _source_to_detector_m = 15.0
+        _array = np.linspace(1,10)
+        _array_returned = convert_x_axis(array=_array, 
+                                         from_units=_from_units,
+                                         to_units=_to_units, 
+                                         delay_us=_delay_us,
+                                         source_to_detector_m=_source_to_detector_m)
+
+        _array_expected = (_array - _delay_us * 1e-6) * 3955.4 / _source_to_detector_m
+        # checking one by one every element of the array
+        for _index in np.arange(len(_array)):
+            self.assertAlmostEqual(_array_returned[_index], _array_expected[_index], delta=0.0001)
+
+
     def test_conversion_from_s_to_ev(self):
         '''assert conversion from s to ev works'''
         _from_units = 's'
@@ -569,6 +588,7 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
         _array_expected = (5.2276e-6 * (_source_to_detector_m / (_array - (_delay_us * 1e-6))**2) * 1e3)
         print(_array_expected)
         print(_array_returned)
+        #FIXME!!!!
         
 #        self.assertTrue(False)
         

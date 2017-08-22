@@ -494,6 +494,21 @@ def angstroms_to_s(array_angstroms=[], delay_us=2.99, source_to_detector_m=np.Na
     '''
     return (source_to_detector_m * array_angstroms / 3955.4) + delay_us * 1e-6
 
+def s_to_angstroms(array_s=[], delay_us=2.99, source_to_detector_m=np.NaN):
+    '''convert s to angstroms arrays
+    
+    Parameters:
+    ===========
+    array_s: array in s
+    delay_us: float. Delay of detector in mocros
+    source_to_detector_m: float. Distance source to detector in m
+    
+    Returns:
+    ========
+    array in angstroms
+    '''
+    return 3955.4 * (array_s - delay_us * 1e-6) / source_to_detector_m
+
 def energy_to_image_number(energy_ev=[], delay_us=np.NaN, time_resolution_us=np.NaN, source_to_detector_cm=np.NaN):
     # delay values is normal 2.99 us with NONE actual MCP delay settings
     """convert energy (eV) to image numbers (#)
@@ -593,6 +608,7 @@ def convert_x_axis(array=[], from_units='ev', to_units='Angstroms',
                           source_to_detector_m=source_to_detector_m)
         
         if  to_units == 'angstroms':
-            return np.ndarray([])
+            return s_to_angstroms(array_s=array, delay_us=delay_us, 
+                                 source_to_detector_m=source_to_detector_m)
     
     return np.ndarray([])
