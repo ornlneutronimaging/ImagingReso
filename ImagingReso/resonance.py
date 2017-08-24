@@ -598,16 +598,16 @@ class Resonance(object):
             x_axis_label = 'Energy (eV)'
         if x_axis == 'lambda':
             x_axis_label = u"Wavelength (\u212B)"
-            _x_axis = _utilities.energy_to_lambda(energy_ev=_x_axis)
+            _x_axis = _utilities.energy_to_lambda(array=_x_axis)
             plt.xlim(0, 1)
         if x_axis == 'time':
             x_axis_label = 'Time (us)'
-            _x_axis = _utilities.energy_to_time(energy_ev=_x_axis,
-                                                source_to_detector_cm=source_to_detector_cm,
-                                                delay_us=delay_us)
+            _x_axis = _utilities.ev_to_s(array=_x_axis,
+                                         source_to_detector_cm=source_to_detector_cm,
+                                         delay_us=delay_us)
         if x_axis == 'number':
             x_axis_label = 'Image number (#)'
-            _x_axis = _utilities.energy_to_image_number(energy_ev=_x_axis,
+            _x_axis = _utilities.energy_to_image_number(array=_x_axis,
                                                         source_to_detector_cm=source_to_detector_cm,
                                                         delay_us=delay_us,
                                                         time_resolution_us=time_resolution_us)
