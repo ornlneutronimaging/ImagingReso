@@ -44,15 +44,15 @@ Example of usage is presented in `tutorial.ipynb` under `/notebooks` directory.
 
 ### Calculation algorithm
 
-The neutron transmission calculation algorithm is base on Beer-Lambert law [7-8]:
+The neutron transmission calculation algorithm of neutron transmission *T*(*E*), is base on Beer-Lambert law [7]-[9]:
 
 <img src="documentation/source/_static/Beer_lambert_law_1.png" width=467 height=73 />
 
 *N<sub>i</sub>* : number of atoms of element *i* per unit volume, 
 
-*d<sub>i</sub>* : the effective thickness element *i* integrated along the neutron path, 
+*d* : thickness along the incident neutron path, 
 
-*σ<sub>ij</sub>(E)* : the energy-dependent neutron attenuation cross-section, 
+*σ<sub>ij</sub>(E)* : energy-dependent neutron total cross-section for the isotope *j* of element *i*, 
 
 *A<sub>ij</sub>* : abundance for the isotope *j* of element *i*. 
 
@@ -61,9 +61,13 @@ For solid materials the number of atoms per unit volume can be calculated from:
 
 <img src="documentation/source/_static/Beer_lambert_law_2.png" width=170 height=73 />
 
-*ρ<sub>i</sub>* : known density of the material,
+*N<sub>A</sub>* : Avogadro’s number,
 
-*m<sub>ij</sub>* : atomic mass values.
+*C<sub>i</sub>* : molar concentration of element *i*,
+
+*ρ<sub>i</sub>* : density of the element *i*,
+
+*m<sub>ij</sub>* : atomic mass values for the isotope *j* of element *i*.
 
 ### Acknowledgements
 
@@ -86,6 +90,8 @@ User Facilities under contract number DE-AC05-00OR22725.
 
 [6]	P. A. Kienzle, “Periodictable V1.5.0,” Journal of Open Source Software, Jan. 2017.
 
-[7]	A. S. Tremsin et al., “Non-Contact Measurement of Partial Gas Pressure and Distribution of Elemental Composition Using Energy-Resolved Neutron Imaging,” AIP Advances, vol. 7, no. 1, p. 15315, 2017.
+[7]	M. Ooi et al., “Neutron Resonance Imaging of a Au-In-Cd Alloy for the JSNS,” Physics Procedia, vol. 43, pp. 337–342, 2013.
 
-[8]	Y. Zhang et al., “The Nature of Electrochemical Delithiation of Li-Mg Alloy Electrodes: Neutron Computed Tomography and Analytical Modeling of Li Diffusion and Delithiation Phenomenon,” Journal of the Electrochemical Society, vol. 164, no. 2, pp. A28–A38, 2017.
+[8]	A. S. Tremsin et al., “Non-Contact Measurement of Partial Gas Pressure and Distribution of Elemental Composition Using Energy-Resolved Neutron Imaging,” AIP Advances, vol. 7, no. 1, p. 15315, 2017.
+
+[9]	Y. Zhang et al., “The Nature of Electrochemical Delithiation of Li-Mg Alloy Electrodes: Neutron Computed Tomography and Analytical Modeling of Li Diffusion and Delithiation Phenomenon,” Journal of the Electrochemical Society, vol. 164, no. 2, pp. A28–A38, 2017.

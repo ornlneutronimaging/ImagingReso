@@ -517,7 +517,7 @@ class Resonance(object):
                 _list_isotopic_ratio = _stack[_compound][_element]['isotopes']['isotopic_ratio']
                 _iso_file_ratio = zip(_list_isotopes, _list_file_names, _list_isotopic_ratio)
                 
-                _dict_sigma_isotopes_sum = {}
+                # _dict_sigma_isotopes_sum = {}
                 _sigma_all_isotopes = 0
                 _energy_all_isotpes = 0
                 
@@ -541,30 +541,10 @@ class Resonance(object):
                 stack_sigma[_compound][_element]['sigma_b'] = _sigma_all_isotopes
                     
         self.stack_sigma = stack_sigma
-              
-    def convert_x_axis(self, array=[], from_units='eV', to_units='Angstroms', delay_us=0, source_to_detector_m=np.NaN):
-        '''allow to convert the x-axis into eV, TOF or Angstroms units
-        
-        Parameters:
-        ===========
-        array: array to convert
-        from_units: string (default is eV)
-        to_units: string (default is Angstroms)
-        delay_us: float. Detector offset in microS (used when converting from or to TOF)
-        source_to_detector_m: float. distance in m between source and detector (used when converting from or to TOF)
-        
-        Returns:
-        ========
-        converted array
-        '''
-        return _utilities.convert_x_axis(array=array, 
-                                         from_units=from_units,
-                                         to_units=to_units,
-                                         delay_us=delay_us,
-                                         source_to_detector_m=source_to_detector_m)
 
     def plot(self, transmission=False, x_axis='energy', mixed=True, all_layers=False, all_elements=False,
-             all_isotopes=False, items_to_plot=[], delay_us=2.99, time_resolution_us=0.16, source_to_detector_cm=1612.5):
+             all_isotopes=False, items_to_plot=[], time_unit='us', offset_us=2.99, time_resolution_us=0.16, source_to_detector_m=16.125):
+        # offset delay values is normal 2.99 us with NONE actual MCP delay settings
         """display the transmission or attenuation of compound, element and/or isotopes specified
 
         Parameters:
@@ -598,19 +578,30 @@ class Resonance(object):
             x_axis_label = 'Energy (eV)'
         if x_axis == 'lambda':
             x_axis_label = u"Wavelength (\u212B)"
-            _x_axis = _utilities.energy_to_lambda(array=_x_axis)
-            plt.xlim(0, 1)
+            _x_axis = _utilities.ev_to_angstroms(array=_x_axis)
+            # plt.xlim(0, 1)
         if x_axis == 'time':
-            x_axis_label = 'Time (us)'
-            _x_axis = _utilities.ev_to_s(array=_x_axis,
-                                         source_to_detector_cm=source_to_detector_cm,
-                                         delay_us=delay_us)
+            if time_unit == 's':
+                x_axis_label = 'Time (s)'
+                _x_axis = _utilities.ev_to_s(array=_x_axis,
+                                             source_to_detector_m=source_to_detector_m,
+                                             offset_us=offset_us)
+            if time_unit == 'us':
+                x_axis_label = 'Time (us)'
+                _x_axis = 1e6 * _utilities.ev_to_s(array=_x_axis,
+                                                   source_to_detector_m=source_to_detector_m,
+                                                   offset_us=offset_us)
+            if time_unit == 'ns':
+                x_axis_label = 'Time (ns)'
+                _x_axis = 1e9 * _utilities.ev_to_s(array=_x_axis,
+                                                   source_to_detector_m=source_to_detector_m,
+                                                   offset_us=offset_us)
         if x_axis == 'number':
             x_axis_label = 'Image number (#)'
-            _x_axis = _utilities.energy_to_image_number(array=_x_axis,
-                                                        source_to_detector_cm=source_to_detector_cm,
-                                                        delay_us=delay_us,
-                                                        time_resolution_us=time_resolution_us)
+            _x_axis = _utilities.ev_to_image_number(array=_x_axis,
+                                                    source_to_detector_m=source_to_detector_m,
+                                                    offset_us=offset_us,
+                                                    time_resolution_us=time_resolution_us)
 
         '''Y-axis'''
         # determine to plot transmission or attenuation

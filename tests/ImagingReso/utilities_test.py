@@ -438,7 +438,7 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
         _array_returned = convert_x_axis(array=_array, 
                                          from_units=_from_units, 
                                          to_units=_to_units,
-                                         delay_us=1,
+                                         offset_us=1,
                                          source_to_detector_m=1)
         self.assertTrue(isinstance(_array_returned, np.ndarray))        
         
@@ -492,7 +492,7 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
         _array = np.linspace(1,10)
 
         # error raised if source_detector missing
-        _delay_us = 5
+        _offset_us = 5
         self.assertRaises(ValueError, convert_x_axis, array=_array, 
                           from_units=_from_units, 
                           to_units=_to_units)
@@ -501,15 +501,12 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
         _array_returned = convert_x_axis(array=_array, 
                                          from_units=_from_units, 
                                          to_units=_to_units,
-                                         delay_us=_delay_us,
-                                         source_to_detector_m=_source_to_detector_m)        
+                                         offset_us=_offset_us,
+                                         source_to_detector_m=_source_to_detector_m)
 
-        source_to_detector_cm = _source_to_detector_m * 100
-        energy_mev = _array * 1000
-        time_tot_us = np.sqrt(81.787 / energy_mev) * source_to_detector_cm / 0.3956
-        time_record_us = time_tot_us - _delay_us
-        time_record_ns = time_record_us * 1000
-        _array_expected = time_record_us / 1e6
+        time_s = np.sqrt(81.787 / (_array * 1000.)) * _source_to_detector_m / 3956.
+        time_record_s = time_s - _offset_us * 1e-6
+        _array_expected = time_record_s
         self.assertTrue((_array_expected == _array_returned).all())
 
     # from angstroms to ev
@@ -539,16 +536,16 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
         '''assert conversion from angstroms to s works'''
         _from_units = 'angstroms'
         _to_units = 's'
-        _delay_us = 1
+        _offset_us = 1
         _source_to_detector_m = 15.0
         _array = np.linspace(1,10)
         _array_returned = convert_x_axis(array=_array, 
                                          from_units=_from_units,
                                          to_units=_to_units, 
-                                         delay_us=_delay_us,
+                                         offset_us=_offset_us,
                                          source_to_detector_m=_source_to_detector_m)
         
-        _array_expected = (_source_to_detector_m * _array / 3955.4) + _delay_us * 1e-6
+        _array_expected = (_source_to_detector_m * _array / 3956) + _offset_us * 1e-6
         # checking one by one every element of the array
         for _index in np.arange(len(_array)):
             self.assertAlmostEqual(_array_returned[_index], _array_expected[_index], delta=0.0001)
@@ -557,16 +554,16 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
         '''assert conversion from s to angstroms works'''
         _from_units = 's'
         _to_units = 'angstroms'
-        _delay_us = 1
+        _offset_us = 1
         _source_to_detector_m = 15.0
         _array = np.linspace(1,10)
         _array_returned = convert_x_axis(array=_array, 
                                          from_units=_from_units,
                                          to_units=_to_units, 
-                                         delay_us=_delay_us,
+                                         offset_us=_offset_us,
                                          source_to_detector_m=_source_to_detector_m)
 
-        _array_expected = (_array - _delay_us * 1e-6) * 3955.4 / _source_to_detector_m
+        _array_expected = 3956. * (_array + _offset_us*1e-6) / _source_to_detector_m
         # checking one by one every element of the array
         for _index in np.arange(len(_array)):
             self.assertAlmostEqual(_array_returned[_index], _array_expected[_index], delta=0.0001)
@@ -576,16 +573,16 @@ class TestUtilities_xaxis_convertor(unittest.TestCase):
         '''assert conversion from s to ev works'''
         _from_units = 's'
         _to_units = 'ev'
-        _delay_us = 1
+        _offset_us = 1
         _source_to_detector_m = 15.0
         _array = np.linspace(1,10)
         _array_returned = convert_x_axis(array=_array, 
-                                             from_units=_from_units,
-                                             to_units=_to_units, 
-                                             delay_us=_delay_us,
-                                             source_to_detector_m=_source_to_detector_m)
-
-        _array_expected = 81.787 * pow(_source_to_detector_m / (_array - _delay_us * 1e-6), 2) / pow(3955.4, 2)
+                                         from_units=_from_units,
+                                         to_units=_to_units,
+                                         offset_us=_offset_us,
+                                         source_to_detector_m=_source_to_detector_m)
+        lambda_a = 3956. * (_array + _offset_us * 1e-6) / _source_to_detector_m
+        _array_expected = (81.787 / pow(lambda_a, 2))/1000.
         # checking one by one every element of the array
         for _index in np.arange(len(_array)):
             self.assertAlmostEqual(_array_returned[_index], _array_expected[_index], delta=0.0001)
