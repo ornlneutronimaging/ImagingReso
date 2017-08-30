@@ -46,11 +46,11 @@ Example of usage is presented in `tutorial.ipynb` under `/notebooks` directory.
 
 The neutron transmission calculation algorithm of neutron transmission *T*(*E*), is base on Beer-Lambert law [7]-[9]:
 
-<img src="documentation/source/_static/Beer_lambert_law_1.png" width=467 height=73 />
+<img src="documentation/source/_static/Beer_lambert_law_1.png" width=504 height=80 />
 
-*N<sub>i</sub>* : number of atoms of element *i* per unit volume, 
+*N<sub>i</sub>* : number of atoms per unit volume of element *i*, 
 
-*d* : thickness along the incident neutron path, 
+*d<sub>i</sub>* : effective thickness along the neutron path of element *i*,
 
 *σ<sub>ij</sub>(E)* : energy-dependent neutron total cross-section for the isotope *j* of element *i*, 
 
@@ -59,7 +59,7 @@ The neutron transmission calculation algorithm of neutron transmission *T*(*E*),
 
 For solid materials the number of atoms per unit volume can be calculated from:
 
-<img src="documentation/source/_static/Beer_lambert_law_2.png" width=170 height=73 />
+<img src="documentation/source/_static/Beer_lambert_law_2.png" width=244 height=80 />
 
 *N<sub>A</sub>* : Avogadro’s number,
 
