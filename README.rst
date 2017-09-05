@@ -71,18 +71,38 @@ See the documentation
 Calculation algorithm
 ---------------------
 
+The neutron transmission calculation algorithm of neutron transmission *T*(*E*), is base on Beer-Lambert law [7]-[9]:
 
 .. image:: documentation/source/_static/Beer_lambert_law_1.png
   :align: center
   :alt: Beer Lambert Law 1
+  :width: 504px
+  :height: 80px
+ 
+*N<sub>i</sub>* : number of atoms per unit volume of element *i*, 
 
+*d<sub>i</sub>* : effective thickness along the neutron path of element *i*,
+
+*σ<sub>ij</sub>(E)* : energy-dependent neutron total cross-section for the isotope *j* of element *i*, 
+
+*A<sub>ij</sub>* : abundance for the isotope *j* of element *i*. 
+
+
+For solid materials the number of atoms per unit volume can be calculated from:
 
 .. image:: documentation/source/_static/Beer_lambert_law_2.png
   :align: center
   :alt: Beer Lambert law 2
+  :width: 244px
+  :height: 80px
 
+*N<sub>A</sub>* : Avogadro’s number,
 
+*C<sub>i</sub>* : molar concentration of element *i*,
 
+*ρ<sub>i</sub>* : density of the element *i*,
+
+*m<sub>ij</sub>* : atomic mass values for the isotope *j* of element *i*.
 
 
 Acknowledgements
