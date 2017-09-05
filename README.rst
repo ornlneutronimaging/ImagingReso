@@ -51,7 +51,7 @@ Install _ImagingReso_ by typing the following command in Terminal:
 
 .. code-block:: bash
   
-  $ pip install ImagingReso`
+  $ pip install ImagingReso
 
 
 or by typing the following command under downloaded directory in Terminal: 
@@ -59,7 +59,7 @@ or by typing the following command under downloaded directory in Terminal:
 
 .. code-block:: bash
 
-  $ python setup.py`
+  $ python setup.py
 
 
 Example
