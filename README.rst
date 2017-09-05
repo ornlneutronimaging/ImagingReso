@@ -53,7 +53,8 @@ Install _ImagingReso_ by typing the following command in Terminal:
 or by typing the following command under downloaded directory in Terminal: 
 
 
--- code-block:: bash
+.. code-block:: bash
+
   $ python setup.py`
 
 
@@ -71,7 +72,14 @@ Calculation algorithm
 ---------------------
 
 
+.. image:: documentation/source/_static/Beer_lambert_law_1.png
+  :align: center
+  :alt: Beer Lambert Law 1
 
+
+.. image:: documentation/source/_static/Beer_lambert_law_2.png
+  :align: center
+  :alt: Beer Lambert law 2
 
 
 
