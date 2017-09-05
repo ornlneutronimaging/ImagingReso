@@ -93,7 +93,7 @@ For solid materials the number of atoms per unit volume can be calculated from:
 .. image:: documentation/source/_static/Beer_lambert_law_2.png
   :align: center
   :alt: Beer Lambert law 2
-  :width: 100
+  :width: 10px
 
 N :sub:`A` : Avogadro’s number,
 
