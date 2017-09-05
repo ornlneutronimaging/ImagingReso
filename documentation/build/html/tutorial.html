@@ -104,6 +104,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#display-transmission-and-attenuation">Display Transmission and Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#x-axis-unit-convertor">x-axis unit convertor</a></li>
 </ul>
 </li>
 </ul>
@@ -207,11 +208,11 @@ thickness is defined in mm, the density in g/cm3 and the ratio is the stochiomet
 estimage the density of the compound (layer), and changing the isotope density, or isotopic coefficient will affect the layer/compound density.
 But if you provide the density, this value won’t be affected by any other changes. If you provide the density, we suppose that you
 know what you are doing and that you know your component enough to make sure its density value should not be changed.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span> <span class="o">=</span> <span class="n">ImagingReso</span><span class="o">.</span><span class="n">Resonance</span><span class="p">(</span><span class="n">stack</span> <span class="o">=</span> <span class="n">_stack</span><span class="p">,</span> <span class="n">energy_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">energy_max</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">energy_step</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span> <span class="o">=</span> <span class="n">ImagingReso</span><span class="o">.</span><span class="n">Resonance</span><span class="p">(</span><span class="n">stack</span> <span class="o">=</span> <span class="n">_stack</span><span class="p">,</span> <span class="n">energy_min</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">energy_max</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">energy_step</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>It is also possible to define the layers (stack) one by one using their formula as demonstrated here</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span> <span class="o">=</span> <span class="n">ImagingReso</span><span class="o">.</span><span class="n">Resonance</span><span class="p">(</span><span class="n">energy_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">energy_max</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">energy_step</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span> <span class="o">=</span> <span class="n">ImagingReso</span><span class="o">.</span><span class="n">Resonance</span><span class="p">(</span><span class="n">energy_min</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">energy_max</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">energy_step</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">stack1</span> <span class="o">=</span> <span class="s1">&#39;CoAg&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">thickness1</span> <span class="o">=</span> <span class="mf">0.025</span> <span class="c1">#mm</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">density1</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1">#g/cm3</span>
@@ -314,7 +315,7 @@ the elements you defined, for each layer.</p>
 </div>
 <p>The energy range defined</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy min </span><span class="si">{}</span><span class="s2"> eV&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">energy_min</span><span class="p">))</span>
-<span class="go">Energy min 0 eV</span>
+<span class="go">Energy min 0.001 eV</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy max </span><span class="si">{}</span><span class="s2"> eV&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">energy_max</span><span class="p">))</span>
 <span class="go">Energy max 300 eV</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Energy step </span><span class="si">{}</span><span class="s2"> eV&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">energy_step</span><span class="p">))</span>
@@ -405,7 +406,7 @@ the elements you defined, for each layer.</p>
 </pre></div>
 </div>
 <p>Let’s define the new stochiomettric ratio</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span><span class="o">.</span><span class="n">set_stochiometric_ratio</span><span class="p">(</span><span class="n">compound</span><span class="o">=</span><span class="s1">&#39;U&#39;</span><span class="p">,</span> <span class="n">list_ratio</span><span class="o">=</span><span class="n">new_list_ratio</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_reso</span><span class="o">.</span><span class="n">set_isotopic_ratio</span><span class="p">(</span><span class="n">compound</span><span class="o">=</span><span class="s1">&#39;U&#39;</span><span class="p">,</span> <span class="n">list_ratio</span><span class="o">=</span><span class="n">new_list_ratio</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">o_reso</span><span class="o">.</span><span class="n">stack</span><span class="p">)</span>
 <span class="go">{&#39;CoAg&#39;: {&#39;Ag&#39;: {&#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;, &#39;value&#39;: 10.5},</span>
 <span class="go">                 &#39;isotopes&#39;: {&#39;density&#39;: {&#39;units&#39;: &#39;g/cm3&#39;,</span>
@@ -546,6 +547,20 @@ every time one of the parameters is modified, such as density, stochiometric coe
 </pre></div>
 </div>
 <img alt="typical attenuation plot" class="align-center" src="_images/plot1.png" />
+</div>
+<div class="section" id="x-axis-unit-convertor">
+<h2>x-axis unit convertor<a class="headerlink" href="#x-axis-unit-convertor" title="Permalink to this headline">¶</a></h2>
+<p>This library also provides a energy/lambda/time_of_flight convertor, used here to change the x-axis of the plot.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">energy_ev</span> <span class="o">=</span> <span class="n">o_reso</span><span class="o">.</span><span class="n">stack_signal</span><span class="p">[</span><span class="s1">&#39;CoAg&#39;</span><span class="p">][</span><span class="s1">&#39;Ag&#39;</span><span class="p">][</span><span class="s1">&#39;107-Ag&#39;</span><span class="p">][</span><span class="s1">&#39;energy_eV&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">energy_angstroms</span> <span class="o">=</span> <span class="n">o_reso</span><span class="o">.</span><span class="n">convert_x_axis</span><span class="p">(</span><span class="n">array</span><span class="o">=</span><span class="n">energy_ev</span><span class="p">,</span> <span class="n">from_units</span><span class="o">=</span><span class="s1">&#39;ev&#39;</span><span class="p">,</span> <span class="n">to_units</span><span class="o">=</span><span class="s1">&#39;angstroms&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>to convert to time_of_flight, 2 parameters must be provide, the detector_offset (in s, if any) and the distance source to detector (in m)</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">delay_us</span> <span class="o">=</span> <span class="mf">2.99</span>   <span class="c1">#microS</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source_to_detector_m</span> <span class="o">=</span> <span class="mf">15.1</span> <span class="c1">#meters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">energy_tof</span> <span class="o">=</span> <span class="n">o_reso</span><span class="o">.</span><span class="n">convert_x_axis</span><span class="p">(</span><span class="n">array</span><span class="o">=</span><span class="n">energy_ev</span><span class="p">,</span> <span class="n">from_units</span><span class="o">=</span><span class="s1">&#39;ev&#39;</span><span class="p">,</span> <span class="n">to_units</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">delay_us</span><span class="o">=</span><span class="n">delay_us</span><span class="p">,</span> <span class="n">source_to_detector_m</span><span class="o">=</span><span class="n">source_to_detector_m</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 </div>
 
