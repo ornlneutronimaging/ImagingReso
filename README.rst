@@ -78,7 +78,6 @@ The neutron transmission calculation algorithm of neutron transmission *T*(*E*),
   :alt: Beer Lambert Law 1
   :width: 504px
   :height: 80px
-  :scale: 10%
  
 N :sub:`i` : number of atoms per unit volume of element *i*, 
 
@@ -94,7 +93,7 @@ For solid materials the number of atoms per unit volume can be calculated from:
 .. image:: documentation/source/_static/Beer_lambert_law_2.png
   :align: center
   :alt: Beer Lambert law 2
-  :scale: 50%
+  :width: 100px
 
 N :sub:`A` : Avogadro’s number,
 
