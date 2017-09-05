@@ -74,8 +74,10 @@ Calculation algorithm
 The neutron transmission calculation algorithm of neutron transmission *T*(*E*), is base on Beer-Lambert law [7]-[9]:
 
 .. image:: documentation/source/_static/Beer_lambert_law_1.png
-  :align: center
-  :alt: Beer Lambert Law 1
+   :align: center
+   :alt: Beer Lambert Law 1
+   :width: 504px
+   :height: 80px
  
 N :sub:`i` : number of atoms per unit volume of element *i*, 
 
