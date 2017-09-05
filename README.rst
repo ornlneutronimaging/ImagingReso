@@ -144,3 +144,7 @@ Yuxuan Zhang - zhangy6@ornl.gov
 
 Jean Bilheux - bilheuxjm@ornl.gov
 
+Distributed under the BSD license. See ``license`` for more information
+
+https://github.com/ornlneutronimaging/ImagingReso
+
