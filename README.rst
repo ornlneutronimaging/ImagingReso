@@ -75,8 +75,9 @@ The neutron transmission calculation algorithm of neutron transmission *T*(*E*),
 
 .. image:: documentation/source/_static/Beer_lambert_law_1.png
    :alt: Beer Lambert Law 1
-   :width: 504 px
-   :height: 80 px
+   :width: 2016 px
+   :height: 321 px
+   :scale: 20
    :align: center
  
 N :sub:`i` : number of atoms per unit volume of element *i*, 
