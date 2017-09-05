@@ -81,9 +81,9 @@ The neutron transmission calculation algorithm of neutron transmission *T*(*E*),
  
 N :sub:`i` : number of atoms per unit volume of element *i*, 
 
-d :sub`i` : effective thickness along the neutron path of element *i*,
+d :sub:`i` : effective thickness along the neutron path of element *i*,
 
-σ :sub`ij` (E) : energy-dependent neutron total cross-section for the isotope *j* of element *i*, 
+σ :sub:`ij` (E) : energy-dependent neutron total cross-section for the isotope *j* of element *i*, 
 
 A :sub:`ij` : abundance for the isotope *j* of element *i*. 
 
