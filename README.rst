@@ -1,6 +1,10 @@
 ImagingReso
 ==========
 
+
+.. image:: https://img.shields.io/pypi/v/ImagingReso.svg
+  :target: https://pypi.python.org/pypi/ImagingReso
+
 .. image:: https://travis-ci.org/ornlneutronimaging/ImagingReso.svg?branch=master
   :target: https://travis-ci.org/ornlneutronimaging/ImagingReso
     
