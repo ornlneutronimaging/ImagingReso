@@ -94,13 +94,13 @@ For solid materials the number of atoms per unit volume can be calculated from:
   :alt: Beer Lambert law 2
   :scale: 50%
 
-N:sub:`A`: Avogadro’s number,
+N :sub:`A`: Avogadro’s number,
 
-C:sub:`i` : molar concentration of element *i*,
+C :sub:`i` : molar concentration of element *i*,
 
-ρ:sub:`i` : density of the element *i*,
+ρ :sub:`i` : density of the element *i*,
 
-m:sub:`ij` : atomic mass values for the isotope *j* of element *i*.
+m :sub:`ij` : atomic mass values for the isotope *j* of element *i*.
 
 
 Acknowledgements
