@@ -44,11 +44,11 @@ estimage the density of the compound (layer), and changing the isotope density, 
 But if you provide the density, this value won't be affected by any other changes. If you provide the density, we suppose that you 
 know what you are doing and that you know your component enough to make sure its density value should not be changed.
 
->>> o_reso = ImagingReso.Resonance(stack = _stack, energy_min=0, energy_max=300, energy_step=10)
+>>> o_reso = ImagingReso.Resonance(stack = _stack, energy_min=0.001, energy_max=300, energy_step=10)
 
 It is also possible to define the layers (stack) one by one using their formula as demonstrated here
 
->>> o_reso = ImagingReso.Resonance(energy_min=0, energy_max=300, energy_step=10)
+>>> o_reso = ImagingReso.Resonance(energy_min=0.001, energy_max=300, energy_step=10)
 >>> stack1 = 'CoAg'
 >>> thickness1 = 0.025 #mm
 >>> density1 = 0.5 #g/cm3
@@ -152,7 +152,7 @@ or using only the object name
 The energy range defined
 
 >>> print("Energy min {} eV".format(o_reso.energy_min))
-Energy min 0 eV
+Energy min 0.001 eV
 >>> print("Energy max {} eV".format(o_reso.energy_max))
 Energy max 300 eV
 >>> print("Energy step {} eV".format(o_reso.energy_step))
@@ -247,7 +247,7 @@ Let's presume our new set of 'U' ratio is
 
 Let's define the new stochiomettric ratio
 
->>> o_reso.set_stochiometric_ratio(compound='U', list_ratio=new_list_ratio)
+>>> o_reso.set_isotopic_ratio(compound='U', list_ratio=new_list_ratio)
 >>> pprint.pprint(o_reso.stack)
 {'CoAg': {'Ag': {'density': {'units': 'g/cm3', 'value': 10.5},
                  'isotopes': {'density': {'units': 'g/cm3',
