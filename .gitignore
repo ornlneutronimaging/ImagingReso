@@ -1,23 +1,28 @@
-__pycache__/*
-*.pyc
-*~
+__pycache__
+
+*.py[cod]
+
 .ipynb*
 .coverage
 /cover/*
-.DS_Store*
-/dist/*
-/build/*
-.cache/*
 
+# mac
+.DS_Store
 
-# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
-# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+.cache
 
-# User-specific stuff:
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/dictionaries
-.idea/**/*.iml
-.idea/**/misc.xml
-.idea/**/modules.xml
-.idea/**/vcs.xml
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+MANIFEST
+
+# Unit test / coverage reports
+.coverage 
+
