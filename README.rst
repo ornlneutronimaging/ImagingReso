@@ -1,4 +1,4 @@
-ImagingEso
+ImagingReso
 ==========
 
 .. image:: https://travis-ci.org/ornlneutronimaging/ImagingReso.svg?branch=master
@@ -53,16 +53,27 @@ Install _ImagingReso_ by typing the following command in Terminal:
 or by typing the following command under downloaded directory in Terminal: 
 
 
--- code-block:: bashh
+-- code-block:: bash
   $ python setup.py`
 
 
 Example
 -------
 
+See the documentation
+
 .. image:: https://readthedocs.org/projects/imagingreso/badge/?version=latest
   :target: http://imagingreso.readthedocs.io/en/latest/?badge=latest
   :alt: Documentation Status
+
+
+Calculation algorithm
+---------------------
+
+
+
+
+
 
 
 
@@ -95,4 +106,12 @@ References
 [8]	A. S. Tremsin et al., “Non-Contact Measurement of Partial Gas Pressure and Distribution of Elemental Composition Using Energy-Resolved Neutron Imaging,” AIP Advances, vol. 7, no. 1, p. 15315, 2017.
 
 [9]	Y. Zhang et al., “The Nature of Electrochemical Delithiation of Li-Mg Alloy Electrodes: Neutron Computed Tomography and Analytical Modeling of Li Diffusion and Delithiation Phenomenon,” Journal of the Electrochemical Society, vol. 164, no. 2, pp. A28–A38, 2017.
+
+
+
+Meta
+----
+
+Yuxuan Zhang - `zhangy6@ornl.gov` 
+Jean Bilheux - 'bilheuxjm@ornl.gov'
 
