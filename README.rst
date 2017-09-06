@@ -13,7 +13,7 @@ as density, thickness in the neutron path and isotopic ratios of the
 elemental composition of the material, one can plot of expected
 resonance peaks for a selected neutron energy range. Various sample
 types such as layers of single elements (Ag, Co, etc. in solid form),
-chemical compounds (UO3, Gd2O3, etc.), or even multiple layers of both
+chemical compounds (UO :sub:`2`, Gd :sub:`2` O :sub:`3`, etc.), or even multiple layers of both
 types. Major plotting features include display of the
 transmission/attenuation in wavelength/energy/time scale, show/hide
 elemental and isotopic contributions in the total resonance signal.
