@@ -12,7 +12,7 @@ def read_file(filename):
 
 setup(
     name = "ImagingReso",
-    version = "1.5.5",
+    version = "1.5.6",
     author = "Yuxuan (Shawn) Zhang, Jean Bilheux",
     author_email = "zhangy6@ornl.gov, bilheuxjm@ornl.gov",
     packages = find_packages(exclude=['tests', 'notebooks']),
@@ -33,7 +33,7 @@ setup(
     long_description = read_file('README.rst'),
     license = 'BSD',
     keywords = ['neutron','resonance','imaging'],
-    url = "https://github.com/ornlneutronimaging/ImagingReso",
+    url = "https://github.com/ornlneutronimaging/ImagingReso.git",
     classifiers = ['Development Status :: 3 - Alpha',
                    'License :: OSI Approved :: BSD License',
                    'Topic :: Scientific/Engineering :: Physics',
