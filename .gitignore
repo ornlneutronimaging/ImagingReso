@@ -26,3 +26,4 @@ MANIFEST
 # Unit test / coverage reports
 .coverage 
 
+.idea/
