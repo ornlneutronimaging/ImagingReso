@@ -1,7 +1,18 @@
-|pypi version| |Build Status| |codecov| |Documentation Status|
-
 ImagingReso
 ===========
+
+.. image:: https://img.shields.io/pypi/v/ImagingReso.svg
+  :target: https://pypi.python.org/pypi/ImagingReso
+
+.. image:: https://travis-ci.org/ornlneutronimaging/ImagingReso.svg?branch=master
+  :target: https://travis-ci.org/ornlneutronimaging/ImagingReso
+    
+.. image:: https://codecov.io/gh/ornlneutronimaging/ImagingReso/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/ornlneutronimaging/ImagingReso
+  
+.. image:: https://readthedocs.org/projects/imagingreso/badge/?version=latest
+  :target: http://imagingreso.readthedocs.io/en/latest/?badge=latest
+  :alt: Documentation Status
 
 Abstract
 --------
@@ -41,12 +52,16 @@ Installation instructions
 
 Install **ImagingReso** by typing the following command in Terminal:
 
-``pip install ImagingReso``
+.. code-block:: bash
+
+   $ pip install ImagingReso
 
 or by typing the following command under downloaded directory in
 Terminal:
 
-``python setup.py``
+.. code-block:: python
+   
+   python setup.py
 
 Example usage
 -------------
@@ -143,15 +158,6 @@ Distributed under the BSD license. See ``LICENSE.txt`` for more information
 
 https://github.com/ornlneutronimaging/ImagingReso
 
-
-.. |pypi version| image:: https://img.shields.io/pypi/v/imagingreso.svg
-   :target: https://pypi.python.org/pypi/ImagingReso
-.. |Build Status| image:: https://travis-ci.org/ornlneutronimaging/ImagingReso.svg?branch=master
-   :target: https://travis-ci.org/ornlneutronimaging/ImagingReso
-.. |codecov| image:: https://codecov.io/gh/ornlneutronimaging/ImagingReso/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/ornlneutronimaging/ImagingReso
-.. |Documentation Status| image:: https://readthedocs.org/projects/imagingreso/badge/?version=latest
-   :target: http://imagingreso.readthedocs.io/en/latest/?badge=latest
 
 
 
