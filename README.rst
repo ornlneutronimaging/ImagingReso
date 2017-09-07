@@ -17,23 +17,23 @@ ImagingReso
 Abstract
 --------
 
-Here we present an open-source Python library which focuses on
-simulating the neutron resonance signal for neutron imaging
-measurements. In this package, by defining the sample information such
-as density, thickness in the neutron path and isotopic ratios of the
-elemental composition of the material, one can plot of expected
-resonance peaks for a selected neutron energy range. Various sample
-types such as layers of single elements (Ag, Co, etc. in solid form),
-chemical compounds (UO :sub:`2`, Gd :sub:`2` O :sub:`3`, etc.), or even multiple layers of both
-types. Major plotting features include display of the
-transmission/attenuation in wavelength/energy/time scale, show/hide
-elemental and isotopic contributions in the total resonance signal.
+ImagingReso is an open-source Python library that simulates the neutron
+resonance signal for neutron imaging measurements. By defining the sample
+information such as density, thickness in the neutron path, and isotopic
+ratios of the elemental composition of the material, this package plots
+the expected resonance peaks for a selected neutron energy range.
+Various sample types such as layers of single elements (Ag, Co, etc. in solid form),
+chemical compounds (UO :sub:`2`, Gd :sub:`2` O :sub:`3`, etc.),
+or even multiple layers of both types can be plotted with this package.
+Major plotting features include display of the transmission/attenuation in
+wavelength, energy, and time scale, and show/hide elemental and
+isotopic contributions in the total resonance signal.
 
 The energy dependent cross-section data used in this library are from
-`National Nuclear Data Center <http://www.nndc.bnl.gov/>`__, a published
-online database. `Evaluated Nuclear Data File
-(ENDF/B) <http://www.nndc.bnl.gov/exfor/endf00.jsp>`__ [1] is currently
-supported and more evaluated databases will be added in future.
+`National Nuclear Data Center <http://www.nndc.bnl.gov/>`__,
+an online database published by Brookhaven National Laboratory.
+`Evaluated Nuclear Data File (ENDF/B) <http://www.nndc.bnl.gov/exfor/endf00.jsp>`__ [1]
+is currently supported and more evaluated databases will be added in the future.
 
 Python packages used are: SciPy [2], NumPy [3], Matplotlib [4], Pandas
 [5] and Periodictable [6].
@@ -72,12 +72,14 @@ directory.
 Calculation algorithm
 ---------------------
 
-The neutron transmission calculation algorithm of neutron transmission
-*T*\ (*E*), is base on Beer-Lambert law [7]-[9]:
+The calculation algorithm of neutron transmission *T*\ (*E*),
+is base on Beer-Lambert law [7]-[9]:
 
 .. figure:: https://github.com/ornlneutronimaging/ImagingReso/blob/master/documentation/source/_static/Beer_lambert_law_1.png
    :alt: Beer Lambert Law 1
    :align: center
+
+where
 
 N :sub:`i` : number of atoms per unit volume of element *i*,
 
@@ -87,12 +89,14 @@ d :sub:`i` : effective thickness along the neutron path of element *i*,
 
 A :sub:`ij` : abundance for the isotope *j* of element *i*.
 
-For solid materials the number of atoms per unit volume can be
+For solid materials, the number of atoms per unit volume can be
 calculated from:
 
 .. figure:: https://github.com/ornlneutronimaging/ImagingReso/blob/master/documentation/source/_static/Beer_lambert_law_2.png
    :align: center
    :alt: Beer Lambert law 2
+
+where
 
 N :sub:`A` : Avogadro’s number,
 
