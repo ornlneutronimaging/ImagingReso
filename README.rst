@@ -76,7 +76,9 @@ The calculation algorithm of neutron transmission *T*\ (*E*),
 is base on Beer-Lambert law [7]-[9]:
 
 .. figure:: https://github.com/ornlneutronimaging/ImagingReso/blob/master/documentation/source/_static/Beer_lambert_law_1.png
-   :alt: Beer Lambert Law 1
+   :alt: Beer-lambert Law 1
+   :width: 504px
+   :height: 80px
    :align: center
 
 where
@@ -94,7 +96,9 @@ calculated from:
 
 .. figure:: https://github.com/ornlneutronimaging/ImagingReso/blob/master/documentation/source/_static/Beer_lambert_law_2.png
    :align: center
-   :alt: Beer Lambert law 2
+   :width: 244px
+   :height: 80px
+   :alt: Beer-lambert law 2
 
 where
 
