@@ -77,8 +77,6 @@ is base on Beer-Lambert law [7]-[9]:
 
 .. figure:: https://github.com/ornlneutronimaging/ImagingReso/blob/master/documentation/source/_static/Beer_lambert_law_1.png
    :alt: Beer-lambert Law 1
-   :width: 504px
-   :height: 80px
    :align: center
 
 where
@@ -96,8 +94,6 @@ calculated from:
 
 .. figure:: https://github.com/ornlneutronimaging/ImagingReso/blob/master/documentation/source/_static/Beer_lambert_law_2.png
    :align: center
-   :width: 244px
-   :height: 80px
    :alt: Beer-lambert law 2
 
 where
