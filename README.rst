@@ -75,9 +75,9 @@ Calculation algorithm
 The calculation algorithm of neutron transmission *T*\ (*E*),
 is base on Beer-Lambert law [7]-[9]:
 
-.. math::
-   \Tr\left( E \right) =\frac { I\left( E \right)  }{ { I }_{ 0 }\left( E \right)  } =exp\left[ -\sum_{ i }^{  } { { N }_{ i }{ d }_{ i } } \sum_{ j }^{  } { { \sigma  }_{ ij }\left( E \right) { A }_{ ij } }  \right]
-
+.. figure:: https://github.com/ornlneutronimaging/ImagingReso/blob/master/documentation/source/_static/Beer_lambert_law_1.png
+   :alt: Beer-lambert Law 1
+   :align: center
 
 where
 
@@ -92,8 +92,9 @@ A :sub:`ij` : abundance for the isotope *j* of element *i*.
 For solid materials, the number of atoms per unit volume can be
 calculated from:
 
-.. math::
-   \{ N }_{ i }=\frac { { \rho  }_{ i } }{ \sum_{ j }^{  } { { m }_{ ij }{ A }_{ ij } }  }
+.. figure:: https://github.com/ornlneutronimaging/ImagingReso/blob/master/documentation/source/_static/Beer_lambert_law_2.png
+   :align: center
+   :alt: Beer-lambert law 2
 
 where
 
