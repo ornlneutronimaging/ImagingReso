@@ -23,7 +23,7 @@ information such as density, thickness in the neutron path, and isotopic
 ratios of the elemental composition of the material, this package plots
 the expected resonance peaks for a selected neutron energy range.
 Various sample types such as layers of single elements (Ag, Co, etc. in solid form),
-chemical compounds (UO :sub:`2`, Gd :sub:`2` O :sub:`3`, etc.),
+chemical compounds (UO\ :sub:`2`, Gd\ :sub:`2`\O\ :sub:`3`, etc.),
 or even multiple layers of both types can be plotted with this package.
 Major plotting features include display of the transmission/attenuation in
 wavelength, energy, and time scale, and show/hide elemental and
@@ -81,13 +81,13 @@ is base on Beer-Lambert law [7]-[9]:
 
 where
 
-N :sub:`i` : number of atoms per unit volume of element *i*,
+N\ :sub:`i` : number of atoms per unit volume of element *i*,
 
-d :sub:`i` : effective thickness along the neutron path of element *i*,
+d\ :sub:`i` : effective thickness along the neutron path of element *i*,
 
-σ :sub:`ij` (E) : energy-dependent neutron total cross-section for the isotope *j* of element *i*,
+σ\ :sub:`ij` (E) : energy-dependent neutron total cross-section for the isotope *j* of element *i*,
 
-A :sub:`ij` : abundance for the isotope *j* of element *i*.
+A\ :sub:`ij` : abundance for the isotope *j* of element *i*.
 
 For solid materials, the number of atoms per unit volume can be
 calculated from:
@@ -98,13 +98,13 @@ calculated from:
 
 where
 
-N :sub:`A` : Avogadro’s number,
+N\ :sub:`A` : Avogadro’s number,
 
-C :sub:`i` : molar concentration of element *i*,
+C\ :sub:`i` : molar concentration of element *i*,
 
-ρ :sub:`i` : density of the element *i*,
+ρ\ :sub:`i` : density of the element *i*,
 
-m :sub:`ij` : atomic mass values for the isotope *j* of element *i*.
+m\ :sub:`ij` : atomic mass values for the isotope *j* of element *i*.
 
 Acknowledgements
 ----------------
