@@ -18,7 +18,7 @@ class TestInitialization(unittest.TestCase):
 
     def test_str(self):
         """assert print(object) works"""
-        _stack = {'CoAg': {'elements': ['Co',' Ag'],
+        _stack = {'CoAg': {'elements': ['Co', 'Ag'],
                            'stoichiometric_ratio': [1, 2],
                            'thickness': {'value': 0.025,
                                          'units': 'mm'},
@@ -58,7 +58,7 @@ class TestInitialization(unittest.TestCase):
         
     def test_initialization_of_object(self):
         """assert object is correctly initialized with energy min, max and step"""
-        _stack = {'CoAg': {'elements': ['Co','Ag'],
+        _stack = {'CoAg': {'elements': ['Co', 'Ag'],
                                'stoichiometric_ratio': [1, 2],
                                'thickness': {'value': 0.025,
                                              'units': 'mm'},
