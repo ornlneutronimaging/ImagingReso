@@ -24,12 +24,13 @@ def is_element_in_database(element='', database='ENDF_VIII'):
     '''
     if element == '':
         return False
-    
+
     list_entry_from_database = get_list_element_from_database(database=database)
     if element.lower() in list_entry_from_database:
         return True
-    return False    
-    
+    return False
+
+
 def get_list_element_from_database(database=''):
     '''return a string array of all the element from the database
     
@@ -47,12 +48,13 @@ def get_list_element_from_database(database=''):
 
     if not os.path.exists(_database_folder):
         raise ValueError("Database {} does not exist!".format(database))
-    
+
     _list_files = glob.glob(_database_folder + '/*.csv')
     _list_short_files = [os.path.basename(_file) for _file in _list_files]
     _list_element = set([_name.split('-')[0].lower() for _name in _list_short_files])
     return _list_element
-    
+
+
 def checking_stack(stack={}, database='ENDF_VIII'):
     '''This method makes sure that all the elements from the various stacks are 
     in the database and that the thickness has the correct format (float)
@@ -81,12 +83,13 @@ def checking_stack(stack={}, database='ENDF_VIII'):
         _thickness = stack[_keys]['thickness']['value']
         if not isinstance(_thickness, numbers.Number):
             raise ValueError("Thickness {} should be a number!".format(_thickness))
-    
+
         _stoichiometric_ratio = stack[_keys]['stoichiometric_ratio']
         if len(_stoichiometric_ratio) != len(_elements):
             raise ValueError("stoichiometric Ratio and Elements should have the same size!")
-    
-    return True    
+
+    return True
+
 
 def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database='ENDF_VIII'):
     '''create dictionary based on formula given
@@ -143,6 +146,7 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
                       },
             }
 
+
 def get_isotope_dicts(element='', database='ENDF_VIII'):
     '''return a dictionary with list of isotopes found in database and name of database files
     
@@ -163,19 +167,19 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
     _database_folder = os.path.join(_file_path, 'reference_data', database)
     _element_search_path = os.path.join(_database_folder, element + '-*.csv')
     list_files = glob.glob(_element_search_path)
-    isotope_dict = {'isotopes': {'list': [], 
+    isotope_dict = {'isotopes': {'list': [],
                                  'file_names': [],
                                  'density': {'value': np.NaN,
                                              'units': 'g/cm3'},
                                  'mass': {'value': [],
                                           'units': 'g/mol',
-                                 },
-                                 'isotopic_ratio': [],},
+                                          },
+                                 'isotopic_ratio': [], },
                     'density': {'value': np.NaN,
                                 'units': 'g/cm3'},
                     'molar_mass': {'value': np.NaN,
                                    'units': 'g/mol'},
-                    } 
+                    }
 
     isotope_dict_mirror = {}
     _isotopes_list = []
@@ -185,9 +189,8 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
     _isotopes_atomic_ratio = []
     _density = np.NaN
     _molar_mass = np.NaN
-    
-    for file in list_files:
 
+    for file in list_files:
         # Obtain element, z number from the basename
         _basename = os.path.basename(file)
         [filename, file_extension] = os.path.splitext(_basename)
@@ -202,16 +205,17 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
         _isotopes_density.append(get_density(isotope))
         _density = get_density(element)
         _molar_mass = get_mass(element)
-                                        
+
     isotope_dict['isotopes']['list'] = _isotopes_list
-    isotope_dict['isotopes']['file_names'] = _isotopes_list_files              
+    isotope_dict['isotopes']['file_names'] = _isotopes_list_files
     isotope_dict['isotopes']['mass']['value'] = _isotopes_mass
     isotope_dict['isotopes']['isotopic_ratio'] = _isotopes_atomic_ratio
     isotope_dict['isotopes']['density']['value'] = _isotopes_density
     isotope_dict['density']['value'] = _density
     isotope_dict['molar_mass']['value'] = _molar_mass
-                    
-    return isotope_dict   
+
+    return isotope_dict
+
 
 def get_abundance(element):
     '''return the abundance [0.,1.] of the defined element
@@ -226,6 +230,7 @@ def get_abundance(element):
     '''
     return pt.elements.isotope(element).abundance / 100.
 
+
 def get_mass(element):
     '''return the molar mass (SI units) of an given isotope, or element
     
@@ -238,6 +243,7 @@ def get_mass(element):
     the molar mass of the element/isotope in SI units
     '''
     return pt.elements.isotope(element).mass
+
 
 def get_density(element):
     '''return the density (g.cm-3) of the element
@@ -252,16 +258,18 @@ def get_density(element):
     '''
     return pt.elements.isotope(element).density
 
+
 def get_compound_density(list_density=[], list_ratio=[]):
     ''''''
     _ratio_density = zip(list_ratio, list_density)
     _density_compound = 0
-    
+
     _sum_ratio = np.array(list_ratio).sum()
-    
+
     for _ratio, _density in _ratio_density:
         _density_compound += (_ratio * _density) / _sum_ratio
     return _density_compound
+
 
 def get_database_data(file_name=''):
     '''return the energy (eV) and Sigma (barn) from the file_name
@@ -283,7 +291,8 @@ def get_database_data(file_name=''):
     df = pd.read_csv(file_name, header=1)
     return df
 
-def get_interpolated_data(df=[], E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
+
+def get_interpolated_data(df=pd.DataFrame, E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
     '''return the interpolated x and y axis for the given x range [E_min, E_max] with step defined
     
     Parameters:
@@ -298,22 +307,12 @@ def get_interpolated_data(df=[], E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
     x_axis and y_axis of interpolated data over specified range
     '''
     nbr_point = (E_max - E_min) / E_step
-    
-    # remove data outside specified range [x_min, x_max]
-    #df = df.drop(df[df.E_eV < E_min].index)
-    #df = df.drop(df[df.E_eV > E_max].index)
-
-    # reset index
-    df = df.reset_index(drop=True)
-    
-    # energy x_axis
-    #x_axis = np.linspace(df['E_eV'].min(), df['E_eV'].max(), nbr_point)
     x_axis = np.linspace(E_min, E_max, nbr_point)
     y_axis_function = interp1d(x=df['E_eV'], y=df['Sig_b'], kind='linear')
-    
-    y_axis = y_axis_function(x_axis)   
-    
+    y_axis = y_axis_function(x_axis)
+
     return {'x_axis': x_axis, 'y_axis': y_axis}
+
 
 def get_sigma(database_file_name='', E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
     '''retrieve the Energy and sigma axis for the given isotope
@@ -330,10 +329,11 @@ def get_sigma(database_file_name='', E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
     {'energy': np.array(), 'sigma': np.array}
     '''
     _df = get_database_data(file_name=database_file_name)
-    _dict = get_interpolated_data(df=_df, E_min=E_min, E_max=E_max, 
-                                 E_step=E_step)
+    _dict = get_interpolated_data(df=_df, E_min=E_min, E_max=E_max,
+                                  E_step=E_step)
     return {'energy_eV': _dict['x_axis'],
             'sigma_b': _dict['y_axis']}
+
 
 def get_atoms_per_cm3_of_layer(compound_dict={}):
     '''calculate the atoms per cm3 of the given compound (layer)
@@ -347,7 +347,7 @@ def get_atoms_per_cm3_of_layer(compound_dict={}):
     dictionary
     '''
     atoms_per_cm3 = {}
-    
+
     _list_of_elements = compound_dict['elements']
     _stoichiometric_list = compound_dict['stoichiometric_ratio']
 
@@ -360,8 +360,9 @@ def get_atoms_per_cm3_of_layer(compound_dict={}):
     for _element, _stoichio in _element_stoichio:
         _step1 = (compound_dict['density']['value'] * _stoichio) / _molar_mass_sum
         atoms_per_cm3[_element] = Avogadro * _step1
-    
+
     return atoms_per_cm3
+
 
 def calculate_transmission(thickness_cm=np.NaN, atoms_per_cm3=np.NaN, sigma_b=[]):
     '''calculate the transmission signal using the formula
@@ -378,8 +379,9 @@ def calculate_transmission(thickness_cm=np.NaN, atoms_per_cm3=np.NaN, sigma_b=[]
     ========
     transmission array
     '''
-    transmission = np.exp( -thickness_cm * 1e-24 * sigma_b * atoms_per_cm3)
+    transmission = np.exp(-thickness_cm * 1e-24 * sigma_b * atoms_per_cm3)
     return np.array(transmission)
+
 
 def set_distance_units(value=np.NaN, from_units='mm', to_units='cm'):
     '''convert distance into new units
@@ -429,6 +431,7 @@ def set_distance_units(value=np.NaN, from_units='mm', to_units='cm'):
 
     return coeff * value
 
+
 def ev_to_angstroms(array=[]):
     """convert into lambda from the energy array
 
@@ -442,6 +445,7 @@ def ev_to_angstroms(array=[]):
     """
     return np.sqrt(81.787 / (array * 1000.))  # 1000 is used to convert eV to meV
 
+
 def angstroms_to_ev(array=[]):
     """convert lambda array in angstroms to energy in eV
     
@@ -454,6 +458,7 @@ def angstroms_to_ev(array=[]):
     numpy array of energy in eV
     """
     return 81.787 / (1000. * array ** 2)  # 1000 is used to convert meV to eV
+
 
 def ev_to_s(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
     # delay values is normal 2.99 us with NONE actual MCP delay settings
@@ -474,6 +479,7 @@ def ev_to_s(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
     time_record_s = time_s - offset_us * 1e-6
     return time_record_s
 
+
 def s_to_ev(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
     """convert time (s) to energy (eV)
     Parameters:
@@ -486,8 +492,9 @@ def s_to_ev(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
     ========
     numpy array of energy in eV
     """
-    lambda_a = 3956. * (array + offset_us*1e-6) / source_to_detector_m
-    return (81.787 / pow(lambda_a, 2))/1000.  # 1000 is used to convert meV to eV
+    lambda_a = 3956. * (array + offset_us * 1e-6) / source_to_detector_m
+    return (81.787 / pow(lambda_a, 2)) / 1000.  # 1000 is used to convert meV to eV
+
 
 def angstroms_to_s(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
     '''convert array in angstroms into s
@@ -504,6 +511,7 @@ def angstroms_to_s(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
     '''
     return (source_to_detector_m * array / 3956.) - offset_us * 1e-6
 
+
 def s_to_angstroms(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
     '''convert s to angstroms arrays
 
@@ -517,9 +525,11 @@ def s_to_angstroms(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
     ========
     array in angstroms
     '''
-    return 3956. * (array + offset_us*1e-6) / source_to_detector_m
+    return 3956. * (array + offset_us * 1e-6) / source_to_detector_m
 
-def ev_to_image_number(array=[], offset_us=np.NaN, time_resolution_us=np.NaN, source_to_detector_m=np.NaN, t_start_us = 1):
+
+def ev_to_image_number(array=[], offset_us=np.NaN, time_resolution_us=np.NaN, source_to_detector_m=np.NaN,
+                       t_start_us=1):
     # delay values is normal 2.99 us with NONE actual MCP delay settings
     """convert energy (eV) to image numbers (#)
 
