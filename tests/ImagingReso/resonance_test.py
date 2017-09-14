@@ -18,17 +18,17 @@ class TestInitialization(unittest.TestCase):
 
     def test_str(self):
         """assert print(object) works"""
-        _stack = {'CoAg': {'elements': ['Co','Ag'],
-                               'stoichiometric_ratio': [1, 2],
-                                   'thickness': {'value': 0.025,
-                                                 'units': 'mm'},
-                                   },
-                      'Ag': {'elements': ['Ag'],
-                                 'stoichiometric_ratio': [1],
-                                 'thickness': {'value': 0.03,
-                                               'units': 'mm'},
-                                 },
-                          }
+        _stack = {'CoAg': {'elements': ['Co',' Ag'],
+                           'stoichiometric_ratio': [1, 2],
+                           'thickness': {'value': 0.025,
+                                         'units': 'mm'},
+                           },
+                  'Ag': {'elements': ['Ag'],
+                         'stoichiometric_ratio': [1],
+                         'thickness': {'value': 0.03,
+                                       'units': 'mm'},
+                         },
+                  }
         energy_min = 10
         energy_max = 150
         energy_step = 1
@@ -38,17 +38,17 @@ class TestInitialization(unittest.TestCase):
 
     def test_repr(self):
         """assert object works"""
-        _stack = {'CoAg': {'elements': ['Co','Ag'],
-                               'stoichiometric_ratio': [1, 2],
-                                   'thickness': {'value': 0.025,
-                                                 'units': 'mm'},
-                                   },
-                      'Ag': {'elements': ['Ag'],
-                                 'stoichiometric_ratio': [1],
-                                 'thickness': {'value': 0.03,
-                                               'units': 'mm'},
-                                 },
-                          }
+        _stack = {'CoAg': {'elements': ['Co', 'Ag'],
+                           'stoichiometric_ratio': [1, 2],
+                           'thickness': {'value': 0.025,
+                                         'units': 'mm'},
+                           },
+                  'Ag': {'elements': ['Ag'],
+                         'stoichiometric_ratio': [1],
+                         'thickness': {'value': 0.03,
+                                       'units': 'mm'},
+                         },
+                  }
         energy_min = 10
         energy_max = 150
         energy_step = 1
@@ -146,7 +146,7 @@ class TestInitialization(unittest.TestCase):
 
     def test_correct_initialization_of_stack(self):
         """assert correct defined stack is correctly saved"""
-        _stack = {'CoAg': {'elements': ['Co','Ag'],
+        _stack = {'CoAg': {'elements': ['Co', 'Ag'],
                            'stoichiometric_ratio': [1, 2],
                            'thickness': {'value': 0.025,
                                          'units': 'mm'},
@@ -178,14 +178,14 @@ class TestInitialization(unittest.TestCase):
         
         returned_stack = o_reso.stack
         
-        expected_stack = {'CoAg': {'elements': ['Co','Ag'],
-                                   'stoichiometric_ratio': [1,1],
+        expected_stack = {'CoAg': {'elements': ['Co', 'Ag'],
+                                   'stoichiometric_ratio': [1, 1],
                                    'thickness': {'value': 0.025,
                                                  'units': 'mm'},
                                    'density': {'value': 9.7,
                                                'units': 'g/cm3'},
-                                   'Co': {'isotopes': {'file_names': ['Co-58.csv','Co-59.csv'],
-                                                       'list': ['58-Co','59-Co'],
+                                   'Co': {'isotopes': {'file_names': ['Co-58.csv', 'Co-59.csv'],
+                                                       'list': ['58-Co', '59-Co'],
                                                        'mass': {'value': [57.9357576, 58.9332002],
                                                                 'units': 'g/mol',
                                                                 },
@@ -196,12 +196,12 @@ class TestInitialization(unittest.TestCase):
                                           'molar_mass': {'value': 58.9332,
                                                          'units': 'g/mol'},
                                           },
-                                   'Ag': {'isotopes': {'file_names': ['Ag-107.csv','Ag-109.csv'],
-                                                       'list': ['107-Ag','109-Ag'],
+                                   'Ag': {'isotopes': {'file_names': ['Ag-107.csv', 'Ag-109.csv'],
+                                                       'list': ['107-Ag', '109-Ag'],
                                                        'mass': {'value': [106.905093, 108.904756],
                                                                 'units': 'g/mol',
                                                                 },
-                                                       'isotopic_ratio': [0.51839,0.48161000],
+                                                       'isotopic_ratio': [0.51839, 0.48161000],
                                                        },
                                           'density': {'value': 10.5,
                                                       'units': 'g/cm3'},
@@ -215,12 +215,12 @@ class TestInitialization(unittest.TestCase):
                                                'units': 'mm'},
                                  'density': {'value': 0.5,
                                              'units': 'g/cm3'},
-                                 'Ag': {'isotopes': {'file_names': ['Ag-107.csv','Ag-109.csv'],
-                                                     'list': ['107-Ag','109-Ag'],
+                                 'Ag': {'isotopes': {'file_names': ['Ag-107.csv', 'Ag-109.csv'],
+                                                     'list': ['107-Ag', '109-Ag'],
                                                      'mass': {'value': [106.905093, 108.904756],
                                                               'units': 'g/mol',
                                                               },
-                                                      'isotopic_ratio': [0.51839,0.48161000],
+                                                      'isotopic_ratio': [0.51839, 0.48161000],
                                                       },
                                         'density': {'value': 10.5,
                                                     'units': 'g/cm3'},
@@ -259,18 +259,18 @@ class TestInitialization(unittest.TestCase):
                                delta=0.0001)
         # isotopic_ratio Ag
         self.assertAlmostEqual(returned_stack['CoAg']['Ag']['isotopes']['isotopic_ratio'][0],
-                                   expected_stack['CoAg']['Ag']['isotopes']['isotopic_ratio'][0],
-                                   delta=0.0001)
+                               expected_stack['CoAg']['Ag']['isotopes']['isotopic_ratio'][0],
+                               delta=0.0001)
         self.assertAlmostEqual(returned_stack['CoAg']['Ag']['isotopes']['isotopic_ratio'][1],
-                                   expected_stack['CoAg']['Ag']['isotopes']['isotopic_ratio'][1],
-                                   delta=0.0001)
+                                expected_stack['CoAg']['Ag']['isotopes']['isotopic_ratio'][1],
+                                delta=0.0001)
         
         # layer density
         self.assertEqual(returned_stack['Ag']['density']['value'], 
                          expected_stack['Ag']['density']['value'])
         self.assertAlmostEqual(returned_stack['CoAg']['density']['value'], 
                                expected_stack['CoAg']['density']['value'],
-                               delta = 0.1)
+                               delta=0.1)
         
         # element density
         self.assertEqual(returned_stack['CoAg']['Ag']['density']['value'], 
@@ -286,7 +286,7 @@ class TestInitialization(unittest.TestCase):
     def test_element_metadata_via_stack_initialization(self):
         """assert __element_metadata is correctly populated using stack initialization"""
 
-        _stack = {'CoAg': {'elements': ['Co','Ag'],
+        _stack = {'CoAg': {'elements': ['Co', 'Ag'],
                            'stoichiometric_ratio': [1, 2],
                            'thickness': {'value': 0.025,
                                          'units': 'mm'},
@@ -337,18 +337,18 @@ class TestInitialization(unittest.TestCase):
         
     def test_layer_density_locked_if_defined_during_initialization_init(self):
         """assert the layer density is locked if defined at the beginning using init"""
-        _stack = {'CoAg': {'elements': ['Co','Ag'],
+        _stack = {'CoAg': {'elements': ['Co', 'Ag'],
                            'stoichiometric_ratio': [1, 2],
                            'thickness': {'value': 0.025,
                                          'units': 'mm'},
-                           'density' :{'value': 8.9,
+                           'density': {'value': 8.9,
                                        'units': 'g/cm3'},
                            },
                   'Ag': {'elements': ['Ag'],
                          'stoichiometric_ratio': [1],
                          'thickness': {'value': 0.03,
                                        'units': 'mm'},
-                         'density' :{'value': np.NaN,
+                         'density': {'value': np.NaN,
                                      'units': 'g/cm3'},
                          },
                   }
@@ -389,21 +389,21 @@ class TestInitialization(unittest.TestCase):
 class TestGetterSetter(unittest.TestCase):
     
     def setUp(self):
-        _stack = {'CoAg': {'elements': ['Co','Ag'],
+        _stack = {'CoAg': {'elements': ['Co', 'Ag'],
                            'stoichiometric_ratio': [1, 2],
                            'thickness': {'value': 0.025,
                                          'units': 'mm'},
                            'density': {'value': np.NaN,
                                        'units': 'g/cm3'},
                            },
-                'U': {'elements': ['U'],
-                      'stoichiometric_ratio': [1],
-                      'thickness': {'value': 0.03,
-                                    'units': 'mm'},
-                      'density': {'value': np.NaN,
-                                  'units': 'g/cm3'},
-                      },
-                }
+                  'U': {'elements': ['U'],
+                        'stoichiometric_ratio': [1],
+                        'thickness': {'value': 0.03,
+                                      'units': 'mm'},
+                        'density': {'value': np.NaN,
+                                    'units': 'g/cm3'},
+                        },
+                  }
         self.o_reso = Resonance(stack=_stack)        
         
     # stoichiometric ratio
@@ -412,9 +412,9 @@ class TestGetterSetter(unittest.TestCase):
         o_reso = Resonance()
         o_reso.add_layer(formula='UO3', thickness=0.25, density=0.5)
         o_reso.add_layer(formula='AgCo', thickness=0.5, density=0.8)
-        _stoichiometric_ratio = o_reso.get_isotopic_ratio(compound='UO3',
-            element='U')
-    
+        _stoichiometric_ratio = o_reso.get_isotopic_ratio(compound='UO3', element='U')
+        self.assertEqual(_stoichiometric_ratio['238-U'], 0.992745)
+
     def test_retrieve_stoichiometric_ratio_raises_error_if_unknown_compound(self):
         """assert ValueError raised if wrong compound when getting stoichiometric ratio"""
         self.assertRaises(ValueError, self.o_reso.get_isotopic_ratio, compound='unknown')
@@ -511,69 +511,30 @@ class TestGetterSetter(unittest.TestCase):
                                    },
                              }
         self.assertEqual(_expected_density, _density_list)
-        
-    #def test_set_density_raises_error_if_bad_compound_element_or_density(self):
-        #"""assert set density raises error if any of the parameters is wrong"""
-        #self.assertRaises(ValueError, self.o_reso.set_density)
-        #self.assertRaises(ValueError, self.o_reso.set_density, compound='unknown')
-        #self.assertRaises(ValueError, self.o_reso.set_density, compound='CoAg', element='unknown')
-        #self.assertRaises(ValueError, self.o_reso.set_density, compound='CoAg', element='Co', density='not_a_number')
-        
-    #def test_set_isotopic_ratio_only_change_unlock_compound_density(self):
-        #"""assert set isotopic ratio only change unlock compound density"""
-        #_stack = {'CoAg': {'elements': ['Co','Ag'],
-                            #'stoichiometric_ratio': [1, 2],
-                            #'thickness': {'value': 0.025,
-                                          #'units': 'mm'},
-                            #'density': {'value': 8.5,
-                                        #'units': 'g/cm3'},
-                            #},
-                  #'U': {'elements': ['U'],
-                        #'stoichiometric_ratio': [1],
-                        #'thickness': {'value': 0.03,
-                                      #'units': 'mm'},
-                        #'density': {'value': np.NaN,
-                                    #'units': 'g/cm3'},
-                    #},
-                  #}
-        #o_reso = Resonance(stack=_stack)        
-        #lock_density_before = o_reso.stack['CoAg']['density']['value']
-        #unlock_density_before = o_reso.stack['U']['density']['value']
-        
-        ## defining new density on lock compound raises error
-        #self.assertRaises(IOError, self.o_reso.set_density, compound='CoAg', element='Ag', density=9)
 
-        #new_set_density = 10
-        #o_reso.set_density(compound='U', element='U', density=new_set_density, debug=True)
-        #lock_density_after = o_reso.stack['CoAg']['density']['value']
-        #unlock_density_after = o_reso.stack['U']['density']['value']
-        
-        #self.assertEqual(lock_density_after, lock_density_before)
-        #self.assertEqual(unlock_density_after, new_set_density)
         
 class TestTransmissionAttenuation(unittest.TestCase):
     
     def setUp(self):
-        _stack = {'CoAg': {'elements': ['Co','Ag'],
-                               'stoichiometric_ratio': [1, 2],
-                                   'thickness': {'value': 0.025,
-                                                 'units': 'mm'},
-                                   'density': {'value': np.NaN,
-                                               'units': 'g/cm3'},
-                                   },
-                      'U': {'elements': ['U'],
-                                 'stoichiometric_ratio': [1],
-                                 'thickness': {'value': 0.03,
-                                               'units': 'mm'},
-                                 'density': {'value': np.NaN,
-                                            'units': 'g/cm3'},
-                                 },
-                          }
+        _stack = {'CoAg': {'elements': ['Co', 'Ag'],
+                           'stoichiometric_ratio': [1, 2],
+                           'thickness': {'value': 0.025,
+                                         'units': 'mm'},
+                           'density': {'value': np.NaN,
+                                       'units': 'g/cm3'},
+                           },
+                  'U': {'elements': ['U'],
+                        'stoichiometric_ratio': [1],
+                        'thickness': {'value': 0.03,
+                                      'units': 'mm'},
+                        'density': {'value': np.NaN,
+                                    'units': 'g/cm3'},
+                        },
+                  }
         self.o_reso = Resonance(stack=_stack)        
 
     def test_calculate_transmission_isotopes(self):
         """assert calculation of transmission for isotopes works"""
-        #pprint.pprint(self.o_reso.stack_signal)
         energy_eV = self.o_reso.stack_signal['CoAg']['Ag']['107-Ag']['energy_eV']
         transmission = self.o_reso.stack_signal['CoAg']['Ag']['107-Ag']['transmission']
 
@@ -594,7 +555,6 @@ class TestTransmissionAttenuation(unittest.TestCase):
         
     def test_calculate_attenuation_isotopes(self):
         """assert calculation of attenuation for isotopes works"""
-        #pprint.pprint(self.o_reso.stack_signal)
         energy_eV = self.o_reso.stack_signal['CoAg']['Ag']['107-Ag']['energy_eV']
         attenuation = self.o_reso.stack_signal['CoAg']['Ag']['107-Ag']['attenuation']
         
@@ -615,7 +575,6 @@ class TestTransmissionAttenuation(unittest.TestCase):
 
     def test_calculate_transmission_element(self):
         """assert calculation of transmission for element works"""
-        #pprint.pprint(self.o_reso.stack_signal)
         energy_eV = self.o_reso.stack_signal['CoAg']['Ag']['energy_eV']
         transmission = self.o_reso.stack_signal['CoAg']['Ag']['transmission']
         
@@ -636,7 +595,6 @@ class TestTransmissionAttenuation(unittest.TestCase):
         
     def test_calculate_attenuation_element(self):
         """assert calculation of attenuation for element works"""
-        #pprint.pprint(self.o_reso.stack_signal)
         energy_eV = self.o_reso.stack_signal['CoAg']['Ag']['energy_eV']
         attenuation = self.o_reso.stack_signal['CoAg']['Ag']['attenuation']
         
