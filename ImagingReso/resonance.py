@@ -45,7 +45,7 @@ class Resonance(object):
         energy_step: float (default 0.1) energy step to use in extrapolation of sigma data
         """
         self.__element_metadata = {}
-        
+
         if energy_min < self.E_MIN:
             raise ValueError("Energy min (eV) must be >= {}".format(self.E_MIN))
         self.energy_min = energy_min
@@ -53,6 +53,12 @@ class Resonance(object):
         if energy_max > self.E_MAX:
             raise ValueError("Energy max (eV) must be <= {}".format(self.E_MAX))
         self.energy_max = energy_max
+
+        if energy_min == energy_max:
+            raise ValueError("Energy min and max should not have the same value!")
+
+        if (energy_max - energy_min) < energy_step:
+            raise ValueError("Energy step is bigger than range of energy specified!")
 
         self.energy_step = energy_step
 

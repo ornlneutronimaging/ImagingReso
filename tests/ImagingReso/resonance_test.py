@@ -1,24 +1,23 @@
 import unittest
 import numpy as np
-import os
-import pprint
 
 from ImagingReso.resonance import Resonance
+
 
 class TestInitialization(unittest.TestCase):
 
     def test_E_min(self):
-        '''assert E can not be set below a given threshold'''
+        """assert E can not be set below a given threshold"""
         energy_min = 1e-6
         self.assertRaises(ValueError, Resonance, energy_min=energy_min)
 
     def test_E_max(self):
-        '''assert E can not be set above a given threshold'''
+        """assert E can not be set above a given threshold"""
         energy_max = 10000
         self.assertRaises(ValueError, Resonance, energy_max=energy_max)
 
     def test_str(self):
-        '''assert print(object) works'''
+        """assert print(object) works"""
         _stack = {'CoAg': {'elements': ['Co','Ag'],
                                'stoichiometric_ratio': [1, 2],
                                    'thickness': {'value': 0.025,
@@ -38,7 +37,7 @@ class TestInitialization(unittest.TestCase):
         self.assertIsInstance(o_reso.__str__(), str)
 
     def test_repr(self):
-        '''assert object works'''
+        """assert object works"""
         _stack = {'CoAg': {'elements': ['Co','Ag'],
                                'stoichiometric_ratio': [1, 2],
                                    'thickness': {'value': 0.025,
@@ -58,7 +57,7 @@ class TestInitialization(unittest.TestCase):
         self.assertIsInstance(o_reso.__repr__(), str)
         
     def test_initialization_of_object(self):
-        '''assert object is correctly initialized with energy min, max and step'''
+        """assert object is correctly initialized with energy min, max and step"""
         _stack = {'CoAg': {'elements': ['Co','Ag'],
                                'stoichiometric_ratio': [1, 2],
                                'thickness': {'value': 0.025,
@@ -79,8 +78,46 @@ class TestInitialization(unittest.TestCase):
         self.assertEqual(o_reso.energy_min, energy_min)
         self.assertEqual(o_reso.energy_step, energy_step)
 
+    def test_initialization_with_same_E_min_and_max_raises_error(self):
+        """assert ValueError is raised if E_min == E_max"""
+        _stack = {'CoAg': {'elements': ['Co', 'Ag'],
+                           'stoichiometric_ratio': [1, 2],
+                           'thickness': {'value': 0.025,
+                                         'units': 'mm'},
+                           },
+                  'Ag': {'elements': ['Ag'],
+                         'stoichiometric_ratio': [1],
+                         'thickness': {'value': 0.03,
+                                       'units': 'mm'},
+                         },
+                  }
+        energy_min = 150
+        energy_max = 150
+        energy_step = 1
+        self.assertRaises(ValueError, Resonance, stack=_stack, energy_max=energy_max, energy_min=energy_min,
+                           energy_step=energy_step)
+
+    def test_initialization_E_step_bigger_than_E_range_raises_error(self):
+        """assert ValueError is raised if E_min == E_max"""
+        _stack = {'CoAg': {'elements': ['Co', 'Ag'],
+                           'stoichiometric_ratio': [1, 2],
+                           'thickness': {'value': 0.025,
+                                         'units': 'mm'},
+                           },
+                  'Ag': {'elements': ['Ag'],
+                         'stoichiometric_ratio': [1],
+                         'thickness': {'value': 0.03,
+                                       'units': 'mm'},
+                         },
+                  }
+        energy_min = 1
+        energy_max = 10
+        energy_step = 11
+        self.assertRaises(ValueError, Resonance, stack=_stack, energy_max=energy_max, energy_min=energy_min,
+                           energy_step=energy_step)
+
     def test_get_sigma_isotopes(self):
-        '''assert get_sigma works'''
+        """assert get_sigma works"""
         _stack = {'CoAg': {'elements': ['Co','Ag'],
                                'stoichiometric_ratio': [1, 2],
                                    'thickness': {'value': 0.025,
@@ -108,7 +145,7 @@ class TestInitialization(unittest.TestCase):
         self.assertEqual(stack_sigma['Ag']['Ag']['energy_eV'][0], 10)
 
     def test_correct_initialization_of_stack(self):
-        '''assert correct defined stack is correctly saved'''
+        """assert correct defined stack is correctly saved"""
         _stack = {'CoAg': {'elements': ['Co','Ag'],
                            'stoichiometric_ratio': [1, 2],
                            'thickness': {'value': 0.025,
@@ -125,7 +162,7 @@ class TestInitialization(unittest.TestCase):
         self.assertEqual(_stack, _stack_returned)
     
     def test_adding_layer(self):
-        '''assert adding_layer works'''
+        """assert adding_layer works"""
         o_reso = Resonance()
         
         # layer 1
@@ -141,13 +178,13 @@ class TestInitialization(unittest.TestCase):
         
         returned_stack = o_reso.stack
         
-        expected_stack = {'CoAg': {'elements':['Co','Ag'],
+        expected_stack = {'CoAg': {'elements': ['Co','Ag'],
                                    'stoichiometric_ratio': [1,1],
                                    'thickness': {'value': 0.025,
                                                  'units': 'mm'},
                                    'density': {'value': 9.7,
                                                'units': 'g/cm3'},
-                                   'Co': {'isotopes': {'file_names':['Co-58.csv','Co-59.csv'],
+                                   'Co': {'isotopes': {'file_names': ['Co-58.csv','Co-59.csv'],
                                                        'list': ['58-Co','59-Co'],
                                                        'mass': {'value': [57.9357576, 58.9332002],
                                                                 'units': 'g/mol',
@@ -247,7 +284,7 @@ class TestInitialization(unittest.TestCase):
                          expected_stack['CoAg']['Co']['molar_mass']['value'])
         
     def test_element_metadata_via_stack_initialization(self):
-        '''assert __element_metadata is correctly populated using stack initialization'''
+        """assert __element_metadata is correctly populated using stack initialization"""
 
         _stack = {'CoAg': {'elements': ['Co','Ag'],
                            'stoichiometric_ratio': [1, 2],
@@ -270,7 +307,7 @@ class TestInitialization(unittest.TestCase):
         self.assertEqual(ag_mass_expected, stack['Ag']['Ag']['molar_mass']['value'])
         
     def test_element_metadata_via_add_layer_initialization(self):
-        '''assert __element_metadata is correctly populated using add layer initialization'''
+        """assert __element_metadata is correctly populated using add layer initialization"""
         o_reso = Resonance()
         
         # layer 1
@@ -299,7 +336,7 @@ class TestInitialization(unittest.TestCase):
         self.assertEqual(ag_density_expected, stack['Ag']['Ag']['density']['value'])
         
     def test_layer_density_locked_if_defined_during_initialization_init(self):
-        '''assert the layer density is locked if defined at the beginning using init'''
+        """assert the layer density is locked if defined at the beginning using init"""
         _stack = {'CoAg': {'elements': ['Co','Ag'],
                            'stoichiometric_ratio': [1, 2],
                            'thickness': {'value': 0.025,
@@ -326,7 +363,7 @@ class TestInitialization(unittest.TestCase):
         self.assertEqual(density_unlock_after, density_unlock_expected)
         
     def test_layer_density_locked_if_defined_during_initialization_add_layer(self):
-        '''assert the layer density is locked if defined at the beginning using add_layer'''
+        """assert the layer density is locked if defined at the beginning using add_layer"""
         o_reso = Resonance()
     
         # layer 1
@@ -371,7 +408,7 @@ class TestGetterSetter(unittest.TestCase):
         
     # stoichiometric ratio
     def test_retrieve_stoichiometric_of_UO3_sample(self):
-        '''assert retrieve stoichiometric work for complex sample such as UO3'''
+        """assert retrieve stoichiometric work for complex sample such as UO3"""
         o_reso = Resonance()
         o_reso.add_layer(formula='UO3', thickness=0.25, density=0.5)
         o_reso.add_layer(formula='AgCo', thickness=0.5, density=0.8)
@@ -379,15 +416,15 @@ class TestGetterSetter(unittest.TestCase):
             element='U')
     
     def test_retrieve_stoichiometric_ratio_raises_error_if_unknown_compound(self):
-        '''assert ValueError raised if wrong compound when getting stoichiometric ratio'''
+        """assert ValueError raised if wrong compound when getting stoichiometric ratio"""
         self.assertRaises(ValueError, self.o_reso.get_isotopic_ratio, compound='unknown')
         
     def test_if_element_misssing_use_compound_and_raises_error_if_wrong(self):
-        '''assert ValueError raised if element does not exist'''
+        """assert ValueError raised if element does not exist"""
         self.assertRaises(ValueError, self.o_reso.get_isotopic_ratio, compound='CoAg')
         
     def test_stoichiometric_ratio_returned(self):
-        '''assert the stoichiometric ratio are correctly returned'''
+        """assert the stoichiometric ratio are correctly returned"""
         _stoichiometric_ratio = self.o_reso.get_isotopic_ratio(compound='U')
         _expected_dict = {'233-U': 0.0,
                           '234-U': 5.5e-5,
@@ -398,7 +435,7 @@ class TestGetterSetter(unittest.TestCase):
         self.assertEqual(_expected_dict['238-U'], _stoichiometric_ratio['238-U'])
         
     def test_list_all_stoichiometric_ratio(self):
-        '''assert the entire stoichiometric list is returned'''
+        """assert the entire stoichiometric list is returned"""
         _stoichiometric_ratio = self.o_reso.get_isotopic_ratio()
         _expected_dict = {'U': {'U': {'233-U': 0.0,
                                       '234-U': 5.5e-5,
@@ -416,21 +453,21 @@ class TestGetterSetter(unittest.TestCase):
         self.assertEqual(_expected_dict['CoAg']['Ag']['107-Ag'], _stoichiometric_ratio['CoAg']['Ag']['107-Ag'])
         
     def test_set_stoichiometric_ratio_raises_value_error_if_wrong_compound(self):
-        '''assert ValueError raised if wrong compound in stoichiometric ratio setter'''
+        """assert ValueError raised if wrong compound in stoichiometric ratio setter"""
         self.assertRaises(ValueError, self.o_reso.set_isotopic_ratio)
         self.assertRaises(ValueError, self.o_reso.set_isotopic_ratio, compound='unknown')
         
     def test_set_stoichiometric_ratio_raises_value_error_if_wrong_element(self):
-        '''assert ValueError raised if wrong element in stoichiometric ratio setter'''
+        """assert ValueError raised if wrong element in stoichiometric ratio setter"""
         self.assertRaises(ValueError, self.o_reso.set_isotopic_ratio, compound='CoAg')
         self.assertRaises(ValueError, self.o_reso.set_isotopic_ratio, compound='CoAg', element='unknown')
         
     def test_set_stoichiometric_ratio_has_correct_new_list_size(self):
-        '''assert ValueRror raised if new list of ratio does not match old list size'''
+        """assert ValueRror raised if new list of ratio does not match old list size"""
         self.assertRaises(ValueError, self.o_reso.set_isotopic_ratio, compound='U', element='U', list_ratio=[0, 1, 2])
         
     def test_set_stoichiometric_ratio_correctly_calculates_new_molar_mass(self):
-        '''assert molar mass is correctly calculated for new set of stoichiometric coefficient'''
+        """assert molar mass is correctly calculated for new set of stoichiometric coefficient"""
         self.o_reso.set_isotopic_ratio(compound='CoAg', element='Co', list_ratio=[0.5, 0.5])
         new_molar_mass = self.o_reso.stack['CoAg']['Co']['molar_mass']['value']
         list_isotopes_mass = self.o_reso.stack['CoAg']['Co']['isotopes']['mass']['value']
@@ -440,7 +477,7 @@ class TestGetterSetter(unittest.TestCase):
         self.assertAlmostEqual(new_molar_mass, expected_molar_mass, delta=0.0001)
         
     def test_set_stoichiometric_ratio_correctly_calculates_new_density(self):
-        '''assert density is correctly calculated for new set of stoichiometric coefficient'''
+        """assert density is correctly calculated for new set of stoichiometric coefficient"""
         self.o_reso.set_isotopic_ratio(compound='CoAg', element='Co', list_ratio=[0.5, 0.5])
         new_density = self.o_reso.stack['CoAg']['Co']['density']['value']
         list_density = self.o_reso.stack['CoAg']['Co']['isotopes']['density']['value']
@@ -451,21 +488,21 @@ class TestGetterSetter(unittest.TestCase):
         
     # density
     def test_retrieve_density_raises_error_if_unknown_compound(self):
-        '''assert ValueError raised if wrong compound when getting density'''
+        """assert ValueError raised if wrong compound when getting density"""
         self.assertRaises(ValueError, self.o_reso.get_density, compound='unknown')
         
     def test_if_element_misssing_use_compound_and_raises_error_if_wrong_when_getting_density(self):
-        '''assert ValueError raised if element does not exist when getting density'''
+        """assert ValueError raised if element does not exist when getting density"""
         self.assertRaises(ValueError, self.o_reso.get_density, compound='CoAg')        
         
     def test_density_returned(self):
-        '''assert the density are correctly returned'''
+        """assert the density are correctly returned"""
         _density = self.o_reso.get_density(compound='U')
         _expected_density = 18.95
         self.assertEqual(_density, _expected_density)
         
     def test_density_returned_all(self):
-        '''assert the density of all element works'''
+        """assert the density of all element works"""
         _density_list = self.o_reso.get_density()
         _expected_density = {'CoAg': {'Co': 8.9,
                                       'Ag': 10.5,
@@ -476,14 +513,14 @@ class TestGetterSetter(unittest.TestCase):
         self.assertEqual(_expected_density, _density_list)
         
     #def test_set_density_raises_error_if_bad_compound_element_or_density(self):
-        #'''assert set density raises error if any of the parameters is wrong'''
+        #"""assert set density raises error if any of the parameters is wrong"""
         #self.assertRaises(ValueError, self.o_reso.set_density)
         #self.assertRaises(ValueError, self.o_reso.set_density, compound='unknown')
         #self.assertRaises(ValueError, self.o_reso.set_density, compound='CoAg', element='unknown')
         #self.assertRaises(ValueError, self.o_reso.set_density, compound='CoAg', element='Co', density='not_a_number')
         
     #def test_set_isotopic_ratio_only_change_unlock_compound_density(self):
-        #'''assert set isotopic ratio only change unlock compound density'''
+        #"""assert set isotopic ratio only change unlock compound density"""
         #_stack = {'CoAg': {'elements': ['Co','Ag'],
                             #'stoichiometric_ratio': [1, 2],
                             #'thickness': {'value': 0.025,
@@ -535,7 +572,7 @@ class TestTransmissionAttenuation(unittest.TestCase):
         self.o_reso = Resonance(stack=_stack)        
 
     def test_calculate_transmission_isotopes(self):
-        '''assert calculation of transmission for isotopes works'''
+        """assert calculation of transmission for isotopes works"""
         #pprint.pprint(self.o_reso.stack_signal)
         energy_eV = self.o_reso.stack_signal['CoAg']['Ag']['107-Ag']['energy_eV']
         transmission = self.o_reso.stack_signal['CoAg']['Ag']['107-Ag']['transmission']
@@ -556,7 +593,7 @@ class TestTransmissionAttenuation(unittest.TestCase):
         self.assertAlmostEqual(expected_tran_2, transmission[2], delta=0.001)
         
     def test_calculate_attenuation_isotopes(self):
-        '''assert calculation of attenuation for isotopes works'''
+        """assert calculation of attenuation for isotopes works"""
         #pprint.pprint(self.o_reso.stack_signal)
         energy_eV = self.o_reso.stack_signal['CoAg']['Ag']['107-Ag']['energy_eV']
         attenuation = self.o_reso.stack_signal['CoAg']['Ag']['107-Ag']['attenuation']
@@ -577,7 +614,7 @@ class TestTransmissionAttenuation(unittest.TestCase):
         self.assertAlmostEqual(expected_attenu_2, attenuation[2], delta=0.001)
 
     def test_calculate_transmission_element(self):
-        '''assert calculation of transmission for element works'''
+        """assert calculation of transmission for element works"""
         #pprint.pprint(self.o_reso.stack_signal)
         energy_eV = self.o_reso.stack_signal['CoAg']['Ag']['energy_eV']
         transmission = self.o_reso.stack_signal['CoAg']['Ag']['transmission']
@@ -598,7 +635,7 @@ class TestTransmissionAttenuation(unittest.TestCase):
         self.assertAlmostEqual(expected_tran_2, transmission[2], delta=0.001)
         
     def test_calculate_attenuation_element(self):
-        '''assert calculation of attenuation for element works'''
+        """assert calculation of attenuation for element works"""
         #pprint.pprint(self.o_reso.stack_signal)
         energy_eV = self.o_reso.stack_signal['CoAg']['Ag']['energy_eV']
         attenuation = self.o_reso.stack_signal['CoAg']['Ag']['attenuation']
@@ -619,7 +656,7 @@ class TestTransmissionAttenuation(unittest.TestCase):
         self.assertAlmostEqual(expected_tran_2, attenuation[2], delta=0.001)
 
     def test_calculate_transmission_compound(self):
-        '''assert calculation of transmission for compounds works'''
+        """assert calculation of transmission for compounds works"""
         energy_eV = self.o_reso.stack_signal['CoAg']['energy_eV']
         transmission = self.o_reso.stack_signal['CoAg']['transmission']
         
@@ -639,7 +676,7 @@ class TestTransmissionAttenuation(unittest.TestCase):
         self.assertAlmostEqual(expected_tran_2, transmission[2], delta=0.001)
         
     def test_calculate_attenuation_compound(self):
-        '''assert calculation of attenuation for compounds works'''
+        """assert calculation of attenuation for compounds works"""
         energy_eV = self.o_reso.stack_signal['CoAg']['energy_eV']
         attenuation = self.o_reso.stack_signal['CoAg']['attenuation']
         
