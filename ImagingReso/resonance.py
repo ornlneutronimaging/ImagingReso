@@ -8,7 +8,6 @@ from ImagingReso import _utilities
 
 
 class Resonance(object):
-    
     database = 'ENDF_VIII'
 
     E_MIN = 1e-5
@@ -18,9 +17,9 @@ class Resonance(object):
     stack_sigma = {}  # all the energy and sigma of the isotopes and compounds
     stack_signal = {}  # transmission and attenuation signal for every isotope and compound
     total_signal = {}  # transmission and attenuation of the entire sample
-    
+
     density_lock = {}  # dictionary that will defined the densities locked
-    
+
     energy_max = np.NaN
     energy_min = np.NaN
     energy_step = np.NaN
@@ -67,13 +66,13 @@ class Resonance(object):
             _utilities.checking_stack(stack=stack)
             new_stack = self.__update_stack_with_isotopes_infos(stack=stack)
             self.stack = new_stack
-            
+
             # if layer density has been defined, lock it
             self.__lock_density_if_defined(stack=self.stack)
-            
+
             # calculate stack_sigma, layer density, atoms_per_cm3 ...
             self.__math_on_stack()
-              
+
     def __str__(self):
         '''what to display if user does
         
@@ -81,16 +80,16 @@ class Resonance(object):
         >>> print(o_reso)
         '''
         return json.dumps(self.stack, indent=4)
-    
+
     def __repr__(self):
         '''what to display if user does
         
         >>> o_reso = Resolution()
         >>> o_reso
         '''
-        return json.dumps(self.stack, indent=4)    
-                
-    def add_layer(self, formula='', thickness=np.NaN, density=np.NaN): 
+        return json.dumps(self.stack, indent=4)
+
+    def add_layer(self, formula='', thickness=np.NaN, density=np.NaN):
         """provide another way to define the layers (stack)
         
         Parameters:
@@ -103,17 +102,17 @@ class Resonance(object):
         """
         if formula == '':
             return
-        
-        _new_stack = _utilities.formula_to_dictionary(formula=formula, 
-                                                      thickness=thickness, 
+
+        _new_stack = _utilities.formula_to_dictionary(formula=formula,
+                                                      thickness=thickness,
                                                       density=density,
-                                                      database=self.database)      
+                                                      database=self.database)
         # check if density has been defined
         self.__lock_density_if_defined(stack=_new_stack)
-        
+
         new_stack = self.__update_stack_with_isotopes_infos(stack=_new_stack)
         self.stack = {**self.stack, **new_stack}
-        
+
         # calculate stack_sigma, layer density, atoms_per_cm3 ...
         self.__math_on_stack()
 
@@ -131,7 +130,7 @@ class Resonance(object):
         """
         _stack = self.stack
         compound = str(compound)
-        
+
         if compound == '':
             _list_compounds = _stack.keys()
             list_all_dict = {}
@@ -144,32 +143,32 @@ class Resonance(object):
                         compound=_compound,
                         element=_element)
             return list_all_dict
-        
+
         # checking compound is valid
         list_compounds = _stack.keys()
         if not compound in list_compounds:
             list_compounds_joined = ', '.join(list_compounds)
             raise ValueError("Compound '{}' could not be find in {}".format(compound, list_compounds_joined))
-        
+
         # checking element is valid
-        if element == '': 
+        if element == '':
             # we assume that the element and compounds names matched
             element = compound
         list_element = _stack[compound].keys()
         if not element in list_element:
             list_element_joined = ', '.join(list_element)
             raise ValueError("Element '{}' should be any of those elements: {}".format(element, list_element_joined))
-        
+
         list_istopes = _stack[compound][element]['isotopes']['list']
         list_ratio = _stack[compound][element]['isotopes']['isotopic_ratio']
         iso_ratio = zip(list_istopes, list_ratio)
-        
+
         _stoichiometric_ratio = {}
         for _iso, _ratio in iso_ratio:
             _stoichiometric_ratio[_iso] = _ratio
-            
+
         return _stoichiometric_ratio
-        
+
     def set_isotopic_ratio(self, compound='', element='', list_ratio=[]):
         """defines the new set of ratio of the compound/element and trigger the calculation to update the density
         
@@ -186,25 +185,25 @@ class Resonance(object):
         ValueError if list_ratio does not have the right format
         """
         _stack = self.stack
-        
+
         list_compounds = _stack.keys()
         if not compound in _stack.keys():
             list_compounds_joined = ', '.join(list_compounds)
             raise ValueError("Compound '{}' could not be find in {}".format(compound, list_compounds_joined))
 
-        if element == '': 
+        if element == '':
             # we assume that the element and compounds names matched
             element = compound
         list_element = _stack[compound].keys()
         if not element in list_element:
             list_element_joined = ', '.join(list_element)
             raise ValueError("Element '{}' should be any of those elements: {}".format(element, list_element_joined))
-        
+
         old_list_ratio = _stack[compound][element]['isotopes']['list']
         if not (len(old_list_ratio) == len(list_ratio)):
             raise ValueError("New list of ratio ({} elements) does not match old list size ({} elements!".format(len(
                 list_ratio), len(old_list_ratio)))
-        
+
         self.stack[compound][element]['isotopes']['isotopic_ratio'] = list_ratio
         self.__update_molar_mass(compound=compound, element=element)
         self.__update_density(compound=compound, element=element)
@@ -225,7 +224,7 @@ class Resonance(object):
         ValueError if element is not defined in the stack
         """
         _stack = self.stack
-        
+
         if compound == '':
             _list_compounds = _stack.keys()
             list_all_dict = {}
@@ -237,22 +236,22 @@ class Resonance(object):
                         compound=_compound,
                         element=_element)
             return list_all_dict
-        
+
         # checking compound is valid
         list_compounds = _stack.keys()
         if not compound in list_compounds:
             list_compounds_joined = ', '.join(list_compounds)
             raise ValueError("Compound '{}' could not be find in {}".format(compile, list_compounds_joined))
-        
+
         # checking element is valid
-        if element == '': 
+        if element == '':
             # we assume that the element and compounds names matched
             element = compound
         list_element = _stack[compound].keys()
         if not element in list_element:
             list_element_joined = ', '.join(list_element)
             raise ValueError("Element '{}' should be any of those elements: {}".format(element, list_element_joined))
-        
+
         return _stack[compound][element]['density']['value']
 
     def __set_density(self, compound='', element='', density=np.NaN, debug=False):
@@ -271,35 +270,35 @@ class Resonance(object):
         ValueError if density is not a number
         '''
         _stack = self.stack
-        
+
         list_compounds = _stack.keys()
         if not compound in _stack.keys():
             list_compounds_joined = ', '.join(list_compounds)
             raise ValueError("Compound '{}' could not be find in {}".format(compile, list_compounds_joined))
 
-        if element == '': 
+        if element == '':
             # we assume that the element and compounds names matched
             element = compound
         list_element = _stack[compound].keys()
         if not element in list_element:
             list_element_joined = ', '.join(list_element)
             raise ValueError("Element '{}' should be any of those elements: {}".format(element, list_element_joined))
-        
+
         if not isinstance(density, numbers.Number):
             raise ValueError("Density '{}' must be a number!".format(density))
-        
+
         _density_lock = self.density_lock
-        if _density_lock[compound]: 
+        if _density_lock[compound]:
             raise IOError("You are not authorized to change the density!")
 
         self.stack[compound]['density']['value'] = density
-    
+
         # populate atoms_per_cm3
         self.__calculate_atoms_per_cm3(used_lock=True)
 
         # calculate transmission and attenuation
         self.__calculate_transmission_attenuation()
-        
+
     def __math_on_stack(self, used_lock=False):
         """will perform all the various update of the stack, such as populating the stack_sigma, caluclate the density of the
         layers....etc. """
@@ -312,7 +311,7 @@ class Resonance(object):
 
         # populate atoms_per_cm3
         self.__calculate_atoms_per_cm3(used_lock=used_lock)
-        
+
         # calculate transmission and attenuation
         self.__calculate_transmission_attenuation()
 
@@ -325,12 +324,12 @@ class Resonance(object):
         stack: dictionary (optional)
           if not provided, the entire stack will be used
         '''
-          
+
         if self.stack == {}:
             density_lock = {}
         else:
             density_lock = self.density_lock
-        
+
         for _compound in stack.keys():
             _density = stack[_compound]['density']['value']
             if np.isnan(_density):
@@ -344,7 +343,7 @@ class Resonance(object):
         stack = self.stack
         stack_sigma = self.stack_sigma
         stack_signal = {}
-        
+
         total_signal = {}
         total_transmisison = 1.
 
@@ -353,7 +352,7 @@ class Resonance(object):
             stack_signal[_name_of_compound] = {}
             transmission_compound = 1.
             energy_compound = []
-            
+
             _list_element = stack[_name_of_compound]['elements']
             _thickness_cm = _utilities.set_distance_units(value=stack[_name_of_compound]['thickness']['value'],
                                                           from_units=stack[_name_of_compound]['thickness']['units'],
@@ -369,21 +368,23 @@ class Resonance(object):
                     stack_signal[_name_of_compound][_element][_iso] = {}
                     _sigma_iso = stack_sigma[_name_of_compound][_element][_iso]['sigma_b']
                     _transmission_iso = _utilities.calculate_transmission(
-                        thickness_cm=_thickness_cm, 
+                        thickness_cm=_thickness_cm,
                         atoms_per_cm3=_atoms_per_cm3,
                         sigma_b=_sigma_iso)
                     stack_signal[_name_of_compound][_element][_iso]['transmission'] = _transmission_iso
                     stack_signal[_name_of_compound][_element][_iso]['attenuation'] = 1. - _transmission_iso
-                    stack_signal[_name_of_compound][_element][_iso]['energy_eV'] = stack_sigma[_name_of_compound][_element][_iso]['energy_eV']
-                
+                    stack_signal[_name_of_compound][_element][_iso]['energy_eV'] = \
+                        stack_sigma[_name_of_compound][_element][_iso]['energy_eV']
+
                 _sigma_ele = stack_sigma[_name_of_compound][_element]['sigma_b']
                 _transmission_ele = _utilities.calculate_transmission(
-                    thickness_cm=_thickness_cm, 
-                    atoms_per_cm3=_atoms_per_cm3, 
+                    thickness_cm=_thickness_cm,
+                    atoms_per_cm3=_atoms_per_cm3,
                     sigma_b=_sigma_ele)
                 stack_signal[_name_of_compound][_element]['transmission'] = _transmission_ele
                 stack_signal[_name_of_compound][_element]['attenuation'] = 1. - _transmission_ele
-                stack_signal[_name_of_compound][_element]['energy_eV'] = stack_sigma[_name_of_compound][_element]['energy_eV']
+                stack_signal[_name_of_compound][_element]['energy_eV'] = stack_sigma[_name_of_compound][_element][
+                    'energy_eV']
 
                 transmission_compound *= _transmission_ele
                 if energy_compound == []:
@@ -392,9 +393,9 @@ class Resonance(object):
             stack_signal[_name_of_compound]['transmission'] = transmission_compound
             stack_signal[_name_of_compound]['attenuation'] = 1. - transmission_compound
             stack_signal[_name_of_compound]['energy_eV'] = energy_compound
-            
+
             total_transmisison *= transmission_compound
-        
+
         total_attenuation = 1. - total_transmisison
 
         self.stack_signal = stack_signal
@@ -402,12 +403,12 @@ class Resonance(object):
         total_signal['attenuation'] = total_attenuation
         total_signal['energy_eV'] = energy_compound
         self.total_signal = total_signal
-        
+
     def __calculate_atoms_per_cm3(self, used_lock=False):
         """calculate for each element, the atoms per cm3"""
         stack = self.stack
         _density_lock = self.density_lock
-        
+
         for _name_of_compound in stack.keys():
             if used_lock and _density_lock[_name_of_compound]:
                 continue
@@ -429,30 +430,30 @@ class Resonance(object):
                     stack[_key][_key_to_find] = _value_to_add.copy()
 
         return stack
-        
+
     def __update_layer_density(self, debug=False):
         '''calculate or update the layer density'''
         _stack = self.stack
-        
+
         _density_lock = self.density_lock
 
         list_compound = _stack.keys()
         for _key in list_compound:
             if _density_lock[_key]:
                 continue
-            
-            #if np.isnan(_stack[_key]['density']['value']):
-                
+
+            # if np.isnan(_stack[_key]['density']['value']):
+
             _list_ratio = _stack[_key]['stoichiometric_ratio']
             _list_density = []
             for _element in _stack[_key]['elements']:
                 _list_density.append(_stack[_key][_element]['density']['value'])
-                _compound_density = _utilities.get_compound_density(list_density=_list_density, 
-                                                                    list_ratio=_list_ratio)   
+                _compound_density = _utilities.get_compound_density(list_density=_list_density,
+                                                                    list_ratio=_list_ratio)
 
             _stack[_key]['density']['value'] = _compound_density
         self.stack = _stack
-                
+
     def __update_stack_with_isotopes_infos(self, stack={}):
         """retrieve the isotopes, isotopes file names, mass and atomic_ratio from each element in stack"""
         for _key in stack:
@@ -460,8 +461,8 @@ class Resonance(object):
             _elements = stack[_key]['elements']
             for _element in _elements:
                 _dict = _utilities.get_isotope_dicts(element=_element, database=self.database)
-                stack[_key][_element] = _dict    
-        
+                stack[_key][_element] = _dict
+
         stack = self.__fill_missing_keys(stack=stack)
         return stack
 
@@ -481,11 +482,11 @@ class Resonance(object):
         for _ratio, _density in ratio_density:
             _density_element += np.float(_ratio) * np.float(_density)
         self.stack[compound][element]['density']['value'] = _density_element
-        
+
         _density_lock = self.density_lock
         if not _density_lock[compound]:
             self.__update_layer_density()
-        
+
     def __update_molar_mass(self, compound='', element=''):
         """Re-calculate the molar mass of the element given due to stoichiometric changes
 
@@ -501,7 +502,7 @@ class Resonance(object):
         for _ratio, _mass in ratio_mass:
             _molar_mass_element += np.float(_ratio) * np.float(_mass)
         self.stack[compound][element]['molar_mass']['value'] = _molar_mass_element
-        
+
     def __get_sigmas(self):
         """will populate the stack_sigma dictionary with the energy and sigma array
         for all the compound/element and isotopes"""
@@ -515,22 +516,22 @@ class Resonance(object):
         for _compound in _list_compounds:
             _list_element = _stack[_compound]['elements']
             stack_sigma[_compound] = {}
-            
+
             for _element in _list_element:
                 stack_sigma[_compound][_element] = {}
                 _list_isotopes = _stack[_compound][_element]['isotopes']['list']
                 _list_file_names = _stack[_compound][_element]['isotopes']['file_names']
                 _list_isotopic_ratio = _stack[_compound][_element]['isotopes']['isotopic_ratio']
                 _iso_file_ratio = zip(_list_isotopes, _list_file_names, _list_isotopic_ratio)
-                
+
                 # _dict_sigma_isotopes_sum = {}
                 _sigma_all_isotopes = 0
                 _energy_all_isotpes = 0
-                
+
                 for _iso, _file, _ratio in _iso_file_ratio:
                     stack_sigma[_compound][_element][_iso] = {}
                     _file = os.path.join(_database_folder, _file)
-                    _dict = _utilities.get_sigma(database_file_name=_file, 
+                    _dict = _utilities.get_sigma(database_file_name=_file,
                                                  E_min=self.energy_min,
                                                  E_max=self.energy_max,
                                                  E_step=self.energy_step)
@@ -542,14 +543,15 @@ class Resonance(object):
                     _energy_all_isotpes += _dict['energy_eV']
 
                 # energy axis (x-axis) is averaged to take into account differences between x-axis of isotopes
-                _mean_energy_all_isotopes = _energy_all_isotpes/len(_list_isotopes)
+                _mean_energy_all_isotopes = _energy_all_isotpes / len(_list_isotopes)
                 stack_sigma[_compound][_element]['energy_eV'] = _mean_energy_all_isotopes
                 stack_sigma[_compound][_element]['sigma_b'] = _sigma_all_isotopes
-                    
+
         self.stack_sigma = stack_sigma
 
     def plot(self, transmission=False, x_axis='energy', mixed=True, all_layers=False, all_elements=False,
-             all_isotopes=False, items_to_plot=[], time_unit='us', offset_us=2.99, time_resolution_us=0.16, source_to_detector_m=16.125):
+             all_isotopes=False, items_to_plot=[], time_unit='us', offset_us=2.99, time_resolution_us=0.16,
+             source_to_detector_m=16.125):
         # offset delay values is normal 2.99 us with NONE actual MCP delay settings
         """display the transmission or attenuation of compound, element and/or isotopes specified
 

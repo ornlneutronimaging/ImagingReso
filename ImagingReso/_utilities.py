@@ -10,7 +10,7 @@ from scipy.constants import Avogadro
 
 
 def is_element_in_database(element='', database='ENDF_VIII'):
-    '''will try to find the element in the folder (database) specified
+    """will try to find the element in the folder (database) specified
     
     Parameters:
     ==========
@@ -21,7 +21,7 @@ def is_element_in_database(element='', database='ENDF_VIII'):
     =======
     bool: True if element was found in the database
           False if element could not be found
-    '''
+    """
     if element == '':
         return False
 
@@ -32,7 +32,7 @@ def is_element_in_database(element='', database='ENDF_VIII'):
 
 
 def get_list_element_from_database(database=''):
-    '''return a string array of all the element from the database
+    """return a string array of all the element from the database
     
     Parameters:
     ==========
@@ -42,7 +42,7 @@ def get_list_element_from_database(database=''):
     ======
     ValueError if database can not be found
     
-    '''
+    """
     _file_path = os.path.abspath(os.path.dirname(__file__))
     _database_folder = os.path.join(_file_path, 'reference_data', database)
 
@@ -56,7 +56,7 @@ def get_list_element_from_database(database=''):
 
 
 def checking_stack(stack={}, database='ENDF_VIII'):
-    '''This method makes sure that all the elements from the various stacks are 
+    """This method makes sure that all the elements from the various stacks are 
     in the database and that the thickness has the correct format (float)
     
     Parameters:
@@ -73,7 +73,7 @@ def checking_stack(stack={}, database='ENDF_VIII'):
     Return:
     ======
     True: for testing purpose only
-    '''
+    """
     for _keys in stack:
         _elements = stack[_keys]['elements']
         for _element in _elements:
@@ -92,7 +92,7 @@ def checking_stack(stack={}, database='ENDF_VIII'):
 
 
 def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database='ENDF_VIII'):
-    '''create dictionary based on formula given
+    """create dictionary based on formula given
     
     Parameters:
     ===========
@@ -119,7 +119,7 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
                                  'units': 'g/cm3',
                                  },
                     }
-    '''
+    """
     _formula_parsed = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
 
     _dictionary = {}
@@ -148,7 +148,7 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
 
 
 def get_isotope_dicts(element='', database='ENDF_VIII'):
-    '''return a dictionary with list of isotopes found in database and name of database files
+    """return a dictionary with list of isotopes found in database and name of database files
     
     Parameters:
     ===========
@@ -162,7 +162,7 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
       ex: {'Ag': {'isotopes': ['107-Ag','109-Ag'],
                   'file_names': ['Ag-107.csv','Ag-109.csv']}}
     
-    '''
+    """
     _file_path = os.path.abspath(os.path.dirname(__file__))
     _database_folder = os.path.join(_file_path, 'reference_data', database)
     _element_search_path = os.path.join(_database_folder, element + '-*.csv')
@@ -218,7 +218,7 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
 
 
 def get_abundance(element):
-    '''return the abundance [0.,1.] of the defined element
+    """return the abundance [0.,1.] of the defined element
     
     Parameters:
     ===========
@@ -227,12 +227,12 @@ def get_abundance(element):
     Returns:
     ========
     the abundance of the elemenet (value between 0 and 1)
-    '''
+    """
     return pt.elements.isotope(element).abundance / 100.
 
 
 def get_mass(element):
-    '''return the molar mass (SI units) of an given isotope, or element
+    """return the molar mass (SI units) of an given isotope, or element
     
     Parameters:
     ===========
@@ -241,12 +241,12 @@ def get_mass(element):
     Returns:
     ========
     the molar mass of the element/isotope in SI units
-    '''
+    """
     return pt.elements.isotope(element).mass
 
 
 def get_density(element):
-    '''return the density (g.cm-3) of the element
+    """return the density (g.cm-3) of the element
     
     Paramters:
     ==========
@@ -255,12 +255,12 @@ def get_density(element):
     Returns:
     ========
     the density of the element in g.cm-3 units
-    '''
+    """
     return pt.elements.isotope(element).density
 
 
 def get_compound_density(list_density=[], list_ratio=[]):
-    ''''''
+    """"""
     _ratio_density = zip(list_ratio, list_density)
     _density_compound = 0
 
@@ -272,7 +272,7 @@ def get_compound_density(list_density=[], list_ratio=[]):
 
 
 def get_database_data(file_name=''):
-    '''return the energy (eV) and Sigma (barn) from the file_name
+    """return the energy (eV) and Sigma (barn) from the file_name
     
     Parameters:
     ===========
@@ -285,7 +285,7 @@ def get_database_data(file_name=''):
     Raises:
     =======
     IOError if file does not exist
-    '''
+    """
     if not os.path.exists(file_name):
         raise IOError("File {} does not exist!".format(file_name))
     df = pd.read_csv(file_name, header=1)
@@ -293,7 +293,7 @@ def get_database_data(file_name=''):
 
 
 def get_interpolated_data(df=pd.DataFrame, E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
-    '''return the interpolated x and y axis for the given x range [E_min, E_max] with step defined
+    """return the interpolated x and y axis for the given x range [E_min, E_max] with step defined
     
     Parameters:
     ===========
@@ -305,7 +305,7 @@ def get_interpolated_data(df=pd.DataFrame, E_min=np.NaN, E_max=np.NaN, E_step=np
     Returns:
     ========
     x_axis and y_axis of interpolated data over specified range
-    '''
+    """
     nbr_point = (E_max - E_min) / E_step
     x_axis = np.linspace(E_min, E_max, nbr_point)
     y_axis_function = interp1d(x=df['E_eV'], y=df['Sig_b'], kind='linear')
@@ -315,7 +315,7 @@ def get_interpolated_data(df=pd.DataFrame, E_min=np.NaN, E_max=np.NaN, E_step=np
 
 
 def get_sigma(database_file_name='', E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
-    '''retrieve the Energy and sigma axis for the given isotope
+    """retrieve the Energy and sigma axis for the given isotope
     
     Paramters:
     ==========
@@ -327,7 +327,7 @@ def get_sigma(database_file_name='', E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
     Returns:
     ========
     {'energy': np.array(), 'sigma': np.array}
-    '''
+    """
     _df = get_database_data(file_name=database_file_name)
     _dict = get_interpolated_data(df=_df, E_min=E_min, E_max=E_max,
                                   E_step=E_step)
@@ -336,7 +336,7 @@ def get_sigma(database_file_name='', E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
 
 
 def get_atoms_per_cm3_of_layer(compound_dict={}):
-    '''calculate the atoms per cm3 of the given compound (layer)
+    """calculate the atoms per cm3 of the given compound (layer)
     
     Paramters:
     ==========
@@ -345,7 +345,7 @@ def get_atoms_per_cm3_of_layer(compound_dict={}):
     Returns:
     ========
     dictionary
-    '''
+    """
     atoms_per_cm3 = {}
 
     _list_of_elements = compound_dict['elements']
@@ -365,7 +365,7 @@ def get_atoms_per_cm3_of_layer(compound_dict={}):
 
 
 def calculate_transmission(thickness_cm=np.NaN, atoms_per_cm3=np.NaN, sigma_b=[]):
-    '''calculate the transmission signal using the formula
+    """calculate the transmission signal using the formula
     
     transmission = exp( - thickness_cm * atoms_per_cm3 * 1e-24 * sigma_b)
     
@@ -378,13 +378,13 @@ def calculate_transmission(thickness_cm=np.NaN, atoms_per_cm3=np.NaN, sigma_b=[]
     Returns:
     ========
     transmission array
-    '''
+    """
     transmission = np.exp(-thickness_cm * 1e-24 * sigma_b * atoms_per_cm3)
     return np.array(transmission)
 
 
 def set_distance_units(value=np.NaN, from_units='mm', to_units='cm'):
-    '''convert distance into new units
+    """convert distance into new units
     
     Parameters:
     ===========
@@ -400,7 +400,7 @@ def set_distance_units(value=np.NaN, from_units='mm', to_units='cm'):
     =======
     ValueError if from_units is not a valid unit (see above)
     ValueError if to_units is not a valud unit
-    '''
+    """
     if from_units == to_units:
         return value
 
@@ -497,7 +497,7 @@ def s_to_ev(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
 
 
 def angstroms_to_s(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
-    '''convert array in angstroms into s
+    """convert array in angstroms into s
 
     Parameters:
     ===========
@@ -508,12 +508,12 @@ def angstroms_to_s(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
     Returns:
     ========
     numpy array of time in s
-    '''
+    """
     return (source_to_detector_m * array / 3956.) - offset_us * 1e-6
 
 
 def s_to_angstroms(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
-    '''convert s to angstroms arrays
+    """convert s to angstroms arrays
 
     Parameters:
     ===========
@@ -524,7 +524,7 @@ def s_to_angstroms(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
     Returns:
     ========
     array in angstroms
-    '''
+    """
     return 3956. * (array + offset_us * 1e-6) / source_to_detector_m
 
 
@@ -552,7 +552,7 @@ def ev_to_image_number(array=[], offset_us=np.NaN, time_resolution_us=np.NaN, so
 def convert_x_axis(array=[], from_units='ev', to_units='Angstroms',
                    offset_us=np.NaN,
                    source_to_detector_m=np.NaN):
-    '''allow to convert the x-axis into eV, Angstroms units, or s
+    """allow to convert the x-axis into eV, Angstroms units, or s
     Parameters:
     ===========
     array: array to convert
@@ -563,7 +563,7 @@ def convert_x_axis(array=[], from_units='ev', to_units='Angstroms',
     Returns:
     ========
     converted array
-    '''
+    """
     units_allowed = ['ev', 'angstroms', 's']
 
     if array == []:
