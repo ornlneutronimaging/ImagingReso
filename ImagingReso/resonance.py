@@ -74,19 +74,19 @@ class Resonance(object):
             self.__math_on_stack()
 
     def __str__(self):
-        '''what to display if user does
+        """what to display if user does
         
         >>> o_reso = Resolution()
         >>> print(o_reso)
-        '''
+        """
         return json.dumps(self.stack, indent=4)
 
     def __repr__(self):
-        '''what to display if user does
+        """what to display if user does
         
         >>> o_reso = Resolution()
         >>> o_reso
-        '''
+        """
         return json.dumps(self.stack, indent=4)
 
     def add_layer(self, formula='', thickness=np.NaN, density=np.NaN):
@@ -255,7 +255,7 @@ class Resonance(object):
         return _stack[compound][element]['density']['value']
 
     def __set_density(self, compound='', element='', density=np.NaN, debug=False):
-        '''defines the new density of the compound/element 
+        """defines the new density of the compound/element 
         
         Parameters:
         ===========
@@ -268,7 +268,7 @@ class Resonance(object):
         ValueError if compound does not exist
         ValueError if element does not exist
         ValueError if density is not a number
-        '''
+        """
         _stack = self.stack
 
         list_compounds = _stack.keys()
@@ -316,14 +316,14 @@ class Resonance(object):
         self.__calculate_transmission_attenuation()
 
     def __lock_density_if_defined(self, stack={}):
-        '''lock (True) the density lock if the density has been been defined during initialization
+        """lock (True) the density lock if the density has been been defined during initialization
         Store the resulting dictionary into density_lock
 
         Parameters:
         ===========
         stack: dictionary (optional)
           if not provided, the entire stack will be used
-        '''
+        """
 
         if self.stack == {}:
             density_lock = {}
@@ -432,7 +432,7 @@ class Resonance(object):
         return stack
 
     def __update_layer_density(self, debug=False):
-        '''calculate or update the layer density'''
+        """calculate or update the layer density"""
         _stack = self.stack
 
         _density_lock = self.density_lock
@@ -579,7 +579,7 @@ class Resonance(object):
         _stack = self.stack
         _x_axis = self.total_signal['energy_eV']
 
-        '''X-axis'''
+        """X-axis"""
         # determine values and labels for x-axis with options from
         # 'energy(eV)' & 'lambda(A)' & 'time(us)' & 'image number(#)'
         if x_axis == 'energy':
@@ -611,7 +611,7 @@ class Resonance(object):
                                                     offset_us=offset_us,
                                                     time_resolution_us=time_resolution_us)
 
-        '''Y-axis'''
+        """Y-axis"""
         # determine to plot transmission or attenuation
         # determine to put transmission or attenuation words for y-axis
         if transmission:
@@ -643,7 +643,7 @@ class Resonance(object):
                         _y_axis = _stack_signal[_compound][_element][_isotope][y_axis_tag]
                         plt.plot(_x_axis, _y_axis, label="{}/{}/{}".format(_compound, _element, _isotope))
 
-        '''Y-axis for specified items_to_plot'''
+        """Y-axis for specified items_to_plot"""
         for _path_to_plot in items_to_plot:
             _path_to_plot = list(_path_to_plot)
             _live_path = _stack_signal
