@@ -50,6 +50,8 @@ missing, and **ImagingReso** we presented here could fill this gap.
 Installation instructions
 -------------------------
 
+Python 3.x is required for installing this package.
+
 Install **ImagingReso** by typing the following command in Terminal:
 
 .. code-block:: bash
