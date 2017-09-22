@@ -306,7 +306,7 @@ def get_interpolated_data(df=pd.DataFrame, E_min=np.NaN, E_max=np.NaN, E_step=np
     ========
     x_axis and y_axis of interpolated data over specified range
     """
-    nbr_point = (E_max - E_min) / E_step
+    nbr_point = (E_max - E_min) / E_step + 1
     x_axis = np.linspace(E_min, E_max, nbr_point)
     y_axis_function = interp1d(x=df['E_eV'], y=df['Sig_b'], kind='linear')
     y_axis = y_axis_function(x_axis)
