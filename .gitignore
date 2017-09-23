@@ -26,6 +26,5 @@ MANIFEST
 # Unit test / coverage reports
 .coverage 
 
+
 .idea/
-.idea/ImagingReso.iml
-.idea/misc.xml
