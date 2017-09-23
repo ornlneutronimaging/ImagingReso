@@ -27,3 +27,5 @@ MANIFEST
 .coverage 
 
 .idea/
+.idea/ImagingReso.iml
+.idea/misc.xml
