@@ -27,4 +27,14 @@ MANIFEST
 .coverage 
 
 
-.idea/
+# User-specific stuff:
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
+.idea/**/ResoFit.iml
+.idea/**/misc.xml
+.idea/**/modules.xml
+.idea/**/vcs.xml
+.idea/preferred-vcs.xml
+
+
