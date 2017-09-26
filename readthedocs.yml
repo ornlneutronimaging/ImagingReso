@@ -1,0 +1,16 @@
+# Read The Docs config
+# - http://docs.readthedocs.io/en/latest/yaml-config.html
+
+# python version
+python:
+   version: 3.5
+   pip_install: True
+
+# build a PDF
+formats:
+  - none
+
+# use a conda environment file
+# - https://conda.io/docs/using/envs.html#share-an-environment
+conda:
+  file: docs/readthedocs-environment.yml
