@@ -13,4 +13,4 @@ formats:
 # use a conda environment file
 # - https://conda.io/docs/using/envs.html#share-an-environment
 conda:
-  file: docs/readthedocs-environment.yml
+  file: documentation/readthedocs-environment.yml

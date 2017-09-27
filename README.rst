@@ -68,8 +68,9 @@ Terminal:
 Example usage
 -------------
 
-Example of usage is presented in ``tutorial.ipynb`` under ``/notebooks``
-directory.
+Example of usage is presented at http://imagingreso.readthedocs.io/ .
+Same content can also be found in ``tutorial.ipynb`` under ``/notebooks``
+in this repository.
 
 Calculation algorithm
 ---------------------
