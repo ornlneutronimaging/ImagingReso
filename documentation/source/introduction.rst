@@ -83,7 +83,7 @@ calculated from:
 :math:`m_{ij}` : atomic mass values for the isotope :math:`j` of element :math:`i`.
 
 References
-**********
+##########
 
 [1] M. B. Chadwick et al., “ENDF/B-VII.1 Nuclear Data for Science and
 Technology: Cross Sections, Covariances, Fission Product Yields and
