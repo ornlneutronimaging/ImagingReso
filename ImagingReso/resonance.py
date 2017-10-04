@@ -3,6 +3,7 @@ import numbers
 import os
 import matplotlib.pyplot as plt
 import json
+import pandas as pd
 
 from ImagingReso import _utilities
 
@@ -559,7 +560,7 @@ class Resonance(object):
         ===========
         transmission: boolean. True -> display transmission signal
                                False -> display the attenuation signal
-        x_axis: string. Must be either 'energy' or 'lambda'
+        x_axis: string. Must be either 'energy' or 'lambda' or 'time' or 'number'
         mixed: boolean. True -> display the total of each layer
                         False -> not displayed
         all_layers: boolean. True -> display all layers
@@ -568,13 +569,13 @@ class Resonance(object):
                                False -> not displayed
         all_isotopes: boolean. True -> display all isotopes signal
                                False -> not displayed
-        items_to_plot: array that descibes what to plot
+        items_to_plot: array that describes what to plot
             ex:
                 [['CoAg','Ag','107-Ag'], ['CoAg']]
             if the dictionary is empty, everything is plotted
         """
-        if x_axis not in ['energy', 'lambda', 'time']:
-            raise ValueError("Please specify the x-axis type using one from '['energy', 'lambda', 'time']'.")
+        if x_axis not in ['energy', 'lambda', 'time', 'number']:
+            raise ValueError("Please specify the x-axis type using one from '['energy', 'lambda', 'time', 'number']'.")
         if time_unit not in ['s', 'us', 'ns']:
             raise ValueError("Please specify the time unit using one from '['s', 'us', 'ns']'.")
 
@@ -585,6 +586,7 @@ class Resonance(object):
         _stack_signal = self.stack_signal
         _stack = self.stack
         _x_axis = self.total_signal['energy_eV']
+        x_axis_label = None
 
         """X-axis"""
         # determine values and labels for x-axis with options from
@@ -594,7 +596,7 @@ class Resonance(object):
         if x_axis == 'lambda':
             x_axis_label = u"Wavelength (\u212B)"
             _x_axis = _utilities.ev_to_angstroms(array=_x_axis)
-            # plt.xlim(0, 1)
+            plt.xlim(0, 1)
         if x_axis == 'time':
             if time_unit == 's':
                 x_axis_label = 'Time (s)'
@@ -622,6 +624,8 @@ class Resonance(object):
                                                     time_resolution_us=time_resolution_us)
             print("'{}' was obtained with the following:\nsource_to_detector_m={}\noffset_us={}\ntime_resolution_us={}"
                   .format(x_axis_label, source_to_detector_m, offset_us, time_resolution_us))
+        if x_axis_label is None:
+            raise ValueError("x_axis_label does NOT exist, please check.")
 
         """Y-axis"""
         # determine to plot transmission or attenuation
@@ -672,134 +676,139 @@ class Resonance(object):
         plt.legend(loc='best')
         plt.show()
 
-    # def export(self, filename='simulation.csv', to_csv=False,
-    #            transmission=False, x_axis='energy',
-    #            mixed=True,
-    #            all_layers=False,
-    #            all_elements=False,
-    #            all_isotopes=False,
-    #            items_to_plot=[], time_unit='us',
-    #            offset_us=2.99, time_resolution_us=0.16, source_to_detector_m=16.125):
-    #     """
-    #     Output x and y values to .csv file
-    #     display the transmission or attenuation of compound, element and/or isotopes specified
-    #
-    #     Parameters:
-    #     ===========
-    #     transmission: boolean. True -> display transmission signal
-    #                            False -> display the attenuation signal
-    #     x_axis: string. Must be either 'energy' or 'lambda'
-    #     mixed: boolean. True -> display the total of each layer
-    #                     False -> not displayed
-    #     all_layers: boolean. True -> display all layers
-    #                          False -> not displayed
-    #     all_elements: boolean. True -> display all elements signal
-    #                            False -> not displayed
-    #     all_isotopes: boolean. True -> display all isotopes signal
-    #                            False -> not displayed
-    #     items_to_plot: array that descibes what to plot
-    #         ex:
-    #             [['CoAg','Ag','107-Ag'], ['CoAg']]
-    #         if the dictionary is empty, everything is plotted
-    #     filename:
-    #     angstrom: bool to determine the output x
-    #     transmission: bool to determine the output y
-    #
-    #     return: .csv file
-    #     """
-    #        if x_axis not in ['energy', 'lambda', 'time']:
-    #         raise ValueError("Please specify the x-axis type using one of '['energy', 'lambda', 'time']'.")
-    #     _stack_signal = self.stack_signal
-    #     _stack = self.stack
-    #     _x_axis = self.total_signal['energy_eV']
-    #
-    #     """X-axis"""
-    #     # determine values and labels for x-axis with options from
-    #     # 'energy(eV)' & 'lambda(A)' & 'time(us)' & 'image number(#)'
-    #     if x_axis == 'energy':
-    #         x_axis_label = 'Energy (eV)'
-    #     if x_axis == 'lambda':
-    #         x_axis_label = u"Wavelength (\u212B)"
-    #         _x_axis = _utilities.ev_to_angstroms(array=_x_axis)
-    #         # plt.xlim(0, 1)
-    #     if x_axis == 'time':
-    #         if time_unit == 's':
-    #             x_axis_label = 'Time (s)'
-    #             _x_axis = _utilities.ev_to_s(array=_x_axis,
-    #                                          source_to_detector_m=source_to_detector_m,
-    #                                          offset_us=offset_us)
-    #         if time_unit == 'us':
-    #             x_axis_label = 'Time (us)'
-    #             _x_axis = 1e6 * _utilities.ev_to_s(array=_x_axis,
-    #                                                source_to_detector_m=source_to_detector_m,
-    #                                                offset_us=offset_us)
-    #         if time_unit == 'ns':
-    #             x_axis_label = 'Time (ns)'
-    #             _x_axis = 1e9 * _utilities.ev_to_s(array=_x_axis,
-    #                                                source_to_detector_m=source_to_detector_m,
-    #                                                offset_us=offset_us)
-    #     if x_axis == 'number':
-    #         x_axis_label = 'Image number (#)'
-    #         _x_axis = _utilities.ev_to_image_number(array=_x_axis,
-    #                                                 source_to_detector_m=source_to_detector_m,
-    #                                                 offset_us=offset_us,
-    #                                                 time_resolution_us=time_resolution_us)
-    #
-    #     """Y-axis"""
-    #     # determine to plot transmission or attenuation
-    #     # determine to put transmission or attenuation words for y-axis
-    #     if transmission:
-    #         y_axis_label = 'Neutron Transmission'
-    #         y_axis_tag = 'transmission'
-    #     else:
-    #         y_axis_label = 'Neutron Attenuation'
-    #         y_axis_tag = 'attenuation'
-    #
-    #     if mixed:
-    #         _y_axis = self.total_signal[y_axis_tag]
-    #         plt.plot(_x_axis, _y_axis, label="Total")
-    #
-    #     if all_layers:
-    #         for _compound in _stack.keys():
-    #             _y_axis = _stack_signal[_compound][y_axis_tag]
-    #             plt.plot(_x_axis, _y_axis, label=_compound)
-    #
-    #     if all_elements:
-    #         for _compound in _stack.keys():
-    #             for _element in _stack[_compound]['elements']:
-    #                 _y_axis = _stack_signal[_compound][_element][y_axis_tag]
-    #                 plt.plot(_x_axis, _y_axis, label="{}/{}".format(_compound, _element))
-    #
-    #     if all_isotopes:
-    #         for _compound in _stack.keys():
-    #             for _element in _stack[_compound]['elements']:
-    #                 for _isotope in _stack[_compound][_element]['isotopes']['list']:
-    #                     _y_axis = _stack_signal[_compound][_element][_isotope][y_axis_tag]
-    #                     plt.plot(_x_axis, _y_axis, label="{}/{}/{}".format(_compound, _element, _isotope))
-    #
-    #     """Y-axis for specified items_to_plot"""
-    #     for _path_to_plot in items_to_plot:
-    #         _path_to_plot = list(_path_to_plot)
-    #         _live_path = _stack_signal
-    #         _label = "/".join(_path_to_plot)
-    #         while _path_to_plot:
-    #             _item = _path_to_plot.pop(0)
-    #             _live_path = _live_path[_item]
-    #         _y_axis = _live_path[y_axis_tag]
-    #         plt.plot(_x_axis, _y_axis, label=_label)
-    #
-    #     _x_tag = 'x (eV)'
-    #     if angstrom is True:
-    #         _x = reso_utils.ev_to_angstroms(_x)
-    #         _x_tag = 'x (\u212B)'
-    #     if transmission is True:
-    #         _y = self.o_reso.total_signal['transmission']
-    #         _y_tag = 'y (transmission)'
-    #     else:
-    #         _y = self.o_reso.total_signal['attenuation']
-    #         _y_tag = 'y (attenuation)'
-    #
-    #     df = pd.DataFrame(_x, index=None)
-    #     df.rename(columns={0: _x_tag}, inplace=True)
-    #     df[_y_tag] = _y
-    #     df.to_csv(filename)
+    def export(self, filename='resonance_output.csv', to_csv=False,
+               x_axis='energy', transmission=False,
+               mixed=True,
+               all_layers=False,
+               all_elements=False,
+               all_isotopes=False,
+               items_to_export=[], time_unit='us',
+               offset_us=2.99, time_resolution_us=0.16, source_to_detector_m=16.125):
+        """
+        output x and y values to clipboard or .csv file
+        output the transmission or attenuation of compound, element and/or isotopes specified
+
+        :param filename: string. filename (with .csv suffix) you would like to save as
+        :param to_csv: boolean. True -> save as .csv file with name specified
+                                False -> export to clipboard
+        :param x_axis: string. Must be either 'energy' or 'lambda' or 'time' or 'number'
+        :param transmission: boolean. True -> export transmission signal
+                                      False -> export the attenuation signal
+        :param mixed: boolean. True -> export the total of each layer
+                               False -> not export
+        :param all_layers: boolean. True -> export all layers
+                                    False -> not export
+        :param all_elements: boolean. True -> export all elements signal
+                                      False -> not export
+        :param all_isotopes: boolean. True -> export all isotopes signal
+                                      False -> not export
+        :param items_to_export: array that describes what to export
+            ex:
+                [['CoAg','Ag','107-Ag'], ['CoAg']]
+            if the dictionary is empty, everything is exported
+        :param time_unit:
+        :param offset_us:
+        :param time_resolution_us:
+        :param source_to_detector_m:
+
+        :return: simulated resonance signals in clipboard or single .csv file
+        """
+        if x_axis not in ['energy', 'lambda', 'time', 'number']:
+            raise ValueError("Please specify the x-axis type using one from '['energy', 'lambda', 'time', 'number']'.")
+        if time_unit not in ['s', 'us', 'ns']:
+            raise ValueError("Please specify the time unit using one from '['s', 'us', 'ns']'.")
+
+        # stack from self
+        _stack_signal = self.stack_signal
+        _stack = self.stack
+        _x_axis = self.total_signal['energy_eV']
+        x_axis_label = None
+
+        df = pd.DataFrame()
+
+        """X-axis"""
+        # determine values and labels for x-axis with options from
+        # 'energy(eV)' & 'lambda(A)' & 'time(us)' & 'image number(#)'
+        if x_axis == 'energy':
+            x_axis_label = 'Energy (eV)'
+        if x_axis == 'lambda':
+            x_axis_label = u"Wavelength (\u212B)"
+            _x_axis = _utilities.ev_to_angstroms(array=_x_axis)
+        if x_axis == 'time':
+            if time_unit == 's':
+                x_axis_label = 'Time (s)'
+                _x_axis = _utilities.ev_to_s(array=_x_axis,
+                                             source_to_detector_m=source_to_detector_m,
+                                             offset_us=offset_us)
+            if time_unit == 'us':
+                x_axis_label = 'Time (us)'
+                _x_axis = 1e6 * _utilities.ev_to_s(array=_x_axis,
+                                                   source_to_detector_m=source_to_detector_m,
+                                                   offset_us=offset_us)
+            if time_unit == 'ns':
+                x_axis_label = 'Time (ns)'
+                _x_axis = 1e9 * _utilities.ev_to_s(array=_x_axis,
+                                                   source_to_detector_m=source_to_detector_m,
+                                                   offset_us=offset_us)
+            print("'{}' was obtained with the following:\nsource_to_detector_m={}\noffset_us={}"
+                  .format(x_axis_label, source_to_detector_m, offset_us))
+
+        if x_axis == 'number':
+            x_axis_label = 'Image number (#)'
+            _x_axis = _utilities.ev_to_image_number(array=_x_axis,
+                                                    source_to_detector_m=source_to_detector_m,
+                                                    offset_us=offset_us,
+                                                    time_resolution_us=time_resolution_us)
+            print("'{}' was obtained with the following:\nsource_to_detector_m={}\noffset_us={}\ntime_resolution_us={}"
+                  .format(x_axis_label, source_to_detector_m, offset_us, time_resolution_us))
+
+        if x_axis_label is None:
+            raise ValueError("x_axis_label does NOT exist, please check.")
+        df[x_axis_label] = _x_axis
+
+        """Y-axis"""
+        # determine to export transmission or attenuation
+        # determine transmission or attenuation label for y-axis
+        if transmission:
+            y_axis_tag = 'transmission'
+        else:
+            y_axis_tag = 'attenuation'
+
+        if mixed:
+            _y_axis = self.total_signal[y_axis_tag]
+            df['Total'] = _y_axis
+
+        if all_layers:
+            for _compound in _stack.keys():
+                _y_axis = _stack_signal[_compound][y_axis_tag]
+                df[_compound] = _y_axis
+
+        if all_elements:
+            for _compound in _stack.keys():
+                for _element in _stack[_compound]['elements']:
+                    _y_axis = _stack_signal[_compound][_element][y_axis_tag]
+                    df[_compound + '/' + _element] = _y_axis
+
+        if all_isotopes:
+            for _compound in _stack.keys():
+                for _element in _stack[_compound]['elements']:
+                    for _isotope in _stack[_compound][_element]['isotopes']['list']:
+                        _y_axis = _stack_signal[_compound][_element][_isotope][y_axis_tag]
+                        df[_compound + '/' + _element + '/' + _isotope] = _y_axis
+
+        """Y-axis for specified items_to_plot"""
+        for _path_to_export in items_to_export:
+            _path_to_export = list(_path_to_export)
+            _live_path = _stack_signal
+            _label = "/".join(_path_to_export)
+            while _path_to_export:
+                _item = _path_to_export.pop(0)
+                _live_path = _live_path[_item]
+            _y_axis = _live_path[y_axis_tag]
+            df[_label] = _y_axis
+            plt.plot(_x_axis, _y_axis, label=_label)
+
+        if to_csv is True:
+            df.to_csv(filename)
+        else:
+            df.to_clipboard(excel=True)
