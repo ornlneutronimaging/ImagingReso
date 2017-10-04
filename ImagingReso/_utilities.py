@@ -399,12 +399,11 @@ def set_distance_units(value=np.NaN, from_units='mm', to_units='cm'):
     Raises:
     =======
     ValueError if from_units is not a valid unit (see above)
-    ValueError if to_units is not a valud unit
+    ValueError if to_units is not a valid unit
     """
     if from_units == to_units:
         return value
 
-    coeff = 1
     if from_units == 'cm':
         if to_units == 'mm':
             coeff = 10

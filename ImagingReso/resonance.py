@@ -384,8 +384,8 @@ class Resonance(object):
                     sigma_b=_sigma_ele)
                 stack_signal[_name_of_compound][_element]['transmission'] = _transmission_ele
                 stack_signal[_name_of_compound][_element]['attenuation'] = 1. - _transmission_ele
-                stack_signal[_name_of_compound][_element]['energy_eV'] = stack_sigma[_name_of_compound][_element][
-                    'energy_eV']
+                stack_signal[_name_of_compound][_element]['energy_eV'] = \
+                    stack_sigma[_name_of_compound][_element]['energy_eV']
 
                 transmission_compound *= _transmission_ele
                 if energy_compound == []:
@@ -573,6 +573,7 @@ class Resonance(object):
             ex:
                 [['CoAg','Ag','107-Ag'], ['CoAg']]
             if the dictionary is empty, everything is plotted
+        time_unit: string. Must be either 's' or 'us' or 'ns'
         """
         if x_axis not in ['energy', 'lambda', 'time', 'number']:
             raise ValueError("Please specify the x-axis type using one from '['energy', 'lambda', 'time', 'number']'.")
@@ -707,7 +708,7 @@ class Resonance(object):
             ex:
                 [['CoAg','Ag','107-Ag'], ['CoAg']]
             if the dictionary is empty, everything is exported
-        :param time_unit:
+        :param time_unit: string. Must be either 's' or 'us' or 'ns'
         :param offset_us:
         :param time_resolution_us:
         :param source_to_detector_m:
