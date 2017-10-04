@@ -551,7 +551,7 @@ class Resonance(object):
         self.stack_sigma = stack_sigma
 
     def plot(self, transmission=False, x_axis='energy', mixed=True, all_layers=False, all_elements=False,
-             all_isotopes=False, items_to_plot=[], time_unit='us', offset_us=2.99, time_resolution_us=0.16,
+             all_isotopes=False, items_to_plot=None, time_unit='us', offset_us=2.99, time_resolution_us=0.16,
              source_to_detector_m=16.125):
         # offset delay values is normal 2.99 us with NONE actual MCP delay settings
         """display the transmission or attenuation of compound, element and/or isotopes specified
@@ -660,15 +660,16 @@ class Resonance(object):
                         plt.plot(_x_axis, _y_axis, label="{}/{}/{}".format(_compound, _element, _isotope))
 
         """Y-axis for specified items_to_plot"""
-        for _path_to_plot in items_to_plot:
-            _path_to_plot = list(_path_to_plot)
-            _live_path = _stack_signal
-            _label = "/".join(_path_to_plot)
-            while _path_to_plot:
-                _item = _path_to_plot.pop(0)
-                _live_path = _live_path[_item]
-            _y_axis = _live_path[y_axis_tag]
-            plt.plot(_x_axis, _y_axis, label=_label)
+        if items_to_plot is not None:
+            for _path_to_plot in items_to_plot:
+                _path_to_plot = list(_path_to_plot)
+                _live_path = _stack_signal
+                _label = "/".join(_path_to_plot)
+                while _path_to_plot:
+                    _item = _path_to_plot.pop(0)
+                    _live_path = _live_path[_item]
+                _y_axis = _live_path[y_axis_tag]
+                plt.plot(_x_axis, _y_axis, label=_label)
 
         plt.ylim(-0.01, 1.01)
         plt.xlabel(x_axis_label)
@@ -682,7 +683,7 @@ class Resonance(object):
                all_layers=False,
                all_elements=False,
                all_isotopes=False,
-               items_to_export=[], time_unit='us',
+               items_to_export=None, time_unit='us',
                offset_us=2.99, time_resolution_us=0.16, source_to_detector_m=16.125):
         """
         output x and y values to clipboard or .csv file
@@ -797,16 +798,16 @@ class Resonance(object):
                         df[_compound + '/' + _element + '/' + _isotope] = _y_axis
 
         """Y-axis for specified items_to_plot"""
-        for _path_to_export in items_to_export:
-            _path_to_export = list(_path_to_export)
-            _live_path = _stack_signal
-            _label = "/".join(_path_to_export)
-            while _path_to_export:
-                _item = _path_to_export.pop(0)
-                _live_path = _live_path[_item]
-            _y_axis = _live_path[y_axis_tag]
-            df[_label] = _y_axis
-            plt.plot(_x_axis, _y_axis, label=_label)
+        if items_to_export is not None:
+            for _path_to_export in items_to_export:
+                _path_to_export = list(_path_to_export)
+                _live_path = _stack_signal
+                _label = "/".join(_path_to_export)
+                while _path_to_export:
+                    _item = _path_to_export.pop(0)
+                    _live_path = _live_path[_item]
+                _y_axis = _live_path[y_axis_tag]
+                df[_label] = _y_axis
 
         if to_csv is True:
             df.to_csv(filename)
