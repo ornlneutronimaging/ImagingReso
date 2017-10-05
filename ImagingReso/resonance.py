@@ -679,7 +679,7 @@ class Resonance(object):
 
     def export(self, filename='resonance_output.csv', to_csv=False,
                x_axis='energy',
-               y_axis='transmission',
+               y_axis='attenuation',
                mixed=True,
                all_layers=False,
                all_elements=False,
