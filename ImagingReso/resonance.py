@@ -458,7 +458,6 @@ class Resonance(object):
     def __update_stack_with_isotopes_infos(self, stack={}):
         """retrieve the isotopes, isotopes file names, mass and atomic_ratio from each element in stack"""
         for _key in stack:
-            isotopes_array = []
             _elements = stack[_key]['elements']
             for _element in _elements:
                 _dict = _utilities.get_isotope_dicts(element=_element, database=self.database)
@@ -679,7 +678,8 @@ class Resonance(object):
         plt.show()
 
     def export(self, filename='resonance_output.csv', to_csv=False,
-               x_axis='energy', transmission=False,
+               x_axis='energy',
+               y_axis='transmission',
                mixed=True,
                all_layers=False,
                all_elements=False,
@@ -688,14 +688,13 @@ class Resonance(object):
                offset_us=2.99, time_resolution_us=0.16, source_to_detector_m=16.125):
         """
         output x and y values to clipboard or .csv file
-        output the transmission or attenuation of compound, element and/or isotopes specified
+        output the transmission or attenuation or sigma of compound, element and/or isotopes specified
 
         :param filename: string. filename (with .csv suffix) you would like to save as
         :param to_csv: boolean. True -> save as .csv file with name specified
                                 False -> export to clipboard
-        :param x_axis: string. Must be either 'energy' or 'lambda' or 'time' or 'number'
-        :param transmission: boolean. True -> export transmission signal
-                                      False -> export the attenuation signal
+        :param x_axis: string. x type for export. Must be either 'energy' or 'lambda' or 'time' or 'number'
+        :param y_axis: string. y type for export. Must be either 'transmission' or 'attenuation' or 'sigma'
         :param mixed: boolean. True -> export the total of each layer
                                False -> not export
         :param all_layers: boolean. True -> export all layers
@@ -713,19 +712,21 @@ class Resonance(object):
         :param time_resolution_us:
         :param source_to_detector_m:
 
-        :return: simulated resonance signals in clipboard or single .csv file
+        :return: simulated resonance signals or sigma in clipboard or single .csv file
         """
         if x_axis not in ['energy', 'lambda', 'time', 'number']:
             raise ValueError("Please specify the x-axis type using one from '['energy', 'lambda', 'time', 'number']'.")
         if time_unit not in ['s', 'us', 'ns']:
             raise ValueError("Please specify the time unit using one from '['s', 'us', 'ns']'.")
-
+        if y_axis not in ['transmission', 'attenuation', 'sigma']:
+            raise ValueError(
+                "Please specify the y-axis type using one from '['transmission', 'attenuation', 'sigma']'.")
         # stack from self
         _stack_signal = self.stack_signal
         _stack = self.stack
+
         _x_axis = self.total_signal['energy_eV']
         x_axis_label = None
-
         df = pd.DataFrame()
 
         """X-axis"""
@@ -769,46 +770,80 @@ class Resonance(object):
         df[x_axis_label] = _x_axis
 
         """Y-axis"""
-        # determine to export transmission or attenuation
-        # determine transmission or attenuation label for y-axis
-        if transmission:
-            y_axis_tag = 'transmission'
+        # export transmission or attenuation
+        if y_axis is not 'sigma':
+            y_axis_tag = y_axis
+            if mixed:
+                _y_axis = self.total_signal[y_axis_tag]
+                df['Total'] = _y_axis
+
+            if all_layers:
+                for _compound in _stack.keys():
+                    _y_axis = _stack_signal[_compound][y_axis_tag]
+                    df[_compound] = _y_axis
+
+            if all_elements:
+                for _compound in _stack.keys():
+                    for _element in _stack[_compound]['elements']:
+                        _y_axis = _stack_signal[_compound][_element][y_axis_tag]
+                        df[_compound + '/' + _element] = _y_axis
+
+            if all_isotopes:
+                for _compound in _stack.keys():
+                    for _element in _stack[_compound]['elements']:
+                        for _isotope in _stack[_compound][_element]['isotopes']['list']:
+                            _y_axis = _stack_signal[_compound][_element][_isotope][y_axis_tag]
+                            df[_compound + '/' + _element + '/' + _isotope] = _y_axis
+
+            """Y-axis for specified items_to_export"""
+            if items_to_export is not None:
+                for _path_to_export in items_to_export:
+                    _path_to_export = list(_path_to_export)
+                    _live_path = _stack_signal
+                    _label = "/".join(_path_to_export)
+                    while _path_to_export:
+                        _item = _path_to_export.pop(0)
+                        _live_path = _live_path[_item]
+                    _y_axis = _live_path[y_axis_tag]
+                    df[_label] = _y_axis
+        # export transmission or attenuation
         else:
-            y_axis_tag = 'attenuation'
+            _stack_sigma = self.stack_sigma
+            y_axis_tag = 'sigma_b'
 
-        if mixed:
-            _y_axis = self.total_signal[y_axis_tag]
-            df['Total'] = _y_axis
+            if all_elements:
+                for _compound in _stack.keys():
+                    for _element in _stack[_compound]['elements']:
+                        _y_axis = _stack_sigma[_compound][_element][y_axis_tag]
+                        df[_compound + '/' + _element + '/atoms_per_cm3'] = _stack[_compound]['atoms_per_cm3'][_element]
+                        df[_compound + '/' + _element] = _y_axis
 
-        if all_layers:
-            for _compound in _stack.keys():
-                _y_axis = _stack_signal[_compound][y_axis_tag]
-                df[_compound] = _y_axis
+            if all_isotopes:
+                for _compound in _stack.keys():
+                    for _element in _stack[_compound]['elements']:
+                        if all_elements is not True:
+                            df[_compound + '/' + _element + '/atoms_per_cm3'] = _stack[_compound]['atoms_per_cm3'][
+                                _element]
+                        for _isotope in _stack[_compound][_element]['isotopes']['list']:
+                            _y_axis = _stack_sigma[_compound][_element][_isotope][y_axis_tag]
+                            df[_compound + '/' + _element + '/' + _isotope] = _y_axis
 
-        if all_elements:
-            for _compound in _stack.keys():
-                for _element in _stack[_compound]['elements']:
-                    _y_axis = _stack_signal[_compound][_element][y_axis_tag]
-                    df[_compound + '/' + _element] = _y_axis
-
-        if all_isotopes:
-            for _compound in _stack.keys():
-                for _element in _stack[_compound]['elements']:
-                    for _isotope in _stack[_compound][_element]['isotopes']['list']:
-                        _y_axis = _stack_signal[_compound][_element][_isotope][y_axis_tag]
-                        df[_compound + '/' + _element + '/' + _isotope] = _y_axis
-
-        """Y-axis for specified items_to_plot"""
-        if items_to_export is not None:
-            for _path_to_export in items_to_export:
-                _path_to_export = list(_path_to_export)
-                _live_path = _stack_signal
-                _label = "/".join(_path_to_export)
-                while _path_to_export:
-                    _item = _path_to_export.pop(0)
-                    _live_path = _live_path[_item]
-                _y_axis = _live_path[y_axis_tag]
-                df[_label] = _y_axis
+            """Y-axis for specified items_to_export"""
+            if items_to_export is not None:
+                for _path_to_export in items_to_export:
+                    if len(_path_to_export) == 1:
+                        raise ValueError(
+                            "Getting total sigma of '{}' at layer level is not supported. "
+                            "If it is a single element layer, please follow ['layer', 'element'] format.".format(
+                                _path_to_export[0]))
+                    _path_to_export = list(_path_to_export)
+                    _live_path = _stack_sigma
+                    _label = "/".join(_path_to_export)
+                    while _path_to_export:
+                        _item = _path_to_export.pop(0)
+                        _live_path = _live_path[_item]
+                    _y_axis = _live_path[y_axis_tag]
+                    df[_label] = _y_axis
 
         if to_csv is True:
             df.to_csv(filename)
