@@ -551,7 +551,7 @@ class Resonance(object):
 
     def plot(self, transmission=False, x_axis='energy', mixed=True, all_layers=False, all_elements=False,
              all_isotopes=False, items_to_plot=None, time_unit='us', offset_us=2.99, time_resolution_us=0.16,
-             source_to_detector_m=16.125):
+             source_to_detector_m=16.125, lambda_max_angstroms=1):
         # offset delay values is normal 2.99 us with NONE actual MCP delay settings
         """display the transmission or attenuation of compound, element and/or isotopes specified
 
@@ -596,7 +596,7 @@ class Resonance(object):
         if x_axis == 'lambda':
             x_axis_label = u"Wavelength (\u212B)"
             _x_axis = _utilities.ev_to_angstroms(array=_x_axis)
-            plt.xlim(0, 1)
+            plt.xlim(xmax=lambda_max_angstroms)
         if x_axis == 'time':
             if time_unit == 's':
                 x_axis_label = 'Time (s)'
