@@ -254,54 +254,6 @@ class Resonance(object):
             raise ValueError("Element '{}' should be any of those elements: {}".format(element, list_element_joined))
 
         return _stack[compound][element]['density']['value']
-    '''
-    Note: density setter after initialization has been removed since one can easily define the density at the begining
-    
-    def __set_density(self, compound='', element='', density=np.NaN, debug=False):
-        """defines the new density of the compound/element
-
-        Parameters:
-        ===========
-        compound: string (default is ''). Name of compound
-        element: string (defualt is ''). Name of element
-        density: float (default is np.NaN). New density
-
-        Raises:
-        =======
-        ValueError if compound does not exist
-        ValueError if element does not exist
-        ValueError if density is not a number
-        """
-        _stack = self.stack
-
-        list_compounds = _stack.keys()
-        if not compound in _stack.keys():
-            list_compounds_joined = ', '.join(list_compounds)
-            raise ValueError("Compound '{}' could not be find in {}".format(compile, list_compounds_joined))
-
-        if element == '':
-            # we assume that the element and compounds names matched
-            element = compound
-        list_element = _stack[compound].keys()
-        if not element in list_element:
-            list_element_joined = ', '.join(list_element)
-            raise ValueError("Element '{}' should be any of those elements: {}".format(element, list_element_joined))
-
-        if not isinstance(density, numbers.Number):
-            raise ValueError("Density '{}' must be a number!".format(density))
-
-        _density_lock = self.density_lock
-        if _density_lock[compound]:
-            raise IOError("You are not authorized to change the density!")
-
-        self.stack[compound]['density']['value'] = density
-
-        # populate atoms_per_cm3
-        self.__calculate_atoms_per_cm3(used_lock=True)
-
-        # calculate transmission and attenuation
-        self.__calculate_transmission_attenuation()
-   '''
 
     def __math_on_stack(self, used_lock=False):
         """will perform all the various update of the stack, such as populating the stack_sigma, caluclate the density of the
