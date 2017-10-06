@@ -254,16 +254,18 @@ class Resonance(object):
             raise ValueError("Element '{}' should be any of those elements: {}".format(element, list_element_joined))
 
         return _stack[compound][element]['density']['value']
-
+    '''
+    Note: density setter after initialization has been removed since one can easily define the density at the begining
+    
     def __set_density(self, compound='', element='', density=np.NaN, debug=False):
-        """defines the new density of the compound/element 
-        
+        """defines the new density of the compound/element
+
         Parameters:
         ===========
         compound: string (default is ''). Name of compound
         element: string (defualt is ''). Name of element
         density: float (default is np.NaN). New density
-        
+
         Raises:
         =======
         ValueError if compound does not exist
@@ -299,6 +301,7 @@ class Resonance(object):
 
         # calculate transmission and attenuation
         self.__calculate_transmission_attenuation()
+   '''
 
     def __math_on_stack(self, used_lock=False):
         """will perform all the various update of the stack, such as populating the stack_sigma, caluclate the density of the
@@ -549,35 +552,43 @@ class Resonance(object):
 
         self.stack_sigma = stack_sigma
 
-    def plot(self, transmission=False, x_axis='energy', mixed=True, all_layers=False, all_elements=False,
+    def plot(self, y_axis='attenuation', x_axis='energy', mixed=True, all_layers=False, all_elements=False,
              all_isotopes=False, items_to_plot=None, time_unit='us', offset_us=2.99, time_resolution_us=0.16,
-             source_to_detector_m=16.125, lambda_max_angstroms=1):
+             source_to_detector_m=16.125, lambda_max_angstroms=1, t_start_us=1):
         # offset delay values is normal 2.99 us with NONE actual MCP delay settings
         """display the transmission or attenuation of compound, element and/or isotopes specified
 
         Parameters:
         ===========
-        transmission: boolean. True -> display transmission signal
-                               False -> display the attenuation signal
-        x_axis: string. Must be either 'energy' or 'lambda' or 'time' or 'number'
-        mixed: boolean. True -> display the total of each layer
-                        False -> not displayed
-        all_layers: boolean. True -> display all layers
-                             False -> not displayed
-        all_elements: boolean. True -> display all elements signal
+        :param x_axis: string. x type for export. Must be either 'energy' or 'lambda' or 'time' or 'number'
+        :param y_axis: string. y type for export. Must be either 'transmission' or 'attenuation'
+        :param mixed: boolean. True -> display the total of each layer
                                False -> not displayed
-        all_isotopes: boolean. True -> display all isotopes signal
-                               False -> not displayed
-        items_to_plot: array that describes what to plot
+        :param all_layers: boolean. True -> display all layers
+                                    False -> not displayed
+        :param all_elements: boolean. True -> display all elements signal
+                                      False -> not displayed
+        :param all_isotopes: boolean. True -> display all isotopes signal
+                                      False -> not displayed
+        :param items_to_plot: array that describes what to plot
             ex:
                 [['CoAg','Ag','107-Ag'], ['CoAg']]
-            if the dictionary is empty, everything is plotted
-        time_unit: string. Must be either 's' or 'us' or 'ns'
+            if the dictionary is empty, everything is exported
+        :param time_unit: string. Must be either 's' or 'us' or 'ns'
+        :param offset_us:
+        :param time_resolution_us:
+        :param source_to_detector_m:
+        :param lambda_max_angstroms: maximum lambda to display
+        :param t_start_us: when is the first acquisition started. default: 1
+
         """
         if x_axis not in ['energy', 'lambda', 'time', 'number']:
             raise ValueError("Please specify the x-axis type using one from '['energy', 'lambda', 'time', 'number']'.")
         if time_unit not in ['s', 'us', 'ns']:
             raise ValueError("Please specify the time unit using one from '['s', 'us', 'ns']'.")
+        if y_axis not in ['transmission', 'attenuation']:
+            raise ValueError(
+                "Please specify the y-axis type using one from '['transmission', 'attenuation']'.")
 
         # figure size
         plt.figure(figsize=[8, 8])
@@ -621,7 +632,8 @@ class Resonance(object):
             _x_axis = _utilities.ev_to_image_number(array=_x_axis,
                                                     source_to_detector_m=source_to_detector_m,
                                                     offset_us=offset_us,
-                                                    time_resolution_us=time_resolution_us)
+                                                    time_resolution_us=time_resolution_us,
+                                                    t_start_us=t_start_us)
             print("'{}' was obtained with the following:\nsource_to_detector_m={}\noffset_us={}\ntime_resolution_us={}"
                   .format(x_axis_label, source_to_detector_m, offset_us, time_resolution_us))
         if x_axis_label is None:
@@ -630,12 +642,11 @@ class Resonance(object):
         """Y-axis"""
         # determine to plot transmission or attenuation
         # determine to put transmission or attenuation words for y-axis
-        if transmission:
+        y_axis_tag = y_axis
+        if y_axis is 'transmission':
             y_axis_label = 'Neutron Transmission'
-            y_axis_tag = 'transmission'
         else:
             y_axis_label = 'Neutron Attenuation'
-            y_axis_tag = 'attenuation'
 
         if mixed:
             _y_axis = self.total_signal[y_axis_tag]
@@ -685,7 +696,7 @@ class Resonance(object):
                all_elements=False,
                all_isotopes=False,
                items_to_export=None, time_unit='us',
-               offset_us=2.99, time_resolution_us=0.16, source_to_detector_m=16.125):
+               offset_us=2.99, time_resolution_us=0.16, source_to_detector_m=16.125, t_start_us=1):
         """
         output x and y values to clipboard or .csv file
         output the transmission or attenuation or sigma of compound, element and/or isotopes specified
@@ -711,6 +722,7 @@ class Resonance(object):
         :param offset_us:
         :param time_resolution_us:
         :param source_to_detector_m:
+        :param t_start_us: when is the first acquisition started. default: 1
 
         :return: simulated resonance signals or sigma in clipboard or single .csv file
         """
@@ -761,7 +773,8 @@ class Resonance(object):
             _x_axis = _utilities.ev_to_image_number(array=_x_axis,
                                                     source_to_detector_m=source_to_detector_m,
                                                     offset_us=offset_us,
-                                                    time_resolution_us=time_resolution_us)
+                                                    time_resolution_us=time_resolution_us,
+                                                    t_start_us=t_start_us)
             print("'{}' was obtained with the following:\nsource_to_detector_m={}\noffset_us={}\ntime_resolution_us={}"
                   .format(x_axis_label, source_to_detector_m, offset_us, time_resolution_us))
 

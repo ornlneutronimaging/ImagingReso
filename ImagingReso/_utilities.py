@@ -436,11 +436,11 @@ def ev_to_angstroms(array=[]):
 
     Parameters:
     ===========
-    array: array to convert (in eV)
+    array: array or number to convert (in eV)
 
     Returns:
     ========
-    numpy array of lambda in Angstroms
+    numpy array or value of lambda in Angstroms
     """
     return np.sqrt(81.787 / (array * 1000.))  # 1000 is used to convert eV to meV
 
@@ -450,16 +450,16 @@ def angstroms_to_ev(array=[]):
     
     Parameters:
     ===========
-    array: numpy array in Angstroms
+    array: numpy array or number in Angstroms
     
     Returns:
     ========
-    numpy array of energy in eV
+    numpy array or value of energy in eV
     """
     return 81.787 / (1000. * array ** 2)  # 1000 is used to convert meV to eV
 
 
-def ev_to_s(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
+def ev_to_s(offset_us, source_to_detector_m, array=[]):
     # delay values is normal 2.99 us with NONE actual MCP delay settings
     """convert energy (eV) to time (us)
 
@@ -479,7 +479,7 @@ def ev_to_s(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
     return time_record_s
 
 
-def s_to_ev(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
+def s_to_ev(offset_us, source_to_detector_m, array=[]):
     """convert time (s) to energy (eV)
     Parameters:
     ===========
@@ -495,7 +495,7 @@ def s_to_ev(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
     return (81.787 / pow(lambda_a, 2)) / 1000.  # 1000 is used to convert meV to eV
 
 
-def angstroms_to_s(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
+def angstroms_to_s(offset_us, source_to_detector_m, array=[]):
     """convert array in angstroms into s
 
     Parameters:
@@ -511,7 +511,7 @@ def angstroms_to_s(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
     return (source_to_detector_m * array / 3956.) - offset_us * 1e-6
 
 
-def s_to_angstroms(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
+def s_to_angstroms(offset_us, source_to_detector_m, array=[]):
     """convert s to angstroms arrays
 
     Parameters:
@@ -527,8 +527,7 @@ def s_to_angstroms(array=[], offset_us=np.NaN, source_to_detector_m=np.NaN):
     return 3956. * (array + offset_us * 1e-6) / source_to_detector_m
 
 
-def ev_to_image_number(array=[], offset_us=np.NaN, time_resolution_us=np.NaN, source_to_detector_m=np.NaN,
-                       t_start_us=1):
+def ev_to_image_number(offset_us, source_to_detector_m, time_resolution_us, t_start_us, array=[],):
     # delay values is normal 2.99 us with NONE actual MCP delay settings
     """convert energy (eV) to image numbers (#)
 
@@ -548,72 +547,72 @@ def ev_to_image_number(array=[], offset_us=np.NaN, time_resolution_us=np.NaN, so
     return image_number
 
 
-def convert_x_axis(array=[], from_units='ev', to_units='Angstroms',
-                   offset_us=np.NaN,
-                   source_to_detector_m=np.NaN):
-    """allow to convert the x-axis into eV, Angstroms units, or s
-    Parameters:
-    ===========
-    array: array to convert
-    from_units: string (default is eV)
-    to_units: string (default is Angstroms)
-    offset_us: float. Delay in micros of the detector
-    source_to_detector_m: float. distance source detector in m
-    Returns:
-    ========
-    converted array
-    """
-    units_allowed = ['ev', 'angstroms', 's']
-
-    if array == []:
-        return np.ndarray([])
-
-    _array = array.copy()
-
-    from_units = from_units.lower()
-    if not from_units in units_allowed:
-        raise ValueError("Units {} not supported!".format(from_units))
-
-    to_units = to_units.lower()
-    if not to_units in units_allowed:
-        raise ValueError("Units {} not supported!".format(to_units))
-
-    if from_units == to_units:
-        return array
-
-    if from_units == 'ev':
-        if to_units == 'angstroms':
-            return ev_to_angstroms(array=array)
-
-        if to_units == 's':
-            if np.isnan(source_to_detector_m):
-                raise ValueError("Please provide a distance source-detector in m!")
-
-            return ev_to_s(array=array,
-                           offset_us=offset_us,
-                           source_to_detector_m=source_to_detector_m)
-
-    if from_units == 'angstroms':
-        if to_units == 'ev':
-            return angstroms_to_ev(array=array)
-
-        if to_units == 's':
-            if np.isnan(source_to_detector_m):
-                raise ValueError("Please provide a distance source-detector in m!")
-
-            return angstroms_to_s(array=array,
-                                  offset_us=offset_us,
-                                  source_to_detector_m=source_to_detector_m)
-
-    if from_units == 's':
-        if to_units == 'ev':
-            return s_to_ev(array=array,
-                           offset_us=offset_us,
-                           source_to_detector_m=source_to_detector_m)
-
-        if to_units == 'angstroms':
-            return s_to_angstroms(array=array,
-                                  offset_us=offset_us,
-                                  source_to_detector_m=source_to_detector_m)
-
-    return np.ndarray([])
+# def convert_x_axis(array=[], from_units='ev', to_units='Angstroms',
+#                    offset_us=np.NaN,
+#                    source_to_detector_m=np.NaN):
+#     """allow to convert the x-axis into eV, Angstroms units, or s
+#     Parameters:
+#     ===========
+#     array: array to convert
+#     from_units: string (default is eV)
+#     to_units: string (default is Angstroms)
+#     offset_us: float. Delay in micros of the detector
+#     source_to_detector_m: float. distance source detector in m
+#     Returns:
+#     ========
+#     converted array
+#     """
+#     units_allowed = ['ev', 'angstroms', 's']
+#
+#     if array == []:
+#         return np.ndarray([])
+#
+#     _array = array.copy()
+#
+#     from_units = from_units.lower()
+#     if not from_units in units_allowed:
+#         raise ValueError("Units {} not supported!".format(from_units))
+#
+#     to_units = to_units.lower()
+#     if not to_units in units_allowed:
+#         raise ValueError("Units {} not supported!".format(to_units))
+#
+#     if from_units == to_units:
+#         return array
+#
+#     if from_units == 'ev':
+#         if to_units == 'angstroms':
+#             return ev_to_angstroms(array=array)
+#
+#         if to_units == 's':
+#             if np.isnan(source_to_detector_m):
+#                 raise ValueError("Please provide a distance source-detector in m!")
+#
+#             return ev_to_s(array=array,
+#                            offset_us=offset_us,
+#                            source_to_detector_m=source_to_detector_m)
+#
+#     if from_units == 'angstroms':
+#         if to_units == 'ev':
+#             return angstroms_to_ev(array=array)
+#
+#         if to_units == 's':
+#             if np.isnan(source_to_detector_m):
+#                 raise ValueError("Please provide a distance source-detector in m!")
+#
+#             return angstroms_to_s(array=array,
+#                                   offset_us=offset_us,
+#                                   source_to_detector_m=source_to_detector_m)
+#
+#     if from_units == 's':
+#         if to_units == 'ev':
+#             return s_to_ev(array=array,
+#                            offset_us=offset_us,
+#                            source_to_detector_m=source_to_detector_m)
+#
+#         if to_units == 'angstroms':
+#             return s_to_angstroms(array=array,
+#                                   offset_us=offset_us,
+#                                   source_to_detector_m=source_to_detector_m)
+#
+#     return np.ndarray([])

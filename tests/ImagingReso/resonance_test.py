@@ -651,3 +651,40 @@ class TestTransmissionAttenuation(unittest.TestCase):
         self.assertAlmostEqual(expected_tran_0, attenuation[0], delta=0.001)
         self.assertAlmostEqual(expected_tran_1, attenuation[1], delta=0.001)
         self.assertAlmostEqual(expected_tran_2, attenuation[2], delta=0.001)
+
+
+class TestPlot(unittest.TestCase):
+    def setUp(self):
+        _energy_min = 1
+        _energy_max = 50
+        _energy_step = 0.1
+        _layer_1 = 'Co'
+        _thickness_1 = 0.025  # mm
+
+        o_reso = Resonance(energy_min=_energy_min, energy_max=_energy_max, energy_step=_energy_step)
+        o_reso.add_layer(formula=_layer_1, thickness=_thickness_1)
+        self.o_reso = o_reso
+
+    def test_axis_type_and_time_unit(self):
+        self.assertRaises(ValueError, self.o_reso.plot, x_axis='wrong_x_word')
+        self.assertRaises(ValueError, self.o_reso.plot, time_unit='wrong_unit')
+        self.assertRaises(ValueError, self.o_reso.plot, y_axis='wrong_y_word')
+
+
+class TestExport(unittest.TestCase):
+    def setUp(self):
+        _energy_min = 1
+        _energy_max = 50
+        _energy_step = 0.1
+        _layer_1 = 'Co'
+        _thickness_1 = 0.025  # mm
+
+        o_reso = Resonance(energy_min=_energy_min, energy_max=_energy_max, energy_step=_energy_step)
+        o_reso.add_layer(formula=_layer_1, thickness=_thickness_1)
+        self.o_reso = o_reso
+
+    def test_axis_type_and_time_unit(self):
+        self.assertRaises(ValueError, self.o_reso.export, x_axis='wrong_x_word')
+        self.assertRaises(ValueError, self.o_reso.export, time_unit='wrong_unit')
+        self.assertRaises(ValueError, self.o_reso.export, y_axis='wrong_y_word')
+

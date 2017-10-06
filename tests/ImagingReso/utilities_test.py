@@ -361,248 +361,294 @@ class TestUtilities_2(unittest.TestCase):
 
     def test_set_distance_units(self):
         """asset set_distance_units works"""
-        # cm -> mm
         value = 10
-        from_units = 'cm'
-        to_units = 'mm'
-        new_value = set_distance_units(value=value,
-                                       from_units=from_units,
-                                       to_units=to_units)
-        self.assertEqual(new_value, 100)
+        cm = 'cm'
+        mm = 'mm'
+        m = 'm'
+        # cm <-> mm
+        _to_value = set_distance_units(value=value, from_units=cm, to_units=mm)
+        _from_value = set_distance_units(value=_to_value, from_units=mm, to_units=cm)
+        self.assertEqual(_from_value, value)
+        # cm <-> m
+        _to_value = set_distance_units(value=value, from_units=cm, to_units=m)
+        _from_value = set_distance_units(value=_to_value, from_units=m, to_units=cm)
+        self.assertEqual(_from_value, value)
+        # m <-> mm
+        _to_value = set_distance_units(value=value, from_units=mm, to_units=m)
+        _from_value = set_distance_units(value=_to_value, from_units=m, to_units=mm)
+        self.assertEqual(_from_value, value)
+        # self <-> self
+        _to_value = set_distance_units(value=value, from_units=cm, to_units=cm)
+        _from_value = set_distance_units(value=_to_value, from_units=cm, to_units=cm)
+        self.assertEqual(_from_value, value)
 
-        # mm -> cm
-        value = 10
-        from_units = 'mm'
-        to_units = 'cm'
-        new_value = set_distance_units(value=value,
-                                       from_units=from_units,
-                                       to_units=to_units)
-        self.assertEqual(new_value, 1)
+        _wrong = 'wrong_unit'
+        self.assertRaises(ValueError, set_distance_units, value=value, from_units=_wrong, to_units='cm')
+        self.assertRaises(ValueError, set_distance_units, value=value, to_units=_wrong, from_units='cm')
+        self.assertRaises(ValueError, set_distance_units, value=value, from_units=_wrong, to_units='m')
+        self.assertRaises(ValueError, set_distance_units, value=value, to_units=_wrong, from_units='m')
+        self.assertRaises(ValueError, set_distance_units, value=value, from_units=_wrong, to_units='mm')
+        self.assertRaises(ValueError, set_distance_units, value=value, to_units=_wrong, from_units='mm')
 
-    def test_energy_to_lambda(self):
+    def test_energy_angstroms_conversion(self):
         """assert energy_to_lambda works"""
-        energy_ev = np.linspace(1, 10, 10)
-        energy_lambda = ev_to_angstroms(array=energy_ev)
+        _from = np.linspace(1, 10, 10)
+        _to = ev_to_angstroms(array=_from)
+        _back = angstroms_to_ev(array=_to)
 
-        expected_energy_lambda_0 = 0.28598427
-        expected_energy_lambda_1 = 0.20222141
-        expected_energy_lambda_2 = 0.16511309
-        expected_energy_lambda_3 = 0.14299213
-        self.assertAlmostEquals(expected_energy_lambda_0, energy_lambda[0], delta=0.0001)
-        self.assertAlmostEquals(expected_energy_lambda_1, energy_lambda[1], delta=0.0001)
-        self.assertAlmostEquals(expected_energy_lambda_2, energy_lambda[2], delta=0.0001)
-        self.assertAlmostEquals(expected_energy_lambda_3, energy_lambda[3], delta=0.0001)
+        self.assertAlmostEquals(_from[0], _back[0], delta=0.0001)
+        self.assertAlmostEquals(_from[1], _back[1], delta=0.0001)
+        self.assertAlmostEquals(_from[2], _back[2], delta=0.0001)
+        self.assertAlmostEquals(_from[3], _back[3], delta=0.0001)
 
+    def test_ev_s_conversion(self):
+        """assert ev_to_s works"""
+        _from = np.linspace(1, 10, 10)
+        _to = ev_to_s(array=_from, offset_us=2.7, source_to_detector_m=16.)
+        _back = s_to_ev(array=_to, offset_us=2.7, source_to_detector_m=16.)
 
-class TestUtilities_xaxis_convertor(unittest.TestCase):
-    def test_complains_if_wrong_units(self):
-        """assert ValueError raised if wrong units given"""
-        _from_units = 'eV'
-        _to_units = 'unknown'
-        _array = np.linspace(1, 10)
-        self.assertRaises(ValueError, convert_x_axis, array=_array, from_units=_from_units,
-                          to_units=_to_units)
+        self.assertAlmostEquals(_from[0], _back[0], delta=0.0001)
+        self.assertAlmostEquals(_from[1], _back[1], delta=0.0001)
+        self.assertAlmostEquals(_from[2], _back[2], delta=0.0001)
+        self.assertAlmostEquals(_from[3], _back[3], delta=0.0001)
 
-        _to_units = 'eV'
-        _from_units = 'unknown'
-        _array = np.linspace(1, 10)
-        self.assertRaises(ValueError, convert_x_axis, array=_array, from_units=_from_units,
-                          to_units=_to_units)
+    def test_angstroms_s_conversion(self):
+        """assert ev_to_s works"""
+        _from = np.linspace(1, 10, 10)
+        _to = angstroms_to_s(array=_from, offset_us=2.7, source_to_detector_m=16.)
+        _back = s_to_angstroms(array=_to, offset_us=2.7, source_to_detector_m=16.)
+        self.assertAlmostEquals(_from[0], _back[0], delta=0.0001)
+        self.assertAlmostEquals(_from[1], _back[1], delta=0.0001)
+        self.assertAlmostEquals(_from[2], _back[2], delta=0.0001)
+        self.assertAlmostEquals(_from[3], _back[3], delta=0.0001)
 
-    def test_units_not_case_sensitivie(self):
-        """assert from and to units are not case sensitives """
-        _from_units = 'EV'
-        _to_units = 'Angstroms'
-        _array = np.linspace(1, 10)
-        _array_returned = convert_x_axis(array=_array,
-                                         from_units=_from_units,
-                                         to_units=_to_units)
-        self.assertTrue(isinstance(_array_returned, np.ndarray))
+    def test_ev_to_image_number_conversion(self):
+        """assert ev_to_s works"""
+        _from = np.linspace(13, 130, 10)
+        _to = ev_to_image_number(array=_from,
+                                 offset_us=0,
+                                 source_to_detector_m=16.,
+                                 time_resolution_us=0.16,
+                                 t_start_us=1)
+        _to_expected_0 = 1998.749091
+        _to_expected_1 = 1411.49845352
+        _to_expected_2 = 1151.33676491
+        _to_expected_3 = 996.2495455
+        self.assertAlmostEquals(_to_expected_0, _to[0], delta=0.0001)
+        self.assertAlmostEquals(_to_expected_1, _to[1], delta=0.0001)
+        self.assertAlmostEquals(_to_expected_2, _to[2], delta=0.0001)
+        self.assertAlmostEquals(_to_expected_3, _to[3], delta=0.0001)
 
-        _from_units = 'EV'
-        _to_units = 'anGSTRoms'
-        _array = np.linspace(1, 10)
-        _array_returned = convert_x_axis(array=_array,
-                                         from_units=_from_units,
-                                         to_units=_to_units)
-        self.assertTrue(isinstance(_array_returned, np.ndarray))
+# class TestUtilities_xaxis_convertor(unittest.TestCase):
+#     def test_complains_if_wrong_units(self):
+#         """assert ValueError raised if wrong units given"""
+#         _from_units = 'eV'
+#         _to_units = 'unknown'
+#         _array = np.linspace(1, 10)
+#         self.assertRaises(ValueError, convert_x_axis, array=_array, from_units=_from_units,
+#                           to_units=_to_units)
+#
+#         _to_units = 'eV'
+#         _from_units = 'unknown'
+#         _array = np.linspace(1, 10)
+#         self.assertRaises(ValueError, convert_x_axis, array=_array, from_units=_from_units,
+#                           to_units=_to_units)
+#
+#     def test_units_not_case_sensitivie(self):
+#         """assert from and to units are not case sensitives """
+#         _from_units = 'EV'
+#         _to_units = 'Angstroms'
+#         _array = np.linspace(1, 10)
+#         _array_returned = convert_x_axis(array=_array,
+#                                          from_units=_from_units,
+#                                          to_units=_to_units)
+#         self.assertTrue(isinstance(_array_returned, np.ndarray))
+#
+#         _from_units = 'EV'
+#         _to_units = 'anGSTRoms'
+#         _array = np.linspace(1, 10)
+#         _array_returned = convert_x_axis(array=_array,
+#                                          from_units=_from_units,
+#                                          to_units=_to_units)
+#         self.assertTrue(isinstance(_array_returned, np.ndarray))
+#
+#         _from_units = 'angStrOms'
+#         _to_units = 'eV'
+#         _array = np.linspace(1, 10)
+#         _array_returned = convert_x_axis(array=_array,
+#                                          from_units=_from_units,
+#                                          to_units=_to_units)
+#         self.assertTrue(isinstance(_array_returned, np.ndarray))
+#
+#         _from_units = 'angStrOms'
+#         _to_units = 's'
+#         _array = np.linspace(1, 10)
+#         _array_returned = convert_x_axis(array=_array,
+#                                          from_units=_from_units,
+#                                          to_units=_to_units,
+#                                          offset_us=1,
+#                                          source_to_detector_m=1)
+#         self.assertTrue(isinstance(_array_returned, np.ndarray))
+#
+#     def test_array_not_changed_if_same_units_before_and_after(self):
+#         """assert array untouched if from_units is identical to to_units"""
+#         _from_units = 'ev'
+#         _to_units = 'ev'
+#         _array = np.linspace(1, 10)
+#         _array_returned = convert_x_axis(array=_array,
+#                                          from_units=_from_units,
+#                                          to_units=_to_units)
+#         self.assertTrue((_array_returned == _array).all())
+#
+#         _from_units = 'angstroms'
+#         _to_units = 'angstroms'
+#         _array = np.linspace(1, 10)
+#         _array_returned = convert_x_axis(array=_array,
+#                                          from_units=_from_units,
+#                                          to_units=_to_units)
+#         self.assertTrue((_array_returned == _array).all())
+#
+#         _from_units = 's'
+#         _to_units = 's'
+#         _array = np.linspace(1, 10)
+#         _array_returned = convert_x_axis(array=_array,
+#                                          from_units=_from_units,
+#                                          to_units=_to_units)
+#         self.assertTrue((_array_returned == _array).all())
+#
+#         # from eV to Angstroms
+#
+#     def test_conversion_from_ev_to_angstroms_works(self):
+#         """assert conversion from eV to Angstroms works"""
+#         _from_units = 'ev'
+#         _to_units = 'angstroms'
+#         _array = np.linspace(1, 10)
+#         _array_returned = convert_x_axis(array=_array,
+#                                          from_units=_from_units,
+#                                          to_units=_to_units)
+#         _array_expected = []
+#         for _value in _array:
+#             _tmp = 81.787 / (np.float(_value) * 1000.)
+#             _array_expected.append(np.sqrt(_tmp))
+#
+#         self.assertTrue((_array_expected == _array_returned).all())
+#
+#     # from eV to time
+#     def test_conversion_from_ev_to_time_works(self):
+#         """assert conversion from eV to time works"""
+#         _from_units = 'ev'
+#         _to_units = 's'
+#         _array = np.linspace(1, 10)
+#
+#         # error raised if source_detector missing
+#         _offset_us = 5
+#         self.assertRaises(ValueError, convert_x_axis, array=_array,
+#                           from_units=_from_units,
+#                           to_units=_to_units)
+#
+#         _source_to_detector_m = 15
+#         _array_returned = convert_x_axis(array=_array,
+#                                          from_units=_from_units,
+#                                          to_units=_to_units,
+#                                          offset_us=_offset_us,
+#                                          source_to_detector_m=_source_to_detector_m)
+#
+#         time_s = np.sqrt(81.787 / (_array * 1000.)) * _source_to_detector_m / 3956.
+#         time_record_s = time_s - _offset_us * 1e-6
+#         _array_expected = time_record_s
+#         self.assertTrue((_array_expected == _array_returned).all())
+#
+#     # from angstroms to ev
+#     def test_conversion_from_angstroms_to_ev(self):
+#         """assert conversion from angstroms to ev works"""
+#         _from_units = 'angstroms'
+#         _to_units = 'ev'
+#         _array = np.linspace(1, 10)
+#
+#         _array_returned = convert_x_axis(array=_array, from_units=_from_units, to_units=_to_units)
+#         _array_expected = (81.787 / (1000. * _array ** 2))
+#         self.assertTrue((_array_expected == _array_returned).all())
+#
+#     # from eV to anstroms and back to eV
+#     def test_double_conversion_from_ev_to_ev_via_angstroms(self):
+#         """assert double conversion from eV to eV via Anstroms return same array"""
+#         _array = np.linspace(1, 10)
+#         _array_angsroms = convert_x_axis(array=_array, from_units='ev',
+#                                          to_units='Angstroms')
+#         _array_ev = convert_x_axis(array=_array_angsroms, from_units='angstroms',
+#                                    to_units='ev')
+#         # checking one by one every element of the array
+#         for _index in np.arange(len(_array)):
+#             self.assertAlmostEqual(_array[_index], _array_ev[_index], delta=0.0001)
+#
+#     def test_conversion_from_s_to_ev(self):
+#         """assert conversion from s to ev works"""
+#         _from_units = 's'
+#         _to_units = 'ev'
+#         _offset_us = 1
+#         _source_to_detector_m = 15.0
+#         _array = np.linspace(1, 10)
+#         _array_returned = convert_x_axis(array=_array,
+#                                          from_units=_from_units,
+#                                          to_units=_to_units,
+#                                          offset_us=_offset_us,
+#                                          source_to_detector_m=_source_to_detector_m)
+#         lambda_a = 3956. * (_array + _offset_us * 1e-6) / _source_to_detector_m
+#         _array_expected = (81.787 / pow(lambda_a, 2)) / 1000.
+#         # checking one by one every element of the array
+#         for _index in np.arange(len(_array)):
+#             self.assertAlmostEqual(_array_returned[_index], _array_expected[_index], delta=0.0001)
+#
+#     def test_conversion_from_angstroms_to_s(self):
+#         """assert conversion from angstroms to s works"""
+#         _from_units = 'angstroms'
+#         _to_units = 's'
+#         _offset_us = 1
+#         _source_to_detector_m = 15.0
+#         _array = np.linspace(1, 10)
+#         _array_returned = convert_x_axis(array=_array,
+#                                          from_units=_from_units,
+#                                          to_units=_to_units,
+#                                          offset_us=_offset_us,
+#                                          source_to_detector_m=_source_to_detector_m)
+#
+#         _array_expected = (_source_to_detector_m * _array / 3956) + _offset_us * 1e-6
+#         # checking one by one every element of the array
+#         for _index in np.arange(len(_array)):
+#             self.assertAlmostEqual(_array_returned[_index], _array_expected[_index], delta=0.0001)
+#
+#     def test_conversion_from_s_to_angstroms(self):
+#         """assert conversion from s to angstroms works"""
+#         _from_units = 's'
+#         _to_units = 'angstroms'
+#         _offset_us = 1
+#         _source_to_detector_m = 15.0
+#         _array = np.linspace(1, 10)
+#         _array_returned = convert_x_axis(array=_array,
+#                                          from_units=_from_units,
+#                                          to_units=_to_units,
+#                                          offset_us=_offset_us,
+#                                          source_to_detector_m=_source_to_detector_m)
+#
+#         _array_expected = 3956. * (_array + _offset_us * 1e-6) / _source_to_detector_m
+#         # checking one by one every element of the array
+#         for _index in np.arange(len(_array)):
+#             self.assertAlmostEqual(_array_returned[_index], _array_expected[_index], delta=0.0001)
+#
+#
+#
+#             # def test_conversion_from_angstroms_to_ev_works(self):
+#             # """assert conversion from Angsroms to eV works"""
+#             # _from_units = 'angstroms'
+#             # _to_units = 'ev'
+#             # _array = np.linspace(1,10)
+#             # _array_returned = convert_x_axis(array=_array,
+#             # from_units=_from_units,
+#             # to_units=_to_units)
+#             # _array_expected = []
+#             # for _value in _array:
+#             # _tmp = 81.787 / np.float(_value)**2
+#             # _array_expected.append(_tmp / 1000.)
+#
+#             # self.assertEqual(_array_expected, _array_returned)
 
-        _from_units = 'angStrOms'
-        _to_units = 'eV'
-        _array = np.linspace(1, 10)
-        _array_returned = convert_x_axis(array=_array,
-                                         from_units=_from_units,
-                                         to_units=_to_units)
-        self.assertTrue(isinstance(_array_returned, np.ndarray))
-
-        _from_units = 'angStrOms'
-        _to_units = 's'
-        _array = np.linspace(1, 10)
-        _array_returned = convert_x_axis(array=_array,
-                                         from_units=_from_units,
-                                         to_units=_to_units,
-                                         offset_us=1,
-                                         source_to_detector_m=1)
-        self.assertTrue(isinstance(_array_returned, np.ndarray))
-
-    def test_array_not_changed_if_same_units_before_and_after(self):
-        """assert array untouched if from_units is identical to to_units"""
-        _from_units = 'ev'
-        _to_units = 'ev'
-        _array = np.linspace(1, 10)
-        _array_returned = convert_x_axis(array=_array,
-                                         from_units=_from_units,
-                                         to_units=_to_units)
-        self.assertTrue((_array_returned == _array).all())
-
-        _from_units = 'angstroms'
-        _to_units = 'angstroms'
-        _array = np.linspace(1, 10)
-        _array_returned = convert_x_axis(array=_array,
-                                         from_units=_from_units,
-                                         to_units=_to_units)
-        self.assertTrue((_array_returned == _array).all())
-
-        _from_units = 's'
-        _to_units = 's'
-        _array = np.linspace(1, 10)
-        _array_returned = convert_x_axis(array=_array,
-                                         from_units=_from_units,
-                                         to_units=_to_units)
-        self.assertTrue((_array_returned == _array).all())
-
-        # from eV to Angstroms
-
-    def test_conversion_from_ev_to_angstroms_works(self):
-        """assert conversion from eV to Angstroms works"""
-        _from_units = 'ev'
-        _to_units = 'angstroms'
-        _array = np.linspace(1, 10)
-        _array_returned = convert_x_axis(array=_array,
-                                         from_units=_from_units,
-                                         to_units=_to_units)
-        _array_expected = []
-        for _value in _array:
-            _tmp = 81.787 / (np.float(_value) * 1000.)
-            _array_expected.append(np.sqrt(_tmp))
-
-        self.assertTrue((_array_expected == _array_returned).all())
-
-    # from eV to time
-    def test_conversion_from_ev_to_time_works(self):
-        """assert conversion from eV to time works"""
-        _from_units = 'ev'
-        _to_units = 's'
-        _array = np.linspace(1, 10)
-
-        # error raised if source_detector missing
-        _offset_us = 5
-        self.assertRaises(ValueError, convert_x_axis, array=_array,
-                          from_units=_from_units,
-                          to_units=_to_units)
-
-        _source_to_detector_m = 15
-        _array_returned = convert_x_axis(array=_array,
-                                         from_units=_from_units,
-                                         to_units=_to_units,
-                                         offset_us=_offset_us,
-                                         source_to_detector_m=_source_to_detector_m)
-
-        time_s = np.sqrt(81.787 / (_array * 1000.)) * _source_to_detector_m / 3956.
-        time_record_s = time_s - _offset_us * 1e-6
-        _array_expected = time_record_s
-        self.assertTrue((_array_expected == _array_returned).all())
-
-    # from angstroms to ev
-    def test_conversion_from_angstroms_to_ev(self):
-        """assert conversion from angstroms to ev works"""
-        _from_units = 'angstroms'
-        _to_units = 'ev'
-        _array = np.linspace(1, 10)
-
-        _array_returned = convert_x_axis(array=_array, from_units=_from_units, to_units=_to_units)
-        _array_expected = (81.787 / (1000. * _array ** 2))
-        self.assertTrue((_array_expected == _array_returned).all())
-
-    # from eV to anstroms and back to eV
-    def test_double_conversion_from_ev_to_ev_via_angstroms(self):
-        """assert double conversion from eV to eV via Anstroms return same array"""
-        _array = np.linspace(1, 10)
-        _array_angsroms = convert_x_axis(array=_array, from_units='ev',
-                                         to_units='Angstroms')
-        _array_ev = convert_x_axis(array=_array_angsroms, from_units='angstroms',
-                                   to_units='ev')
-        # checking one by one every element of the array
-        for _index in np.arange(len(_array)):
-            self.assertAlmostEqual(_array[_index], _array_ev[_index], delta=0.0001)
-
-    def test_conversion_from_s_to_ev(self):
-        """assert conversion from s to ev works"""
-        _from_units = 's'
-        _to_units = 'ev'
-        _offset_us = 1
-        _source_to_detector_m = 15.0
-        _array = np.linspace(1, 10)
-        _array_returned = convert_x_axis(array=_array,
-                                         from_units=_from_units,
-                                         to_units=_to_units,
-                                         offset_us=_offset_us,
-                                         source_to_detector_m=_source_to_detector_m)
-        lambda_a = 3956. * (_array + _offset_us * 1e-6) / _source_to_detector_m
-        _array_expected = (81.787 / pow(lambda_a, 2)) / 1000.
-        # checking one by one every element of the array
-        for _index in np.arange(len(_array)):
-            self.assertAlmostEqual(_array_returned[_index], _array_expected[_index], delta=0.0001)
-
-    def test_conversion_from_angstroms_to_s(self):
-        """assert conversion from angstroms to s works"""
-        _from_units = 'angstroms'
-        _to_units = 's'
-        _offset_us = 1
-        _source_to_detector_m = 15.0
-        _array = np.linspace(1, 10)
-        _array_returned = convert_x_axis(array=_array,
-                                         from_units=_from_units,
-                                         to_units=_to_units,
-                                         offset_us=_offset_us,
-                                         source_to_detector_m=_source_to_detector_m)
-
-        _array_expected = (_source_to_detector_m * _array / 3956) + _offset_us * 1e-6
-        # checking one by one every element of the array
-        for _index in np.arange(len(_array)):
-            self.assertAlmostEqual(_array_returned[_index], _array_expected[_index], delta=0.0001)
-
-    def test_conversion_from_s_to_angstroms(self):
-        """assert conversion from s to angstroms works"""
-        _from_units = 's'
-        _to_units = 'angstroms'
-        _offset_us = 1
-        _source_to_detector_m = 15.0
-        _array = np.linspace(1, 10)
-        _array_returned = convert_x_axis(array=_array,
-                                         from_units=_from_units,
-                                         to_units=_to_units,
-                                         offset_us=_offset_us,
-                                         source_to_detector_m=_source_to_detector_m)
-
-        _array_expected = 3956. * (_array + _offset_us * 1e-6) / _source_to_detector_m
-        # checking one by one every element of the array
-        for _index in np.arange(len(_array)):
-            self.assertAlmostEqual(_array_returned[_index], _array_expected[_index], delta=0.0001)
-
-
-
-            # def test_conversion_from_angstroms_to_ev_works(self):
-            # """assert conversion from Angsroms to eV works"""
-            # _from_units = 'angstroms'
-            # _to_units = 'ev'
-            # _array = np.linspace(1,10)
-            # _array_returned = convert_x_axis(array=_array, 
-            # from_units=_from_units, 
-            # to_units=_to_units)        
-            # _array_expected = []
-            # for _value in _array:
-            # _tmp = 81.787 / np.float(_value)**2
-            # _array_expected.append(_tmp / 1000.)
-
-            # self.assertEqual(_array_expected, _array_returned)
