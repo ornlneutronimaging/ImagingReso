@@ -54,7 +54,6 @@ def get_list_element_from_database(database=''):
     _list_element = set([_name.split('-')[0].lower() for _name in _list_short_files])
     return _list_element
 
-
 def checking_stack(stack={}, database='ENDF_VIII'):
     """This method makes sure that all the elements from the various stacks are 
     in the database and that the thickness has the correct format (float)
@@ -167,6 +166,7 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
     _database_folder = os.path.join(_file_path, 'reference_data', database)
     _element_search_path = os.path.join(_database_folder, element + '-*.csv')
     list_files = glob.glob(_element_search_path)
+    list_files.sort()
     isotope_dict = {'isotopes': {'list': [],
                                  'file_names': [],
                                  'density': {'value': np.NaN,
