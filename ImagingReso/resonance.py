@@ -28,7 +28,7 @@ class Resonance(object):
     def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001):
         """initialize resonance object
         
-        Paramters:
+        Parameters:
         ==========
         stack: dictionary 
           example: {'layer1': {'elements':['Ag','Si], 
@@ -512,8 +512,8 @@ class Resonance(object):
 
         Parameters:
         ===========
-        :param x_axis: string. x type for export. Must be either 'energy' or 'lambda' or 'time' or 'number'
-        :param y_axis: string. y type for export. Must be either 'transmission' or 'attenuation'
+        :param x_axis: string. x type for export. Must be either ['energy'|'lambda'|'time'|'number']
+        :param y_axis: string. y type for export. Must be either ['transmission'|'attenuation']
         :param mixed: boolean. True -> display the total of each layer
                                False -> not displayed
         :param all_layers: boolean. True -> display all layers
@@ -526,7 +526,7 @@ class Resonance(object):
             ex:
                 [['CoAg','Ag','107-Ag'], ['CoAg']]
             if the dictionary is empty, everything is exported
-        :param time_unit: string. Must be either 's' or 'us' or 'ns'
+        :param time_unit: string. Must be either ['s'|'us'|'ns']
         :param offset_us:
         :param time_resolution_us:
         :param source_to_detector_m:
