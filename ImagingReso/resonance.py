@@ -640,8 +640,7 @@ class Resonance(object):
         plt.legend(loc='best')
         plt.show()
 
-    def export(self, filename='resonance_output.csv',
-               to_csv=False,
+    def export(self, filename=None,
                x_axis='energy',
                y_axis='attenuation',
                all_layers=False,
@@ -656,8 +655,7 @@ class Resonance(object):
         'atoms_per_cm3' of each element is also exported in 'sigma' mode based on molar mass within stack.
 
         :param filename: string. filename (with .csv suffix) you would like to save as
-        :param to_csv: boolean. True -> save as .csv file with name specified
-                                False -> export to clipboard
+                                None -> export to clipboard
         :param x_axis: string. x type for export. Must be either 'energy' or 'lambda' or 'time' or 'number'
         :param y_axis: string. y type for export. Must be either 'transmission' or 'attenuation' or 'sigma'
         :param all_layers: boolean. True -> export all layers
@@ -801,7 +799,7 @@ class Resonance(object):
                     _y_axis = _live_path[y_axis_tag]
                     df[_label] = _y_axis
 
-        if to_csv is True:
-            df.to_csv(filename)
-        else:
+        if filename is None:
             df.to_clipboard(excel=True)
+        else:
+            df.to_csv(filename)
