@@ -640,10 +640,10 @@ class Resonance(object):
         plt.legend(loc='best')
         plt.show()
 
-    def export(self, filename='resonance_output.csv', to_csv=False,
+    def export(self, filename='resonance_output.csv',
+               to_csv=False,
                x_axis='energy',
                y_axis='attenuation',
-               mixed=True,
                all_layers=False,
                all_elements=False,
                all_isotopes=False,
@@ -652,14 +652,14 @@ class Resonance(object):
         """
         output x and y values to clipboard or .csv file
         output the transmission or attenuation or sigma of compound, element and/or isotopes specified
+        'sigma_b' exported for each isotope is the product resulted from (sigma * isotopic ratio)
+        'atoms_per_cm3' of each element is also exported in 'sigma' mode based on molar mass within stack.
 
         :param filename: string. filename (with .csv suffix) you would like to save as
         :param to_csv: boolean. True -> save as .csv file with name specified
                                 False -> export to clipboard
         :param x_axis: string. x type for export. Must be either 'energy' or 'lambda' or 'time' or 'number'
         :param y_axis: string. y type for export. Must be either 'transmission' or 'attenuation' or 'sigma'
-        :param mixed: boolean. True -> export the total of each layer
-                               False -> not export
         :param all_layers: boolean. True -> export all layers
                                     False -> not export
         :param all_elements: boolean. True -> export all elements signal
@@ -735,33 +735,32 @@ class Resonance(object):
         df[x_axis_label] = _x_axis
 
         """Y-axis"""
-        # export transmission or attenuation
         if y_axis is not 'sigma':
+            # export transmission or attenuation
             y_axis_tag = y_axis
-            if mixed:
-                _y_axis = self.total_signal[y_axis_tag]
-                df['Total'] = _y_axis
+            _y_axis = self.total_signal[y_axis_tag]
+            df['Total_'+y_axis_tag] = _y_axis
+            if items_to_export is None:
+                # export based on specified level : layer|element|isotope
+                if all_layers:
+                    for _compound in _stack.keys():
+                        _y_axis = _stack_signal[_compound][y_axis_tag]
+                        df[_compound] = _y_axis
 
-            if all_layers:
-                for _compound in _stack.keys():
-                    _y_axis = _stack_signal[_compound][y_axis_tag]
-                    df[_compound] = _y_axis
+                if all_elements:
+                    for _compound in _stack.keys():
+                        for _element in _stack[_compound]['elements']:
+                            _y_axis = _stack_signal[_compound][_element][y_axis_tag]
+                            df[_compound + '/' + _element] = _y_axis
 
-            if all_elements:
-                for _compound in _stack.keys():
-                    for _element in _stack[_compound]['elements']:
-                        _y_axis = _stack_signal[_compound][_element][y_axis_tag]
-                        df[_compound + '/' + _element] = _y_axis
-
-            if all_isotopes:
-                for _compound in _stack.keys():
-                    for _element in _stack[_compound]['elements']:
-                        for _isotope in _stack[_compound][_element]['isotopes']['list']:
-                            _y_axis = _stack_signal[_compound][_element][_isotope][y_axis_tag]
-                            df[_compound + '/' + _element + '/' + _isotope] = _y_axis
-
-            """Y-axis for specified items_to_export"""
-            if items_to_export is not None:
+                if all_isotopes:
+                    for _compound in _stack.keys():
+                        for _element in _stack[_compound]['elements']:
+                            for _isotope in _stack[_compound][_element]['isotopes']['list']:
+                                _y_axis = _stack_signal[_compound][_element][_isotope][y_axis_tag]
+                                df[_compound + '/' + _element + '/' + _isotope] = _y_axis
+            else:
+                # export specified transmission or attenuation
                 for _path_to_export in items_to_export:
                     _path_to_export = list(_path_to_export)
                     _live_path = _stack_signal
@@ -771,30 +770,22 @@ class Resonance(object):
                         _live_path = _live_path[_item]
                     _y_axis = _live_path[y_axis_tag]
                     df[_label] = _y_axis
-        # export transmission or attenuation
         else:
+            # export sigma
             _stack_sigma = self.stack_sigma
             y_axis_tag = 'sigma_b'
-
-            if all_elements:
+            if items_to_export is None:
                 for _compound in _stack.keys():
                     for _element in _stack[_compound]['elements']:
                         _y_axis = _stack_sigma[_compound][_element][y_axis_tag]
                         df[_compound + '/' + _element + '/atoms_per_cm3'] = _stack[_compound]['atoms_per_cm3'][_element]
                         df[_compound + '/' + _element] = _y_axis
-
-            if all_isotopes:
-                for _compound in _stack.keys():
-                    for _element in _stack[_compound]['elements']:
-                        if all_elements is not True:
-                            df[_compound + '/' + _element + '/atoms_per_cm3'] = _stack[_compound]['atoms_per_cm3'][
-                                _element]
-                        for _isotope in _stack[_compound][_element]['isotopes']['list']:
-                            _y_axis = _stack_sigma[_compound][_element][_isotope][y_axis_tag]
-                            df[_compound + '/' + _element + '/' + _isotope] = _y_axis
-
-            """Y-axis for specified items_to_export"""
-            if items_to_export is not None:
+                        if all_isotopes:
+                            for _isotope in _stack[_compound][_element]['isotopes']['list']:
+                                _y_axis = _stack_sigma[_compound][_element][_isotope][y_axis_tag]
+                                df[_compound + '/' + _element + '/' + _isotope] = _y_axis
+            else:
+                # export specified sigma
                 for _path_to_export in items_to_export:
                     if len(_path_to_export) == 1:
                         raise ValueError(
