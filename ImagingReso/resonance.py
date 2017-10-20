@@ -1,5 +1,4 @@
 import numpy as np
-import numbers
 import os
 import matplotlib.pyplot as plt
 import json

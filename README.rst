@@ -47,6 +47,22 @@ feasible to identify elements and/or isotopes which resonance with
 incident neutrons. However, a dedicated tool for resonance imaging is
 missing, and **ImagingReso** we presented here could fill this gap.
 
+Community guidelines
+--------------------
+
+**How to contribute**
+
+Clone the code to your own machine, make changes and do a pull request.
+We are looking forward to your contribution to this code!
+
+**How to report issues**
+
+Please use 'Issues' tab on Git to submit issue or bug.
+
+**Support**
+
+You can email authors for support.
+
 Installation instructions
 -------------------------
 

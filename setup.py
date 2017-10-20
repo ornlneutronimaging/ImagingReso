@@ -27,6 +27,7 @@ setup(
         'periodictable',
         'pprint',
         'scipy',
+        'matplotlib',
     ],
     dependency_links=[
     ],
