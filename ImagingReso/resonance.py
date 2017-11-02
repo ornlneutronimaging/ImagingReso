@@ -10,8 +10,8 @@ from ImagingReso import _utilities
 class Resonance(object):
     database = 'ENDF_VIII'
 
-    E_MIN = 1e-5
-    E_MAX = 3e3
+    e_min = 1e-5
+    e_max = 3e3
 
     stack = {}  # compound, thickness, atomic_ratio of each layer with isotopes information
     stack_sigma = {}  # all the energy and sigma of the isotopes and compounds
@@ -26,11 +26,11 @@ class Resonance(object):
 
     def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001):
         """initialize resonance object
-        
+
         Parameters:
         ==========
-        stack: dictionary 
-          example: {'layer1': {'elements':['Ag','Si], 
+        stack: dictionary
+          example: {'layer1': {'elements':['Ag','Si],
                                'atomic_ratio': [1, 2],
                                'thickness': {'value': 0.025,
                                              'units': 'mm',
@@ -45,12 +45,12 @@ class Resonance(object):
         """
         self.__element_metadata = {}
 
-        if energy_min < self.E_MIN:
-            raise ValueError("Energy min (eV) must be >= {}".format(self.E_MIN))
+        if energy_min < self.e_min:
+            raise ValueError("Energy min (eV) must be >= {}".format(self.e_min))
         self.energy_min = energy_min
 
-        if energy_max > self.E_MAX:
-            raise ValueError("Energy max (eV) must be <= {}".format(self.E_MAX))
+        if energy_max > self.e_max:
+            raise ValueError("Energy max (eV) must be <= {}".format(self.e_max))
         self.energy_max = energy_max
 
         if energy_min == energy_max:
@@ -75,7 +75,7 @@ class Resonance(object):
 
     def __str__(self):
         """what to display if user does
-        
+
         >>> o_reso = Resolution()
         >>> print(o_reso)
         """
@@ -83,7 +83,7 @@ class Resonance(object):
 
     def __repr__(self):
         """what to display if user does
-        
+
         >>> o_reso = Resolution()
         >>> o_reso
         """
@@ -91,13 +91,13 @@ class Resonance(object):
 
     def add_layer(self, formula='', thickness=np.NaN, density=np.NaN):
         """provide another way to define the layers (stack)
-        
+
         Parameters:
         ===========
         formula: string
            ex: 'CoAg2'
            ex: 'Al'
-        thickness: float (in mm) 
+        thickness: float (in mm)
         density: float (g/cm3)
         """
         if formula == '':
@@ -118,12 +118,12 @@ class Resonance(object):
 
     def get_isotopic_ratio(self, compound='', element=''):
         """returns the list of isotopes for the element of the compound defined with their stoichiometric values
-        
+
         Parameters:
         ===========
         compound: string (default is empty). If empty, all the stoichiometric will be displayed
-        element: string (default is same as compound). 
-        
+        element: string (default is same as compound).
+
         Raises:
         =======
         ValueError if element is not defined in the stack
@@ -146,7 +146,7 @@ class Resonance(object):
 
         # checking compound is valid
         list_compounds = _stack.keys()
-        if not compound in list_compounds:
+        if compound not in list_compounds:
             list_compounds_joined = ', '.join(list_compounds)
             raise ValueError("Compound '{}' could not be find in {}".format(compound, list_compounds_joined))
 
@@ -155,7 +155,7 @@ class Resonance(object):
             # we assume that the element and compounds names matched
             element = compound
         list_element = _stack[compound].keys()
-        if not element in list_element:
+        if element not in list_element:
             list_element_joined = ', '.join(list_element)
             raise ValueError("Element '{}' should be any of those elements: {}".format(element, list_element_joined))
 
@@ -171,13 +171,13 @@ class Resonance(object):
 
     def set_isotopic_ratio(self, compound='', element='', list_ratio=[]):
         """defines the new set of ratio of the compound/element and trigger the calculation to update the density
-        
+
         Parameters:
         ===========
         compound: string (default is ''). Name of compound
-        elememnt: string (defualt is ''). Name of element
+        element: string (default is ''). Name of element
         list_ratio: list (default is []). list of new stoichiometric_ratio
-        
+
         Raises:
         =======
         ValueError if compound does not exist
@@ -187,7 +187,7 @@ class Resonance(object):
         _stack = self.stack
 
         list_compounds = _stack.keys()
-        if not compound in _stack.keys():
+        if compound not in _stack.keys():
             list_compounds_joined = ', '.join(list_compounds)
             raise ValueError("Compound '{}' could not be find in {}".format(compound, list_compounds_joined))
 
@@ -195,7 +195,7 @@ class Resonance(object):
             # we assume that the element and compounds names matched
             element = compound
         list_element = _stack[compound].keys()
-        if not element in list_element:
+        if element not in list_element:
             list_element_joined = ', '.join(list_element)
             raise ValueError("Element '{}' should be any of those elements: {}".format(element, list_element_joined))
 
@@ -213,12 +213,12 @@ class Resonance(object):
 
     def get_density(self, compound='', element=''):
         """returns the list of isotopes for the element of the compound defined with their density
-        
+
         Parameters:
         ===========
         compound: string (default is empty). If empty, all the stoichiometric will be displayed
-        element: string (default is same as compound). 
-        
+        element: string (default is same as compound).
+
         Raises:
         =======
         ValueError if element is not defined in the stack
@@ -239,7 +239,7 @@ class Resonance(object):
 
         # checking compound is valid
         list_compounds = _stack.keys()
-        if not compound in list_compounds:
+        if compound not in list_compounds:
             list_compounds_joined = ', '.join(list_compounds)
             raise ValueError("Compound '{}' could not be find in {}".format(compile, list_compounds_joined))
 
@@ -248,7 +248,7 @@ class Resonance(object):
             # we assume that the element and compounds names matched
             element = compound
         list_element = _stack[compound].keys()
-        if not element in list_element:
+        if element not in list_element:
             list_element_joined = ', '.join(list_element)
             raise ValueError("Element '{}' should be any of those elements: {}".format(element, list_element_joined))
 
@@ -386,7 +386,7 @@ class Resonance(object):
 
         return stack
 
-    def __update_layer_density(self, debug=False):
+    def __update_layer_density(self):
         """calculate or update the layer density"""
         _stack = self.stack
 
@@ -423,7 +423,7 @@ class Resonance(object):
     def __update_density(self, compound='', element=''):
         """Re-calculate the density of the element given due to stoichiometric changes as
         well as the compound density (if density is not locked)
-        
+
         Parameters:
         ===========
         compound: string (default is '') name of compound
@@ -486,9 +486,9 @@ class Resonance(object):
                     stack_sigma[_compound][_element][_iso] = {}
                     _file = os.path.join(_database_folder, _file)
                     _dict = _utilities.get_sigma(database_file_name=_file,
-                                                 E_min=self.energy_min,
-                                                 E_max=self.energy_max,
-                                                 E_step=self.energy_step)
+                                                 e_min=self.energy_min,
+                                                 e_max=self.energy_max,
+                                                 e_step=self.energy_step)
                     stack_sigma[_compound][_element][_iso]['energy_eV'] = _dict['energy_eV']
                     stack_sigma[_compound][_element][_iso]['sigma_b'] = _dict['sigma_b'] * _ratio
 
@@ -504,8 +504,8 @@ class Resonance(object):
         self.stack_sigma = stack_sigma
 
     def plot(self, y_axis='attenuation', x_axis='energy', mixed=True, all_layers=False, all_elements=False,
-             all_isotopes=False, items_to_plot=None, time_unit='us', offset_us=2.99, time_resolution_us=0.16,
-             source_to_detector_m=16.125, lambda_max_angstroms=1, t_start_us=1):
+             all_isotopes=False, items_to_plot=None, time_unit='us', offset_us=0., time_resolution_us=0.16,
+             source_to_detector_m=16., lambda_max_angstroms=1, t_start_us=1):
         # offset delay values is normal 2.99 us with NONE actual MCP delay settings
         """display the transmission or attenuation of compound, element and/or isotopes specified
 
@@ -537,16 +537,16 @@ class Resonance(object):
             raise ValueError("Please specify the x-axis type using one from '['energy', 'lambda', 'time', 'number']'.")
         if time_unit not in ['s', 'us', 'ns']:
             raise ValueError("Please specify the time unit using one from '['s', 'us', 'ns']'.")
-        if y_axis not in ['transmission', 'attenuation']:
+        if y_axis not in ['transmission', 'attenuation', 'sigma']:
             raise ValueError(
-                "Please specify the y-axis type using one from '['transmission', 'attenuation']'.")
-
+                "Please specify the y-axis type using one from '['transmission', 'attenuation', 'sigma']'.")
         # figure size
-        plt.figure(figsize=[8, 8])
+        # plt.figure(figsize=(8, 8))
 
         # stack from self
         _stack_signal = self.stack_signal
         _stack = self.stack
+        _stack_sigma = self.stack_sigma
         _x_axis = self.total_signal['energy_eV']
         x_axis_label = None
 
@@ -596,57 +596,75 @@ class Resonance(object):
         y_axis_tag = y_axis
         if y_axis is 'transmission':
             y_axis_label = 'Neutron Transmission'
-        else:
+        elif y_axis is 'attenuation':
             y_axis_label = 'Neutron Attenuation'
+        else:
+            y_axis_tag = 'sigma_b'
+            y_axis_label = 'Sigma (barns)'
 
         if mixed:
-            _y_axis = self.total_signal[y_axis_tag]
-            plt.plot(_x_axis, _y_axis, label="Total")
+            if y_axis_tag != 'sigma_b':
+                _y_axis = self.total_signal[y_axis_tag]
+                plt.plot(_x_axis, _y_axis, label="Total")
+            else:
+                raise ValueError("Mixed sigma is not supported.")
 
         if all_layers:
             for _compound in _stack.keys():
-                _y_axis = _stack_signal[_compound][y_axis_tag]
-                plt.plot(_x_axis, _y_axis, label=_compound)
+                if y_axis_tag != 'sigma_b':
+                    _y_axis = _stack_signal[_compound][y_axis_tag]
+                    plt.plot(_x_axis, _y_axis, label=_compound)
+                else:
+                    raise ValueError("Layer sigma is not supported.")
 
         if all_elements:
             for _compound in _stack.keys():
                 for _element in _stack[_compound]['elements']:
-                    _y_axis = _stack_signal[_compound][_element][y_axis_tag]
-                    plt.plot(_x_axis, _y_axis, label="{}/{}".format(_compound, _element))
+                    if y_axis_tag != 'sigma_b':
+                        _y_axis = _stack_signal[_compound][_element][y_axis_tag]
+                        plt.plot(_x_axis, _y_axis, label="{}/{}".format(_compound, _element))
+                    else:
+                        _y_axis = _stack_sigma[_compound][_element][y_axis_tag]
+                        plt.plot(_x_axis, _y_axis, label="{}/{}".format(_compound, _element))
 
         if all_isotopes:
             for _compound in _stack.keys():
                 for _element in _stack[_compound]['elements']:
                     for _isotope in _stack[_compound][_element]['isotopes']['list']:
-                        _y_axis = _stack_signal[_compound][_element][_isotope][y_axis_tag]
-                        plt.plot(_x_axis, _y_axis, label="{}/{}/{}".format(_compound, _element, _isotope))
+                        if y_axis_tag != 'sigma_b':
+                            _y_axis = _stack_signal[_compound][_element][_isotope][y_axis_tag]
+                            plt.plot(_x_axis, _y_axis, label="{}/{}/{}".format(_compound, _element, _isotope))
+                        else:
+                            _y_axis = _stack_sigma[_compound][_element][_isotope][y_axis_tag]
+                            plt.plot(_x_axis, _y_axis, label="{}/{}/{}".format(_compound, _element, _isotope))
 
         """Y-axis for specified items_to_plot"""
         if items_to_plot is not None:
             for _path_to_plot in items_to_plot:
                 _path_to_plot = list(_path_to_plot)
-                _live_path = _stack_signal
+                if y_axis_tag != 'sigma_b':
+                    _live_path = _stack_signal
+                else:
+                    _live_path = _stack_sigma
                 _label = "/".join(_path_to_plot)
                 while _path_to_plot:
                     _item = _path_to_plot.pop(0)
                     _live_path = _live_path[_item]
+
                 _y_axis = _live_path[y_axis_tag]
                 plt.plot(_x_axis, _y_axis, label=_label)
 
-        plt.ylim(-0.01, 1.01)
+        if y_axis_tag != 'sigma_b':
+            plt.ylim(-0.01, 1.01)
         plt.xlabel(x_axis_label)
         plt.ylabel(y_axis_label)
         plt.legend(loc='best')
         plt.show()
 
-    def export(self, filename=None,
-               x_axis='energy',
-               y_axis='attenuation',
-               all_layers=False,
-               all_elements=False,
-               all_isotopes=False,
-               items_to_export=None, time_unit='us',
-               offset_us=2.99, time_resolution_us=0.16, source_to_detector_m=16.125, t_start_us=1):
+    def export(self, filename=None, x_axis='energy', y_axis='attenuation',
+               all_layers=False, all_elements=False, all_isotopes=False, items_to_export=None,
+               offset_us=0., source_to_detector_m=16.,
+               t_start_us=1, time_resolution_us=0.16, time_unit='us'):
         """
         output x and y values to clipboard or .csv file
         output the transmission or attenuation or sigma of compound, element and/or isotopes specified
@@ -736,7 +754,7 @@ class Resonance(object):
             # export transmission or attenuation
             y_axis_tag = y_axis
             _y_axis = self.total_signal[y_axis_tag]
-            df['Total_'+y_axis_tag] = _y_axis
+            df['Total_' + y_axis_tag] = _y_axis
             if items_to_export is None:
                 # export based on specified level : layer|element|isotope
                 if all_layers:

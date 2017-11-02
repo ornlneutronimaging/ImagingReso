@@ -406,7 +406,7 @@ class TestGetterSetter(unittest.TestCase):
 
         # stoichiometric ratio
 
-    def test_retrieve_stoichiometric_of_UO3_sample(self):
+    def test_retrieve_stoichiometric_of_uo3_sample(self):
         """assert retrieve stoichiometric work for complex sample such as UO3"""
         o_reso = Resonance()
         o_reso.add_layer(formula='UO3', thickness=0.25, density=0.5)

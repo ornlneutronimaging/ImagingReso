@@ -285,9 +285,9 @@ class TestUtilities_2(unittest.TestCase):
         """assert get_interpolated_data returns the correct dictionary of x_axis and y_axis"""
         file_name = os.path.join(self.database_path, 'Ag-107.csv')
         df = get_database_data(file_name=file_name)
-        E_min = 300
-        E_max = 600
-        _dict = get_interpolated_data(df=df, E_min=E_min, E_max=E_max, E_step=10)
+        e_min = 300
+        e_max = 600
+        _dict = get_interpolated_data(df=df, e_min=e_min, e_max=e_max, e_step=10)
 
         # first value
         x_axis_0_returned = _dict['x_axis'][0]
@@ -308,9 +308,9 @@ class TestUtilities_2(unittest.TestCase):
     def test_get_sigma(self):
         """assert get_sigma returns the correct dictionary of energy and sigma keys"""
         file_name = os.path.join(self.database_path, 'Ag-107.csv')
-        _dict_returned = get_sigma(database_file_name=file_name, E_min=300,
-                                   E_max=600,
-                                   E_step=10)
+        _dict_returned = get_sigma(database_file_name=file_name, e_min=300,
+                                   e_max=600,
+                                   e_step=10)
 
         # first value
         energy_0_returned = _dict_returned['energy_eV'][0]

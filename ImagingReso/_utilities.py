@@ -54,6 +54,7 @@ def get_list_element_from_database(database=''):
     _list_element = set([_name.split('-')[0].lower() for _name in _list_short_files])
     return _list_element
 
+
 def checking_stack(stack={}, database='ENDF_VIII'):
     """This method makes sure that all the elements from the various stacks are 
     in the database and that the thickness has the correct format (float)
@@ -292,45 +293,45 @@ def get_database_data(file_name=''):
     return df
 
 
-def get_interpolated_data(df=pd.DataFrame, E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
-    """return the interpolated x and y axis for the given x range [E_min, E_max] with step defined
-    
+def get_interpolated_data(df=pd.DataFrame, e_min=np.NaN, e_max=np.NaN, e_step=np.NaN):
+    """return the interpolated x and y axis for the given x range [e_min, e_max] with step defined
+
     Parameters:
     ===========
-    df: data frame 
-    E_min: left range of new interpolated data
-    E_max: right range of new interpolated data
-    E_step: step of energy to use in interpolated data
-    
+    df: data frame
+    e_min: left range of new interpolated data
+    e_max: right range of new interpolated data
+    e_step: step of energy to use in interpolated data
+
     Returns:
     ========
     x_axis and y_axis of interpolated data over specified range
     """
-    nbr_point = int((E_max - E_min) / E_step + 1)
-    x_axis = np.linspace(E_min, E_max, nbr_point)
+    nbr_point = int((e_max - e_min) / e_step + 1)
+    x_axis = np.linspace(e_min, e_max, nbr_point)
     y_axis_function = interp1d(x=df['E_eV'], y=df['Sig_b'], kind='linear')
     y_axis = y_axis_function(x_axis)
 
     return {'x_axis': x_axis, 'y_axis': y_axis}
 
 
-def get_sigma(database_file_name='', E_min=np.NaN, E_max=np.NaN, E_step=np.NaN):
+def get_sigma(database_file_name='', e_min=np.NaN, e_max=np.NaN, e_step=np.NaN):
     """retrieve the Energy and sigma axis for the given isotope
-    
+
     Paramters:
     ==========
     database_file_name: string
-    E_min: left range of new interpolated data
-    E_max: right range of new interpolated data
-    E_step: step of energy to use in interpolated data
-    
+    e_min: left range of new interpolated data
+    e_max: right range of new interpolated data
+    e_step: step of energy to use in interpolated data
+
     Returns:
     ========
     {'energy': np.array(), 'sigma': np.array}
     """
     _df = get_database_data(file_name=database_file_name)
-    _dict = get_interpolated_data(df=_df, E_min=E_min, E_max=E_max,
-                                  E_step=E_step)
+    _dict = get_interpolated_data(df=_df, e_min=e_min, e_max=e_max,
+                                  e_step=e_step)
     return {'energy_eV': _dict['x_axis'],
             'sigma_b': _dict['y_axis']}
 
