@@ -477,6 +477,7 @@ class Resonance(object):
                 _list_file_names = _stack[_compound][_element]['isotopes']['file_names']
                 _list_isotopic_ratio = _stack[_compound][_element]['isotopes']['isotopic_ratio']
                 _iso_file_ratio = zip(_list_isotopes, _list_file_names, _list_isotopic_ratio)
+                stack_sigma[_compound][_element]['isotopic_ratio'] = _list_isotopic_ratio
 
                 # _dict_sigma_isotopes_sum = {}
                 _sigma_all_isotopes = 0
@@ -491,6 +492,7 @@ class Resonance(object):
                                                  e_step=self.energy_step)
                     stack_sigma[_compound][_element][_iso]['energy_eV'] = _dict['energy_eV']
                     stack_sigma[_compound][_element][_iso]['sigma_b'] = _dict['sigma_b'] * _ratio
+                    stack_sigma[_compound][_element][_iso]['sigma_b_raw'] = _dict['sigma_b']
 
                     # sigma for all isotopes with their isotopic ratio
                     _sigma_all_isotopes += _dict['sigma_b'] * _ratio
