@@ -55,7 +55,7 @@ def get_list_element_from_database(database=''):
     return _list_element
 
 
-def checking_stack(stack={}, database='ENDF_VIII'):
+def checking_stack(stack, database='ENDF_VIII'):
     """This method makes sure that all the elements from the various stacks are 
     in the database and that the thickness has the correct format (float)
     
@@ -432,7 +432,7 @@ def set_distance_units(value=np.NaN, from_units='mm', to_units='cm'):
     return coeff * value
 
 
-def ev_to_angstroms(array=[]):
+def ev_to_angstroms(array):
     """convert into lambda from the energy array
 
     Parameters:
@@ -446,7 +446,7 @@ def ev_to_angstroms(array=[]):
     return np.sqrt(81.787 / (array * 1000.))  # 1000 is used to convert eV to meV
 
 
-def angstroms_to_ev(array=[]):
+def angstroms_to_ev(array):
     """convert lambda array in angstroms to energy in eV
     
     Parameters:
@@ -460,7 +460,7 @@ def angstroms_to_ev(array=[]):
     return 81.787 / (1000. * array ** 2)  # 1000 is used to convert meV to eV
 
 
-def ev_to_s(offset_us, source_to_detector_m, array=[]):
+def ev_to_s(offset_us, source_to_detector_m, array):
     # delay values is normal 2.99 us with NONE actual MCP delay settings
     """convert energy (eV) to time (us)
 
@@ -480,7 +480,7 @@ def ev_to_s(offset_us, source_to_detector_m, array=[]):
     return time_record_s
 
 
-def s_to_ev(offset_us, source_to_detector_m, array=[]):
+def s_to_ev(offset_us, source_to_detector_m, array):
     """convert time (s) to energy (eV)
     Parameters:
     ===========
@@ -496,7 +496,7 @@ def s_to_ev(offset_us, source_to_detector_m, array=[]):
     return (81.787 / pow(lambda_a, 2)) / 1000.  # 1000 is used to convert meV to eV
 
 
-def angstroms_to_s(offset_us, source_to_detector_m, array=[]):
+def angstroms_to_s(offset_us, source_to_detector_m, array):
     """convert array in angstroms into s
 
     Parameters:
@@ -512,7 +512,7 @@ def angstroms_to_s(offset_us, source_to_detector_m, array=[]):
     return (source_to_detector_m * array / 3956.) - offset_us * 1e-6
 
 
-def s_to_angstroms(offset_us, source_to_detector_m, array=[]):
+def s_to_angstroms(offset_us, source_to_detector_m, array):
     """convert s to angstroms arrays
 
     Parameters:
@@ -528,7 +528,7 @@ def s_to_angstroms(offset_us, source_to_detector_m, array=[]):
     return 3956. * (array + offset_us * 1e-6) / source_to_detector_m
 
 
-def ev_to_image_number(offset_us, source_to_detector_m, time_resolution_us, t_start_us, array=[],):
+def ev_to_image_number(offset_us, source_to_detector_m, time_resolution_us, t_start_us, array):
     # delay values is normal 2.99 us with NONE actual MCP delay settings
     """convert energy (eV) to image numbers (#)
 

@@ -661,6 +661,7 @@ class Resonance(object):
         plt.xlabel(x_axis_label)
         plt.ylabel(y_axis_label)
         plt.legend(loc='best')
+        plt.tight_layout()
         plt.show()
 
     def export(self, filename=None, x_axis='energy', y_axis='attenuation',
