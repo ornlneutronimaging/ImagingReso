@@ -664,7 +664,7 @@ class Resonance(object):
         plt.tight_layout()
         plt.show()
 
-    def export(self, filename=None, x_axis='energy', y_axis='attenuation',
+    def export(self, filename=None, x_axis='energy', y_axis='attenuation', mixed=False,
                all_layers=False, all_elements=False, all_isotopes=False, items_to_export=None,
                offset_us=0., source_to_detector_m=16.,
                t_start_us=1, time_resolution_us=0.16, time_unit='us'):
@@ -674,6 +674,8 @@ class Resonance(object):
         'sigma_b' exported for each isotope is the product resulted from (sigma * isotopic ratio)
         'atoms_per_cm3' of each element is also exported in 'sigma' mode based on molar mass within stack.
 
+        :param mixed:
+        :type mixed:
         :param filename: string. filename (with .csv suffix) you would like to save as
                                 None -> export to clipboard
         :param x_axis: string. x type for export. Must be either 'energy' or 'lambda' or 'time' or 'number'
@@ -756,8 +758,9 @@ class Resonance(object):
         if y_axis is not 'sigma':
             # export transmission or attenuation
             y_axis_tag = y_axis
-            _y_axis = self.total_signal[y_axis_tag]
-            df['Total_' + y_axis_tag] = _y_axis
+            if mixed:
+                _y_axis = self.total_signal[y_axis_tag]
+                df['Total_' + y_axis_tag] = _y_axis
             if items_to_export is None:
                 # export based on specified level : layer|element|isotope
                 if all_layers:
@@ -819,6 +822,8 @@ class Resonance(object):
                     _y_axis = _live_path[y_axis_tag]
                     df[_label] = _y_axis
 
+        if len(df.columns) <= 1:
+            raise ValueError("No y values have been selected to export!")
         if filename is None:
             df.to_clipboard(excel=True)
         else:
