@@ -1,5 +1,4 @@
 from ImagingReso.resonance import Resonance
-import numpy as np
 import pprint
 # Global parameters
 _energy_min = 1
