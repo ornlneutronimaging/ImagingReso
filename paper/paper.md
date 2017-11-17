@@ -15,7 +15,6 @@ affiliations:
    index: 1
    
 date: 17 November 2017
-output: html_document
 bibliography: paper.bib
 ---
 
