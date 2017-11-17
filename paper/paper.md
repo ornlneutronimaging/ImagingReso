@@ -51,7 +51,7 @@ is currently supported and more evaluated databases will be added in the future.
 The neutron transmission calculation algorithm of neutron transmission *T*(*E*), 
 is base on Beer-Lambert law [@Ooi2013;@Tremsin2017;@Zhang2017]:
 
-[Figure_1](https://github.com/ornlneutronimaging/ImagingReso/blob/master/documentation/source/_static/Beer_lambert_law_1.png)
+![Figure_1](https://github.com/ornlneutronimaging/ImagingReso/blob/master/documentation/source/_static/Beer_lambert_law_1.png)
 
 *N<sub>i</sub>* : number of atoms per unit volume of element *i*, 
 
@@ -63,7 +63,7 @@ is base on Beer-Lambert law [@Ooi2013;@Tremsin2017;@Zhang2017]:
 
 For solid materials the number of atoms per unit volume can be calculated from:
 
-[Figure_2](https://github.com/ornlneutronimaging/ImagingReso/blob/master/documentation/source/_static/Beer_lambert_law_2.png)
+![Figure_2](https://github.com/ornlneutronimaging/ImagingReso/blob/master/documentation/source/_static/Beer_lambert_law_2.png)
 
 *N<sub>A</sub>* : Avogadro’s number,
 
