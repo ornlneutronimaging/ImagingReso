@@ -29,6 +29,7 @@ Welcome to ImagingReso's documentation!
    
    introduction
    tutorial
+   publication
    acknowledgement
 
 Indices and tables
