@@ -14,7 +14,8 @@ affiliations:
  - name: Oak Ridge National Laboratory
    index: 1
    
-date: 7 September 2017
+date: 17 November 2017
+output: html_document
 bibliography: paper.bib
 ---
 
@@ -50,7 +51,7 @@ is currently supported and more evaluated databases will be added in the future.
 The neutron transmission calculation algorithm of neutron transmission *T*(*E*), 
 is base on Beer-Lambert law [@Ooi2013;@Tremsin2017;@Zhang2017]:
 
-<img src="documentation/source/_static/Beer_lambert_law_1.png" width=504 height=80 />
+[Figure_1](https://github.com/ornlneutronimaging/ImagingReso/blob/master/documentation/source/_static/Beer_lambert_law_1.png)
 
 *N<sub>i</sub>* : number of atoms per unit volume of element *i*, 
 
@@ -62,7 +63,7 @@ is base on Beer-Lambert law [@Ooi2013;@Tremsin2017;@Zhang2017]:
 
 For solid materials the number of atoms per unit volume can be calculated from:
 
-<img src="documentation/source/_static/Beer_lambert_law_2.png" width=244 height=80 />
+[Figure_2](https://github.com/ornlneutronimaging/ImagingReso/blob/master/documentation/source/_static/Beer_lambert_law_2.png)
 
 *N<sub>A</sub>* : Avogadro’s number,
 
