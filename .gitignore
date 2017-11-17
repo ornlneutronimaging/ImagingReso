@@ -45,6 +45,6 @@ MANIFEST
 .idea/**/sqlDataSources.xml
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
-#.idea
+.idea
 
 ImagingReso/plot_various_x_axis.py
