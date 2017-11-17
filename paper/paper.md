@@ -39,7 +39,7 @@ online database. [Evaluated Nuclear Data File
 (ENDF/B)](http://www.nndc.bnl.gov/exfor/endf00.jsp) [@Chadwick2011] is currently
 supported and more evaluated databases will be added in future.
 
-Python packages used are: SciPy [@Oliphant2007], NumPy [@Stéfan van der Walt2011], 
+Python packages used are: SciPy [@Oliphant2007], NumPy [@Stefan2011], 
 Matplotlib [@Hunter2007], Pandas [@McKinney2010] and Periodictable [@kienzle_p_a_2017_840347].
 
 The energy dependent cross-section data used in this library are from 
