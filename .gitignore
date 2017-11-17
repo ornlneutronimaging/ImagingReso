@@ -28,7 +28,7 @@ MANIFEST
 # User-specific stuff:
 .idea/**/tasks.xml
 .idea/dictionaries
-.idea/**/ResoFit.iml
+.idea/**/ImagingReso.iml
 .idea/preferred-vcs.xml
 # User-specific stuff:
 .idea/**/workspace.xml
