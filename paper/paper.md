@@ -53,6 +53,8 @@ is base on Beer-Lambert law [@Ooi2013;@Tremsin2017;@Zhang2017]:
 
 ![Figure_1](https://github.com/ornlneutronimaging/ImagingReso/blob/master/documentation/source/_static/Beer_lambert_law_1.png)
 
+![Figure_1](http://latex.codecogs.com/gif.latex?%24%24T%5Cleft%28%20E%20%5Cright%29%20%3D%5Cfrac%20%7B%20I%5Cleft%28%20E%20%5Cright%29%20%7D%7B%20%7B%20I%20%7D_%7B%200%20%7D%5Cleft%28%20E%20%5Cright%29%20%7D%20%3Dexp%5Cleft%5B%20-%5Csum%5Cnolimits_i%20%7B%20%7B%20N%20%7D_%7B%20i%20%7D%7B%20d%20%7D_%7B%20i%20%7D%20%7D%20%5Csum%5Cnolimits_j%20%7B%20%7B%20%5Csigma%20%7D_%7B%20ij%20%7D%5Cleft%28%20E%20%5Cright%29%20%7B%20A%20%7D_%7B%20ij%20%7D%20%7D%20%5Cright%5D%24%24)
+
 *N<sub>i</sub>* : number of atoms per unit volume of element *i*, 
 
 *d<sub>i</sub>* : effective thickness along the neutron path of element *i*,
