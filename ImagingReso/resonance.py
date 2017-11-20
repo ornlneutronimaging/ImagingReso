@@ -664,7 +664,7 @@ class Resonance(object):
         plt.tight_layout()
         plt.show()
 
-    def export(self, filename=None, x_axis='energy', y_axis='attenuation', mixed=False,
+    def export(self, filename=None, x_axis='energy', y_axis='attenuation', mixed=True,
                all_layers=False, all_elements=False, all_isotopes=False, items_to_export=None,
                offset_us=0., source_to_detector_m=16.,
                t_start_us=1, time_resolution_us=0.16, time_unit='us'):
