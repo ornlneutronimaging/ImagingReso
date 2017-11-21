@@ -505,7 +505,8 @@ class Resonance(object):
 
         self.stack_sigma = stack_sigma
 
-    def plot(self, y_axis='attenuation', x_axis='energy', x_in_log=False, y_in_log=False,
+    def plot(self, y_axis='attenuation', x_axis='energy',
+             x_in_log=False, y_in_log=False,
              mixed=True, all_layers=False, all_elements=False,
              all_isotopes=False, items_to_plot=None, time_unit='us', offset_us=0., time_resolution_us=0.16,
              source_to_detector_m=16., lambda_max_angstroms=1, t_start_us=1):
@@ -516,10 +517,10 @@ class Resonance(object):
         ===========
         :param x_axis: string. x type for export. Must be either ['energy'|'lambda'|'time'|'number']
         :param y_axis: string. y type for export. Must be either ['transmission'|'attenuation']
-        :param x_in_log:
-        :type x_in_log:
-        :param y_in_log:
-        :type y_in_log:
+        :param x_in_log: True -> display x in log scale
+        :type x_in_log: boolean.
+        :param y_in_log: True -> display y in log scale
+        :type y_in_log: boolean.
         :param mixed: boolean. True -> display the total of each layer
                                False -> not displayed
         :param all_layers: boolean. True -> display all layers
