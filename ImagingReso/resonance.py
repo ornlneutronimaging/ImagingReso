@@ -505,7 +505,8 @@ class Resonance(object):
 
         self.stack_sigma = stack_sigma
 
-    def plot(self, y_axis='attenuation', x_axis='energy', mixed=True, all_layers=False, all_elements=False,
+    def plot(self, y_axis='attenuation', x_axis='energy', x_in_log=False, y_in_log=False,
+             mixed=True, all_layers=False, all_elements=False,
              all_isotopes=False, items_to_plot=None, time_unit='us', offset_us=0., time_resolution_us=0.16,
              source_to_detector_m=16., lambda_max_angstroms=1, t_start_us=1):
         # offset delay values is normal 2.99 us with NONE actual MCP delay settings
@@ -515,6 +516,10 @@ class Resonance(object):
         ===========
         :param x_axis: string. x type for export. Must be either ['energy'|'lambda'|'time'|'number']
         :param y_axis: string. y type for export. Must be either ['transmission'|'attenuation']
+        :param x_in_log:
+        :type x_in_log:
+        :param y_in_log:
+        :type y_in_log:
         :param mixed: boolean. True -> display the total of each layer
                                False -> not displayed
         :param all_layers: boolean. True -> display all layers
@@ -596,16 +601,16 @@ class Resonance(object):
         # determine to plot transmission or attenuation
         # determine to put transmission or attenuation words for y-axis
         y_axis_tag = y_axis
-        if y_axis is 'transmission':
+        if y_axis == 'transmission':
             y_axis_label = 'Neutron Transmission'
-        elif y_axis is 'attenuation':
+        elif y_axis == 'attenuation':
             y_axis_label = 'Neutron Attenuation'
-        else:
+        else:  # y_axis == 'sigma'
             y_axis_tag = 'sigma_b'
             y_axis_label = 'Sigma (barns)'
 
         if mixed:
-            if y_axis_tag != 'sigma_b':
+            if y_axis_tag[:5] != 'sigma':
                 _y_axis = self.total_signal[y_axis_tag]
                 plt.plot(_x_axis, _y_axis, label="Total")
             else:
@@ -613,7 +618,7 @@ class Resonance(object):
 
         if all_layers:
             for _compound in _stack.keys():
-                if y_axis_tag != 'sigma_b':
+                if y_axis_tag[:5] != 'sigma':
                     _y_axis = _stack_signal[_compound][y_axis_tag]
                     plt.plot(_x_axis, _y_axis, label=_compound)
                 else:
@@ -622,7 +627,7 @@ class Resonance(object):
         if all_elements:
             for _compound in _stack.keys():
                 for _element in _stack[_compound]['elements']:
-                    if y_axis_tag != 'sigma_b':
+                    if y_axis_tag[:5] != 'sigma':
                         _y_axis = _stack_signal[_compound][_element][y_axis_tag]
                         plt.plot(_x_axis, _y_axis, label="{}/{}".format(_compound, _element))
                     else:
@@ -633,7 +638,7 @@ class Resonance(object):
             for _compound in _stack.keys():
                 for _element in _stack[_compound]['elements']:
                     for _isotope in _stack[_compound][_element]['isotopes']['list']:
-                        if y_axis_tag != 'sigma_b':
+                        if y_axis_tag[:5] != 'sigma':
                             _y_axis = _stack_signal[_compound][_element][_isotope][y_axis_tag]
                             plt.plot(_x_axis, _y_axis, label="{}/{}/{}".format(_compound, _element, _isotope))
                         else:
@@ -658,6 +663,10 @@ class Resonance(object):
 
         if y_axis_tag != 'sigma_b':
             plt.ylim(-0.01, 1.01)
+        if y_in_log is True:
+            plt.yscale('log')
+        if x_in_log is True:
+            plt.xscale('log')
         plt.xlabel(x_axis_label)
         plt.ylabel(y_axis_label)
         plt.legend(loc='best')
@@ -755,7 +764,7 @@ class Resonance(object):
         df[x_axis_label] = _x_axis
 
         """Y-axis"""
-        if y_axis is not 'sigma':
+        if y_axis != 'sigma':
             # export transmission or attenuation
             y_axis_tag = y_axis
             if mixed:
