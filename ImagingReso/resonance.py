@@ -8,7 +8,7 @@ from ImagingReso import _utilities
 
 
 class Resonance(object):
-    database = 'ENDF_VIII'
+    # database = 'ENDF_VIII'
 
     e_min = 1e-5
     e_max = 3e3
@@ -24,7 +24,7 @@ class Resonance(object):
     energy_min = np.NaN
     energy_step = np.NaN
 
-    def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001):
+    def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001, database='ENDF_VIII'):
         """initialize resonance object
 
         Parameters:
@@ -43,6 +43,7 @@ class Resonance(object):
         energy_min: float (default 0) min energy in eV to use in calculation
         energy_step: float (default 0.1) energy step to use in extrapolation of sigma data
         """
+        self.database = database
         self.__element_metadata = {}
 
         if energy_min < self.e_min:
@@ -63,7 +64,7 @@ class Resonance(object):
 
         if not stack == {}:
             # checking that every element of each stack is defined
-            _utilities.checking_stack(stack=stack)
+            _utilities.checking_stack(stack=stack,database=self.database)
             new_stack = self.__update_stack_with_isotopes_infos(stack=stack)
             self.stack = new_stack
 
@@ -484,6 +485,7 @@ class Resonance(object):
                 _energy_all_isotpes = 0
 
                 for _iso, _file, _ratio in _iso_file_ratio:
+                    print(_iso, _file, _ratio, _iso_file_ratio)
                     stack_sigma[_compound][_element][_iso] = {}
                     _file = os.path.join(_database_folder, _file)
                     _dict = _utilities.get_sigma(database_file_name=_file,

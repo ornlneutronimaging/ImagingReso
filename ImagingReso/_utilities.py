@@ -7,6 +7,7 @@ import periodictable as pt
 import pandas as pd
 from scipy.interpolate import interp1d
 from scipy.constants import Avogadro
+import openmc.data
 
 
 def is_element_in_database(element='', database='ENDF_VIII'):
@@ -26,7 +27,8 @@ def is_element_in_database(element='', database='ENDF_VIII'):
         return False
 
     list_entry_from_database = get_list_element_from_database(database=database)
-    if element.lower() in list_entry_from_database:
+    # if element.lower() in list_entry_from_database:
+    if element in list_entry_from_database:
         return True
     return False
 
@@ -49,9 +51,17 @@ def get_list_element_from_database(database=''):
     if not os.path.exists(_database_folder):
         raise ValueError("Database {} does not exist!".format(database))
 
-    _list_files = glob.glob(_database_folder + '/*.csv')
+    # _list_files = glob.glob(_database_folder + '/*.csv')
+    _list_files = glob.glob(_database_folder + '/*.h5')
     _list_short_files = [os.path.basename(_file) for _file in _list_files]
-    _list_element = set([_name.split('-')[0].lower() for _name in _list_short_files])
+    # _list_element = set([_name.split('-')[0].lower() for _name in _list_short_files])
+    _list_name = list(set([re.findall('\d+|\D+', _name)[0] for _name in _list_short_files]))
+    _list_element = []
+    for _name in _list_name:
+        if len(_name) <= 2:
+            _list_element.append(_name)
+
+    print(_list_element)
     return _list_element
 
 
@@ -77,7 +87,7 @@ def checking_stack(stack, database='ENDF_VIII'):
     for _keys in stack:
         _elements = stack[_keys]['elements']
         for _element in _elements:
-            if not is_element_in_database(element=_element):
+            if not is_element_in_database(element=_element, database=database):
                 raise ValueError("Element {} can not be found in the database".format(_element))
 
         _thickness = stack[_keys]['thickness']['value']
@@ -329,11 +339,20 @@ def get_sigma(database_file_name='', e_min=np.NaN, e_max=np.NaN, e_step=np.NaN):
     ========
     {'energy': np.array(), 'sigma': np.array}
     """
-    _df = get_database_data(file_name=database_file_name)
-    _dict = get_interpolated_data(df=_df, e_min=e_min, e_max=e_max,
-                                  e_step=e_step)
-    return {'energy_eV': _dict['x_axis'],
-            'sigma_b': _dict['y_axis']}
+    _reactions = openmc.data.IncidentNeutron.from_hdf5(database_file_name)
+    total_xs = _reactions[1].xs['294K']
+    nbr_point = int((e_max - e_min) / e_step + 1)
+    x_axis = np.linspace(e_min, e_max, nbr_point)
+    y_axis = total_xs(x_axis)
+    return {'energy_eV': x_axis,
+            'sigma_b': y_axis}
+
+    # _df = get_database_data(file_name=database_file_name)
+
+    # _dict = get_interpolated_data(df=_df, e_min=e_min, e_max=e_max,
+    #                               e_step=e_step)
+    # return {'energy_eV': _dict['x_axis'],
+    #         'sigma_b': _dict['y_axis']}
 
 
 def get_atoms_per_cm3_of_layer(compound_dict={}):
