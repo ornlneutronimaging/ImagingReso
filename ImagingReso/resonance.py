@@ -485,7 +485,6 @@ class Resonance(object):
                 _energy_all_isotpes = 0
 
                 for _iso, _file, _ratio in _iso_file_ratio:
-                    print(_iso, _file, _ratio, _iso_file_ratio)
                     stack_sigma[_compound][_element][_iso] = {}
                     _file = os.path.join(_database_folder, _file)
                     _dict = _utilities.get_sigma(database_file_name=_file,
