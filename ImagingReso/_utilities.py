@@ -353,16 +353,17 @@ def get_database_data(file_name=''):
 def get_interpolated_data(df=pd.DataFrame, e_min=np.NaN, e_max=np.NaN, e_step=np.NaN):
     """return the interpolated x and y axis for the given x range [e_min, e_max] with step defined
 
-    Parameters:
-    ===========
-    df: data frame
-    e_min: left range of new interpolated data
-    e_max: right range of new interpolated data
-    e_step: step of energy to use in interpolated data
+    :param df: input data frame
+    :type df: pandas.DataFrame
+    :param e_min: left energy range in eV of new interpolated data
+    :type e_min: float
+    :param e_max: right energy range in eV of new interpolated data
+    :type e_max: float
+    :param e_step: energy step in eV for interpolation
+    :type e_step: float
 
-    Returns:
-    ========
-    x_axis and y_axis of interpolated data over specified range
+    :return: x_axis and y_axis of interpolated data over specified range
+    :rtype: dict
     """
     nbr_point = int((e_max - e_min) / e_step + 1)
     x_axis = np.linspace(e_min, e_max, nbr_point)
@@ -372,95 +373,84 @@ def get_interpolated_data(df=pd.DataFrame, e_min=np.NaN, e_max=np.NaN, e_step=np
     return {'x_axis': x_axis, 'y_axis': y_axis}
 
 
-def get_sigma(database_file_name='', e_min=np.NaN, e_max=np.NaN, e_step=np.NaN):
+def get_sigma(database_file_name='', e_min=np.NaN, e_max=np.NaN, e_step=np.NaN, t_kelvin=None):
     """retrieve the Energy and sigma axis for the given isotope
 
-    Paramters:
-    ==========
-    database_file_name: string
-    e_min: left range of new interpolated data
-    e_max: right range of new interpolated data
-    e_step: step of energy to use in interpolated data
+    :param database_file_name: path/to/file with extension
+    :type database_file_name: string
+    :param e_min: left energy range in eV of new interpolated data
+    :type e_min: float
+    :param e_max: right energy range in eV of new interpolated data
+    :type e_max: float
+    :param e_step: energy step in eV for interpolation
+    :type e_step: float
+    :param t_kelvin: temperature in Kelvin
+    :type t_kelvin: float
 
-    Returns:
-    ========
-    {'energy': np.array, 'sigma': np.array}
+    :return: {'energy': np.array, 'sigma': np.array}
+    :rtype: dict
     """
+
     file_extension = os.path.splitext(database_file_name)[1]
 
-    # '.h5' files
-    if file_extension == '.h5':
-        dir_to_read = os.path.dirname(database_file_name)
-        basename = os.path.basename(database_file_name)
-        name_no_extension = os.path.splitext(basename)[0]
-        _split = re.split(r'(\d+)', name_no_extension)
-        name_only = _split[0]
-        aaa = _split[1]
-        filename_to_save = name_only + '-' + aaa
-
-        if len(_split) == 5:
-            meta_str = _split[2] + _split[3]
-            filename_to_save += meta_str
-
-        dir_to_save = os.path.join(dir_to_read, 'cached_csv')
-        if not os.path.exists(dir_to_save):
-            os.makedirs(dir_to_save)
-
-        fullpath_to_save = os.path.join(dir_to_save, filename_to_save + '.csv')
-        if os.path.exists(fullpath_to_save):
-            _df = get_database_data(file_name=filename_to_save)
+    if t_kelvin is None:
+        # '.csv' files
+        if file_extension != '.csv':
+            raise IOError("Cross-section File type must be '.csv'")
+        else:
+            _df = get_database_data(file_name=database_file_name)
             _dict = get_interpolated_data(df=_df, e_min=e_min, e_max=e_max,
                                           e_step=e_step)
             return {'energy_eV': _dict['x_axis'],
                     'sigma_b': _dict['y_axis']}
+    else:
+        raise ValueError("Doppler broadened cross-section in not yet supported in current version.")
 
-        else:
-            _reactions = openmc.data.IncidentNeutron.from_hdf5(database_file_name)
-            total_xs = _reactions[1].xs['294K']
-            nbr_point = int((e_max - e_min) / e_step + 1)
-            x_axis = np.linspace(e_min, e_max, nbr_point)
-            y_axis = total_xs(x_axis)
-
-            _energies_list = list(_reactions.energy['294K'])
-            _xs_list = list(total_xs(_energies_list))
-            _energies_list.insert(0, 'E_eV')
-            _energies_list.insert(0, name_only)
-            _xs_list.insert(0, 'Sig_b')
-            _xs_list.insert(0, aaa)
-            _df_to_save = pd.DataFrame(_xs_list, index=_energies_list)
-            _df_to_save.to_csv(fullpath_to_save, header=False)
-            print("Saving '{}'".format(fullpath_to_save))
-
-            return {'energy_eV': x_axis,
-                    'sigma_b': y_axis}
-
-    # '.csv' files
-    elif file_extension == '.csv':
-        _df = get_database_data(file_name=database_file_name)
-        _dict = get_interpolated_data(df=_df, e_min=e_min, e_max=e_max,
-                                      e_step=e_step)
-        return {'energy_eV': _dict['x_axis'],
-                'sigma_b': _dict['y_axis']}
-
-
-
-        # print(database_file_name)
-        # if os.path.splitext(database_file_name)[-1] == '.h5':
-        #     _reactions = openmc.data.IncidentNeutron.from_hdf5(database_file_name)
-        #     total_xs = _reactions[1].xs['294K']
-        #     nbr_point = int((e_max - e_min) / e_step + 1)
-        #     x_axis = np.linspace(e_min, e_max, nbr_point)
-        #     y_axis = total_xs(x_axis)
-        #     return {'energy_eV': x_axis,
-        #             'sigma_b': y_axis}
-        #
-        # elif os.path.splitext(database_file_name)[-1] == '.csv':
-        #     _df = get_database_data(file_name=database_file_name)
-        #
-        #     _dict = get_interpolated_data(df=_df, e_min=e_min, e_max=e_max,
-        #                                   e_step=e_step)
-        #     return {'energy_eV': _dict['x_axis'],
-        #             'sigma_b': _dict['y_axis']}
+# # '.h5' files
+# if file_extension == '.h5':
+#     dir_to_read = os.path.dirname(database_file_name)
+#     basename = os.path.basename(database_file_name)
+#     name_no_extension = os.path.splitext(basename)[0]
+#     _split = re.split(r'(\d+)', name_no_extension)
+#     name_only = _split[0]
+#     aaa = _split[1]
+#     filename_to_save = name_only + '-' + aaa
+#
+#     if len(_split) == 5:
+#         meta_str = _split[2] + _split[3]
+#         filename_to_save += meta_str
+#
+#     dir_to_save = os.path.join(dir_to_read, 'cached_csv')
+#     if not os.path.exists(dir_to_save):
+#         os.makedirs(dir_to_save)
+#
+#     fullpath_to_save = os.path.join(dir_to_save, filename_to_save + '.csv')
+#     if os.path.exists(fullpath_to_save):
+#         _df = get_database_data(file_name=filename_to_save)
+#         _dict = get_interpolated_data(df=_df, e_min=e_min, e_max=e_max,
+#                                       e_step=e_step)
+#         return {'energy_eV': _dict['x_axis'],
+#                 'sigma_b': _dict['y_axis']}
+#
+#     else:
+#         _reactions = openmc.data.IncidentNeutron.from_hdf5(database_file_name)
+#         total_xs = _reactions[1].xs['294K']
+#         nbr_point = int((e_max - e_min) / e_step + 1)
+#         x_axis = np.linspace(e_min, e_max, nbr_point)
+#         y_axis = total_xs(x_axis)
+#
+#         _energies_list = list(_reactions.energy['294K'])
+#         _xs_list = list(total_xs(_energies_list))
+#         _energies_list.insert(0, 'E_eV')
+#         _energies_list.insert(0, name_only)
+#         _xs_list.insert(0, 'Sig_b')
+#         _xs_list.insert(0, aaa)
+#         _df_to_save = pd.DataFrame(_xs_list, index=_energies_list)
+#         _df_to_save.to_csv(fullpath_to_save, header=False)
+#         print("Saving '{}'".format(fullpath_to_save))
+#
+#         return {'energy_eV': x_axis,
+#                 'sigma_b': y_axis}
 
 
 def get_atoms_per_cm3_of_layer(compound_dict={}):
