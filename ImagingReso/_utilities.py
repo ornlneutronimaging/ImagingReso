@@ -10,13 +10,13 @@ from scipy.constants import Avogadro
 import openmc.data
 
 
-def is_element_in_database(element='', database='ENDF_VIII'):
+def is_element_in_database(element='', database='ENDF_VII'):
     """will try to find the element in the folder (database) specified
     
     Parameters:
     ==========
     element: string. Name of the element. Not case sensitive
-    database: string (default is 'ENDF_VIII'). Name of folder that has the list of elements
+    database: string (default is 'ENDF_VII'). Name of folder that has the list of elements
     
     Returns:
     =======
@@ -33,7 +33,7 @@ def is_element_in_database(element='', database='ENDF_VIII'):
     return False
 
 
-def get_list_element_from_database(database='ENDF_VIII'):
+def get_list_element_from_database(database='ENDF_VII'):
     """return a string array of all the element from the database
     
     Parameters:
@@ -73,12 +73,13 @@ def get_list_element_from_database(database='ENDF_VIII'):
             _list_element = list(set([_name.split('-')[0] for _name in _list_short_filename_without_extension]))
         else:
             _list_letter_part = list(
-                set([re.findall('\d+|\D+', _name)[0] for _name in _list_short_filename_without_extension]))
+                set([re.split(r'(\d+)', _name)[0] for _name in _list_short_filename_without_extension]))
             _list_element = []
             for each_letter_part in _list_letter_part:
                 if len(each_letter_part) <= 2:
                     _list_element.append(each_letter_part)
         # save to current dir
+        _list_element.sort()
         df_to_save = pd.DataFrame()
         df_to_save['elements'] = _list_element
         df_to_save.to_csv(_database_folder + '/_elements_list.csv')
@@ -95,14 +96,14 @@ def get_list_element_from_database(database='ENDF_VIII'):
     return _list_element
 
 
-def checking_stack(stack, database='ENDF_VIII'):
+def checking_stack(stack, database='ENDF_VII'):
     """This method makes sure that all the elements from the various stacks are 
     in the database and that the thickness has the correct format (float)
     
     Parameters:
     ==========
     stack: dictionary that defines the various stacks
-    database: string (default is 'ENDF_VIII') name of database
+    database: string (default is 'ENDF_VII') name of database
     
     Raises:
     ======
@@ -131,7 +132,7 @@ def checking_stack(stack, database='ENDF_VIII'):
     return True
 
 
-def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database='ENDF_VIII'):
+def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database='ENDF_VII'):
     """create dictionary based on formula given
     
     Parameters:
@@ -168,7 +169,7 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
     for _element in _formula_parsed:
         [_single_element, _atomic_ratio] = list(_element)
         if not is_element_in_database(element=_single_element, database=database):
-            raise ValueError("element {} not found in database!".format(_single_element))
+            raise ValueError("element '{}' not found in the database '{}'!".format(_single_element, database))
 
         if _atomic_ratio == '':
             _atomic_ratio = 1
@@ -187,14 +188,14 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
             }
 
 
-def get_isotope_dicts(element='', database='ENDF_VIII'):
+def get_isotope_dicts(element='', database='ENDF_VII'):
     """return a dictionary with list of isotopes found in database and name of database files
     
     Parameters:
     ===========
     element: string. Name of the element
       ex: 'Ag'
-    database: string (default is ENDF_VIII)
+    database: string (default is ENDF_VII)
     
     Returns:
     ========
@@ -205,9 +206,11 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
     """
     _file_path = os.path.abspath(os.path.dirname(__file__))
     _database_folder = os.path.join(_file_path, 'reference_data', database)
-    # _element_search_path = os.path.join(_database_folder, element + '-*.csv')
-    _element_search_path = os.path.join(_database_folder, element + '*')
+    _element_search_path = os.path.join(_database_folder, element + '-*.csv')
+
     list_files = glob.glob(_element_search_path)
+    if not list_files:
+        raise ValueError("File names contains NO '-', the name should in the format of 'Cd-115_m1' or 'Cd-114'")
     list_files.sort()
     isotope_dict = {'isotopes': {'list': [],
                                  'file_names': [],
@@ -239,13 +242,18 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
         # [filename, file_extension] = os.path.splitext(_basename)
         if '-' in filename:
             [_name, _number] = filename.split('-')
+            if '_' in _number:
+                [aaa, meta] = _number.split('_')
+                _number = aaa[:]
         else:
-            _split_list = re.findall('\d+|\D+', filename)
+            _split_list = re.split(r'(\d+)', filename)
             if len(_split_list) == 2:
                 [_name, _number] = _split_list
             else:
                 _name = _split_list[0]
                 _number = _split_list[1]
+        if _number == '0':
+            _number = '12'
         _symbol = _number + '-' + _name
         isotope = str(_symbol)
 
@@ -376,60 +384,83 @@ def get_sigma(database_file_name='', e_min=np.NaN, e_max=np.NaN, e_step=np.NaN):
 
     Returns:
     ========
-    {'energy': np.array(), 'sigma': np.array}
+    {'energy': np.array, 'sigma': np.array}
     """
-    dirname_to_read = os.path.dirname(database_file_name)
-    basename = os.path.basename(database_file_name)
-    name_only = os.path.splitext(basename)[0]
-    dirname_to_save = os.path.join(dirname_to_read, 'cached_csv')
-    if not os.path.exists(dirname_to_save):
-        os.makedirs(dirname_to_save)
-    filename_to_save = os.path.join(dirname_to_save, name_only+'.csv')
+    file_extension = os.path.splitext(database_file_name)[1]
 
-    if os.path.exists(filename_to_save):
-        _df = get_database_data(file_name=filename_to_save)
+    # '.h5' files
+    if file_extension == '.h5':
+        dir_to_read = os.path.dirname(database_file_name)
+        basename = os.path.basename(database_file_name)
+        name_no_extension = os.path.splitext(basename)[0]
+        _split = re.split(r'(\d+)', name_no_extension)
+        name_only = _split[0]
+        aaa = _split[1]
+        filename_to_save = name_only + '-' + aaa
+
+        if len(_split) == 5:
+            meta_str = _split[2] + _split[3]
+            filename_to_save += meta_str
+
+        dir_to_save = os.path.join(dir_to_read, 'cached_csv')
+        if not os.path.exists(dir_to_save):
+            os.makedirs(dir_to_save)
+
+        fullpath_to_save = os.path.join(dir_to_save, filename_to_save + '.csv')
+        if os.path.exists(fullpath_to_save):
+            _df = get_database_data(file_name=filename_to_save)
+            _dict = get_interpolated_data(df=_df, e_min=e_min, e_max=e_max,
+                                          e_step=e_step)
+            return {'energy_eV': _dict['x_axis'],
+                    'sigma_b': _dict['y_axis']}
+
+        else:
+            _reactions = openmc.data.IncidentNeutron.from_hdf5(database_file_name)
+            total_xs = _reactions[1].xs['294K']
+            nbr_point = int((e_max - e_min) / e_step + 1)
+            x_axis = np.linspace(e_min, e_max, nbr_point)
+            y_axis = total_xs(x_axis)
+
+            _energies_list = list(_reactions.energy['294K'])
+            _xs_list = list(total_xs(_energies_list))
+            _energies_list.insert(0, 'E_eV')
+            _energies_list.insert(0, name_only)
+            _xs_list.insert(0, 'Sig_b')
+            _xs_list.insert(0, aaa)
+            _df_to_save = pd.DataFrame(_xs_list, index=_energies_list)
+            _df_to_save.to_csv(fullpath_to_save, header=False)
+            print("Saving '{}'".format(fullpath_to_save))
+
+            return {'energy_eV': x_axis,
+                    'sigma_b': y_axis}
+
+    # '.csv' files
+    elif file_extension == '.csv':
+        _df = get_database_data(file_name=database_file_name)
         _dict = get_interpolated_data(df=_df, e_min=e_min, e_max=e_max,
                                       e_step=e_step)
         return {'energy_eV': _dict['x_axis'],
                 'sigma_b': _dict['y_axis']}
 
-    else:
-        _reactions = openmc.data.IncidentNeutron.from_hdf5(database_file_name)
-        total_xs = _reactions[1].xs['294K']
-        nbr_point = int((e_max - e_min) / e_step + 1)
-        x_axis = np.linspace(e_min, e_max, nbr_point)
-        y_axis = total_xs(x_axis)
-
-        _energies_list = list(_reactions.energy['294K'])
-        _xs_list = list(total_xs(_energies_list))
-        _energies_list.insert(0, 'E_eV')
-        _energies_list.insert(0, name_only)
-        _xs_list.insert(0, 'Sig_b')
-        _xs_list.insert(0, name_only)
-        _df_to_save = pd.DataFrame(_xs_list, index=_energies_list)
-        _df_to_save.to_csv(filename_to_save, header=False)
-
-        return {'energy_eV': x_axis,
-                'sigma_b': y_axis}
 
 
-    # print(database_file_name)
-    # if os.path.splitext(database_file_name)[-1] == '.h5':
-    #     _reactions = openmc.data.IncidentNeutron.from_hdf5(database_file_name)
-    #     total_xs = _reactions[1].xs['294K']
-    #     nbr_point = int((e_max - e_min) / e_step + 1)
-    #     x_axis = np.linspace(e_min, e_max, nbr_point)
-    #     y_axis = total_xs(x_axis)
-    #     return {'energy_eV': x_axis,
-    #             'sigma_b': y_axis}
-    #
-    # elif os.path.splitext(database_file_name)[-1] == '.csv':
-    #     _df = get_database_data(file_name=database_file_name)
-    #
-    #     _dict = get_interpolated_data(df=_df, e_min=e_min, e_max=e_max,
-    #                                   e_step=e_step)
-    #     return {'energy_eV': _dict['x_axis'],
-    #             'sigma_b': _dict['y_axis']}
+        # print(database_file_name)
+        # if os.path.splitext(database_file_name)[-1] == '.h5':
+        #     _reactions = openmc.data.IncidentNeutron.from_hdf5(database_file_name)
+        #     total_xs = _reactions[1].xs['294K']
+        #     nbr_point = int((e_max - e_min) / e_step + 1)
+        #     x_axis = np.linspace(e_min, e_max, nbr_point)
+        #     y_axis = total_xs(x_axis)
+        #     return {'energy_eV': x_axis,
+        #             'sigma_b': y_axis}
+        #
+        # elif os.path.splitext(database_file_name)[-1] == '.csv':
+        #     _df = get_database_data(file_name=database_file_name)
+        #
+        #     _dict = get_interpolated_data(df=_df, e_min=e_min, e_max=e_max,
+        #                                   e_step=e_step)
+        #     return {'energy_eV': _dict['x_axis'],
+        #             'sigma_b': _dict['y_axis']}
 
 
 def get_atoms_per_cm3_of_layer(compound_dict={}):

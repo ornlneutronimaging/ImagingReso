@@ -685,10 +685,12 @@ class Resonance(object):
         'sigma_b' exported for each isotope is the product resulted from (sigma * isotopic ratio)
         'atoms_per_cm3' of each element is also exported in 'sigma' mode based on molar mass within stack.
 
-        :param mixed:
-        :type mixed:
+        :param mixed: True -> display the total of each layer
+                               False -> not displayed
+        :type mixed: boolean
         :param filename: string. filename (with .csv suffix) you would like to save as
                                 None -> export to clipboard
+        :type filename: string
         :param x_axis: string. x type for export. Must be either 'energy' or 'lambda' or 'time' or 'number'
         :param y_axis: string. y type for export. Must be either 'transmission' or 'attenuation' or 'sigma'
         :param all_layers: boolean. True -> export all layers
