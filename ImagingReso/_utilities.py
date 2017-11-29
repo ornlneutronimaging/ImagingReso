@@ -1,13 +1,13 @@
 import glob
-import os
 import numbers
+import os
 import re
+
 import numpy as np
-import periodictable as pt
 import pandas as pd
-from scipy.interpolate import interp1d
+import periodictable as pt
 from scipy.constants import Avogadro
-import openmc.data
+from scipy.interpolate import interp1d
 
 
 def is_element_in_database(element='', database='ENDF_VII'):
@@ -27,7 +27,6 @@ def is_element_in_database(element='', database='ENDF_VII'):
         return False
 
     list_entry_from_database = get_list_element_from_database(database=database)
-    # if element.lower() in list_entry_from_database:
     if element in list_entry_from_database:
         return True
     return False
@@ -239,7 +238,6 @@ def get_isotope_dicts(element='', database='ENDF_VII'):
         # Obtain element, z number from the basename
         _basename = os.path.basename(file)
         filename = os.path.splitext(_basename)[0]
-        # [filename, file_extension] = os.path.splitext(_basename)
         if '-' in filename:
             [_name, _number] = filename.split('-')
             if '_' in _number:
