@@ -17,7 +17,7 @@ isotopic contributions in the total resonance signal.
 The energy dependent cross-section data used in this library are from
 `National Nuclear Data Center <http://www.nndc.bnl.gov/>`__, a published
 online database. `Evaluated Nuclear Data File
-(ENDF/B) <http://www.nndc.bnl.gov/exfor/endf00.jsp>`__ [1] is currently
+(ENDF/B-VII.1) <http://www.nndc.bnl.gov/exfor/endf00.jsp>`__ [1] is currently
 supported and more evaluated databases will be added in future.
 
 Python packages used are: SciPy [2], NumPy [3], Matplotlib [4], Pandas
