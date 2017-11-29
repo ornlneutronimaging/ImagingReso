@@ -48,7 +48,3 @@ MANIFEST
 .idea
 
 ImagingReso/plot_various_x_axis.py
-
-ImagingReso/reference_data/nndc/*
-ImagingReso/reference_data/nndc_hdf5/*
-ImagingReso/reference_data/wmp/*
