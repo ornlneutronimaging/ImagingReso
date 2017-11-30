@@ -1,21 +1,22 @@
 import glob
-import os
 import numbers
+import os
 import re
+
 import numpy as np
-import periodictable as pt
 import pandas as pd
-from scipy.interpolate import interp1d
+import periodictable as pt
 from scipy.constants import Avogadro
+from scipy.interpolate import interp1d
 
 
-def is_element_in_database(element='', database='ENDF_VIII'):
+def is_element_in_database(element='', database='ENDF_VII'):
     """will try to find the element in the folder (database) specified
     
     Parameters:
     ==========
     element: string. Name of the element. Not case sensitive
-    database: string (default is 'ENDF_VIII'). Name of folder that has the list of elements
+    database: string (default is 'ENDF_VII'). Name of folder that has the list of elements
     
     Returns:
     =======
@@ -26,12 +27,12 @@ def is_element_in_database(element='', database='ENDF_VIII'):
         return False
 
     list_entry_from_database = get_list_element_from_database(database=database)
-    if element.lower() in list_entry_from_database:
+    if element in list_entry_from_database:
         return True
     return False
 
 
-def get_list_element_from_database(database=''):
+def get_list_element_from_database(database='ENDF_VII'):
     """return a string array of all the element from the database
     
     Parameters:
@@ -49,20 +50,59 @@ def get_list_element_from_database(database=''):
     if not os.path.exists(_database_folder):
         raise ValueError("Database {} does not exist!".format(database))
 
-    _list_files = glob.glob(_database_folder + '/*.csv')
-    _list_short_files = [os.path.basename(_file) for _file in _list_files]
-    _list_element = set([_name.split('-')[0].lower() for _name in _list_short_files])
+    # if '/_elements_list.csv' NOT exist
+    if not os.path.exists(_database_folder + '/_elements_list.csv'):
+        # glob all .csv files
+        _list_files = glob.glob(_database_folder + '/*.csv')
+
+        # glob all .h5 files if NO .csv file exist
+        if not _list_files:
+            _list_files = glob.glob(_database_folder + '/*.h5')
+
+        # test if files globed
+        _empty_list_boo = not _list_files
+        if _empty_list_boo is True:
+            raise ValueError("'{}' does not contain any '*.csv' or '*.h5' file.".format(_database_folder))
+
+        # convert path/to/file to filename only
+        _list_short_filename_without_extension = [os.path.splitext(os.path.basename(_file))[0] for _file in _list_files]
+
+        # isolate element names and output as list
+        if '-' in _list_short_filename_without_extension[0]:
+            _list_element = list(set([_name.split('-')[0] for _name in _list_short_filename_without_extension]))
+        else:
+            _list_letter_part = list(
+                set([re.split(r'(\d+)', _name)[0] for _name in _list_short_filename_without_extension]))
+            _list_element = []
+            for each_letter_part in _list_letter_part:
+                if len(each_letter_part) <= 2:
+                    _list_element.append(each_letter_part)
+        # save to current dir
+        _list_element.sort()
+        df_to_save = pd.DataFrame()
+        df_to_save['elements'] = _list_element
+        df_to_save.to_csv(_database_folder + '/_elements_list.csv')
+        # print("NOT FOUND '{}'".format(_database_folder + '/_elements_list.csv'))
+        # print("SAVED '{}'".format(_database_folder + '/_elements_list.csv'))
+
+    # '/_elements_list.csv' exist
+    else:
+        df_to_read = pd.read_csv(_database_folder + '/_elements_list.csv')
+        _list_element = list(df_to_read['elements'])
+        # print("FOUND '{}'".format(_database_folder + '/_elements_list.csv'))
+        # print("READ '{}'".format(_database_folder + '/_elements_list.csv'))
+
     return _list_element
 
 
-def checking_stack(stack, database='ENDF_VIII'):
+def checking_stack(stack, database='ENDF_VII'):
     """This method makes sure that all the elements from the various stacks are 
     in the database and that the thickness has the correct format (float)
     
     Parameters:
     ==========
     stack: dictionary that defines the various stacks
-    database: string (default is 'ENDF_VIII') name of database
+    database: string (default is 'ENDF_VII') name of database
     
     Raises:
     ======
@@ -77,7 +117,7 @@ def checking_stack(stack, database='ENDF_VIII'):
     for _keys in stack:
         _elements = stack[_keys]['elements']
         for _element in _elements:
-            if not is_element_in_database(element=_element):
+            if not is_element_in_database(element=_element, database=database):
                 raise ValueError("Element {} can not be found in the database".format(_element))
 
         _thickness = stack[_keys]['thickness']['value']
@@ -91,7 +131,7 @@ def checking_stack(stack, database='ENDF_VIII'):
     return True
 
 
-def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database='ENDF_VIII'):
+def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database='ENDF_VII'):
     """create dictionary based on formula given
     
     Parameters:
@@ -128,7 +168,7 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
     for _element in _formula_parsed:
         [_single_element, _atomic_ratio] = list(_element)
         if not is_element_in_database(element=_single_element, database=database):
-            raise ValueError("element {} not found in database!".format(_single_element))
+            raise ValueError("element '{}' not found in the database '{}'!".format(_single_element, database))
 
         if _atomic_ratio == '':
             _atomic_ratio = 1
@@ -147,14 +187,14 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
             }
 
 
-def get_isotope_dicts(element='', database='ENDF_VIII'):
+def get_isotope_dicts(element='', database='ENDF_VII'):
     """return a dictionary with list of isotopes found in database and name of database files
     
     Parameters:
     ===========
     element: string. Name of the element
       ex: 'Ag'
-    database: string (default is ENDF_VIII)
+    database: string (default is ENDF_VII)
     
     Returns:
     ========
@@ -166,7 +206,10 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
     _file_path = os.path.abspath(os.path.dirname(__file__))
     _database_folder = os.path.join(_file_path, 'reference_data', database)
     _element_search_path = os.path.join(_database_folder, element + '-*.csv')
+
     list_files = glob.glob(_element_search_path)
+    if not list_files:
+        raise ValueError("File names contains NO '-', the name should in the format of 'Cd-115_m1' or 'Cd-114'")
     list_files.sort()
     isotope_dict = {'isotopes': {'list': [],
                                  'file_names': [],
@@ -194,8 +237,21 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
     for file in list_files:
         # Obtain element, z number from the basename
         _basename = os.path.basename(file)
-        [filename, file_extension] = os.path.splitext(_basename)
-        [_name, _number] = filename.split('-')
+        filename = os.path.splitext(_basename)[0]
+        if '-' in filename:
+            [_name, _number] = filename.split('-')
+            if '_' in _number:
+                [aaa, meta] = _number.split('_')
+                _number = aaa[:]
+        else:
+            _split_list = re.split(r'(\d+)', filename)
+            if len(_split_list) == 2:
+                [_name, _number] = _split_list
+            else:
+                _name = _split_list[0]
+                _number = _split_list[1]
+        if _number == '0':
+            _number = '12'
         _symbol = _number + '-' + _name
         isotope = str(_symbol)
 
@@ -214,7 +270,6 @@ def get_isotope_dicts(element='', database='ENDF_VIII'):
     isotope_dict['isotopes']['density']['value'] = _isotopes_density
     isotope_dict['density']['value'] = _density
     isotope_dict['molar_mass']['value'] = _molar_mass
-
     return isotope_dict
 
 
@@ -296,16 +351,17 @@ def get_database_data(file_name=''):
 def get_interpolated_data(df=pd.DataFrame, e_min=np.NaN, e_max=np.NaN, e_step=np.NaN):
     """return the interpolated x and y axis for the given x range [e_min, e_max] with step defined
 
-    Parameters:
-    ===========
-    df: data frame
-    e_min: left range of new interpolated data
-    e_max: right range of new interpolated data
-    e_step: step of energy to use in interpolated data
+    :param df: input data frame
+    :type df: pandas.DataFrame
+    :param e_min: left energy range in eV of new interpolated data
+    :type e_min: float
+    :param e_max: right energy range in eV of new interpolated data
+    :type e_max: float
+    :param e_step: energy step in eV for interpolation
+    :type e_step: float
 
-    Returns:
-    ========
-    x_axis and y_axis of interpolated data over specified range
+    :return: x_axis and y_axis of interpolated data over specified range
+    :rtype: dict
     """
     nbr_point = int((e_max - e_min) / e_step + 1)
     x_axis = np.linspace(e_min, e_max, nbr_point)
@@ -315,25 +371,84 @@ def get_interpolated_data(df=pd.DataFrame, e_min=np.NaN, e_max=np.NaN, e_step=np
     return {'x_axis': x_axis, 'y_axis': y_axis}
 
 
-def get_sigma(database_file_name='', e_min=np.NaN, e_max=np.NaN, e_step=np.NaN):
+def get_sigma(database_file_name='', e_min=np.NaN, e_max=np.NaN, e_step=np.NaN, t_kelvin=None):
     """retrieve the Energy and sigma axis for the given isotope
 
-    Paramters:
-    ==========
-    database_file_name: string
-    e_min: left range of new interpolated data
-    e_max: right range of new interpolated data
-    e_step: step of energy to use in interpolated data
+    :param database_file_name: path/to/file with extension
+    :type database_file_name: string
+    :param e_min: left energy range in eV of new interpolated data
+    :type e_min: float
+    :param e_max: right energy range in eV of new interpolated data
+    :type e_max: float
+    :param e_step: energy step in eV for interpolation
+    :type e_step: float
+    :param t_kelvin: temperature in Kelvin
+    :type t_kelvin: float
 
-    Returns:
-    ========
-    {'energy': np.array(), 'sigma': np.array}
+    :return: {'energy': np.array, 'sigma': np.array}
+    :rtype: dict
     """
-    _df = get_database_data(file_name=database_file_name)
-    _dict = get_interpolated_data(df=_df, e_min=e_min, e_max=e_max,
-                                  e_step=e_step)
-    return {'energy_eV': _dict['x_axis'],
-            'sigma_b': _dict['y_axis']}
+
+    file_extension = os.path.splitext(database_file_name)[1]
+
+    if t_kelvin is None:
+        # '.csv' files
+        if file_extension != '.csv':
+            raise IOError("Cross-section File type must be '.csv'")
+        else:
+            _df = get_database_data(file_name=database_file_name)
+            _dict = get_interpolated_data(df=_df, e_min=e_min, e_max=e_max,
+                                          e_step=e_step)
+            return {'energy_eV': _dict['x_axis'],
+                    'sigma_b': _dict['y_axis']}
+    else:
+        raise ValueError("Doppler broadened cross-section in not yet supported in current version.")
+
+# # '.h5' files
+# if file_extension == '.h5':
+#     dir_to_read = os.path.dirname(database_file_name)
+#     basename = os.path.basename(database_file_name)
+#     name_no_extension = os.path.splitext(basename)[0]
+#     _split = re.split(r'(\d+)', name_no_extension)
+#     name_only = _split[0]
+#     aaa = _split[1]
+#     filename_to_save = name_only + '-' + aaa
+#
+#     if len(_split) == 5:
+#         meta_str = _split[2] + _split[3]
+#         filename_to_save += meta_str
+#
+#     dir_to_save = os.path.join(dir_to_read, 'cached_csv')
+#     if not os.path.exists(dir_to_save):
+#         os.makedirs(dir_to_save)
+#
+#     fullpath_to_save = os.path.join(dir_to_save, filename_to_save + '.csv')
+#     if os.path.exists(fullpath_to_save):
+#         _df = get_database_data(file_name=filename_to_save)
+#         _dict = get_interpolated_data(df=_df, e_min=e_min, e_max=e_max,
+#                                       e_step=e_step)
+#         return {'energy_eV': _dict['x_axis'],
+#                 'sigma_b': _dict['y_axis']}
+#
+#     else:
+#         _reactions = openmc.data.IncidentNeutron.from_hdf5(database_file_name)
+#         total_xs = _reactions[1].xs['294K']
+#         nbr_point = int((e_max - e_min) / e_step + 1)
+#         x_axis = np.linspace(e_min, e_max, nbr_point)
+#         y_axis = total_xs(x_axis)
+#
+#         _energies_list = list(_reactions.energy['294K'])
+#         _xs_list = list(total_xs(_energies_list))
+#         _energies_list.insert(0, 'E_eV')
+#         _energies_list.insert(0, name_only)
+#         _xs_list.insert(0, 'Sig_b')
+#         _xs_list.insert(0, aaa)
+#         _df_to_save = pd.DataFrame(_xs_list, index=_energies_list)
+#         _df_to_save.to_csv(fullpath_to_save, header=False)
+#         print("Saving '{}'".format(fullpath_to_save))
+#
+#         return {'energy_eV': x_axis,
+#                 'sigma_b': y_axis}
 
 
 def get_atoms_per_cm3_of_layer(compound_dict={}):

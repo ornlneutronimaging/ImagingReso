@@ -164,7 +164,7 @@ class TestUtilities_1(unittest.TestCase):
         _dict_expected = {'density': {'value': 10.5,
                                       'units': 'g/cm3'},
                           'isotopes': {'list': ['107-Ag', '109-Ag', '110-Ag', '111-Ag'],
-                                       'file_names': ['Ag-107.csv', 'Ag-109.csv', 'Ag-110.csv', 'Ag-111.csv'],
+                                       'file_names': ['Ag-107.csv', 'Ag-109.csv', 'Ag-110_m1.csv', 'Ag-111.csv'],
                                        'mass': {'value': [106.905093, 108.904756, 109.90611, 110.905295],
                                                 'units': 'g/mol'},
                                        'density': {'value': [10.406, 10.600, 10.698, 10.795],
@@ -196,43 +196,20 @@ class TestUtilities_1(unittest.TestCase):
         self.assertEqual(_dict_returned['molar_mass']['value'], _dict_expected['molar_mass']['value'])
 
     def test_get_isotope_returns_empty_dict_if_missing_element(self):
-        """assert get_isotopes_dict returns empty dict if element can not be found such as Xo"""
+        """assert get_isotopes_dict raises ValueError if element can not be found such as Xo"""
         _element = 'Xo'
-        _dict_returned = get_isotope_dicts(element=_element)
-        _dict_expected = {'isotopes': {'list': [],
-                                       'file_names': [],
-                                       'mass': {'value': [],
-                                                'units': 'g/mol',
-                                                },
-                                       'density': {'value': [],
-                                                   'units': 'g/cm3'},
-                                       'isotopic_ratio': []},
-                          'density': {'value': np.NaN,
-                                      'units': 'g/cm3'},
-                          'molar_mass': {'value': np.NaN,
-                                         'units': 'g/mol',
-                                         },
-                          }
-        self.assertEqual(_dict_returned, _dict_expected)
+        self.assertRaises(ValueError, get_isotope_dicts, element=_element)
 
     def test_get_isotope_dicts_returns_correct_element(self):
         """assert get_isotopes_dict returns correct isotopes if element with single symbol such as C"""
-        _element = 'C'
+        _element = 'V'
         _dict_returned = get_isotope_dicts(element=_element)
-        _dict_expected = {'isotopes': {'list': ['12-C', '13-C'],
-                                       'file_names': ['C-12.csv', 'C-13.csv'],
-                                       'mass': {'value': [12.0, 13.0033548378],
-                                                'units': 'g/mol',
-                                                },
-                                       'density': {'value': [2.0981291681583922, 2.27355983909181],
-                                                   'units': 'g/cm3'},
-                                       'isotopic_ratio': [0.9893000000000001, 0.010700000000000001]},
-                          'density': {'value': 2.1,
-                                      'units': 'g/cm3'},
-                          'molar_mass': {'value': 12.0107,
-                                         'units': 'g/mol',
-                                         },
-                          }
+        _dict_expected = {'isotopes': {'list': ['50-V', '51-V'], 'file_names': ['V-50.csv', 'V-51.csv'],
+                                       'density': {'value': [5.990737703208583, 6.110295499877311], 'units': 'g/cm3'},
+                                       'mass': {'value': [49.9471628, 50.9439637], 'units': 'g/mol'},
+                                       'isotopic_ratio': [0.0025, 0.9975]},
+                          'density': {'value': 6.11, 'units': 'g/cm3'},
+                          'molar_mass': {'value': 50.9415, 'units': 'g/mol'}}
 
         self.assertEqual(_dict_returned, _dict_expected)
 

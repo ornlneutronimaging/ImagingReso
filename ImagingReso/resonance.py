@@ -1,14 +1,15 @@
-import numpy as np
-import os
-import matplotlib.pyplot as plt
 import json
+import os
+
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 
 from ImagingReso import _utilities
 
 
 class Resonance(object):
-    database = 'ENDF_VIII'
+    # database = 'ENDF_VIII'
 
     e_min = 1e-5
     e_max = 3e3
@@ -24,7 +25,7 @@ class Resonance(object):
     energy_min = np.NaN
     energy_step = np.NaN
 
-    def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001):
+    def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001, database='ENDF_VIII'):
         """initialize resonance object
 
         Parameters:
@@ -43,6 +44,7 @@ class Resonance(object):
         energy_min: float (default 0) min energy in eV to use in calculation
         energy_step: float (default 0.1) energy step to use in extrapolation of sigma data
         """
+        self.database = database
         self.__element_metadata = {}
 
         if energy_min < self.e_min:
@@ -63,7 +65,7 @@ class Resonance(object):
 
         if not stack == {}:
             # checking that every element of each stack is defined
-            _utilities.checking_stack(stack=stack)
+            _utilities.checking_stack(stack=stack,database=self.database)
             new_stack = self.__update_stack_with_isotopes_infos(stack=stack)
             self.stack = new_stack
 
@@ -684,10 +686,12 @@ class Resonance(object):
         'sigma_b' exported for each isotope is the product resulted from (sigma * isotopic ratio)
         'atoms_per_cm3' of each element is also exported in 'sigma' mode based on molar mass within stack.
 
-        :param mixed:
-        :type mixed:
+        :param mixed: True -> display the total of each layer
+                               False -> not displayed
+        :type mixed: boolean
         :param filename: string. filename (with .csv suffix) you would like to save as
                                 None -> export to clipboard
+        :type filename: string
         :param x_axis: string. x type for export. Must be either 'energy' or 'lambda' or 'time' or 'number'
         :param y_axis: string. y type for export. Must be either 'transmission' or 'attenuation' or 'sigma'
         :param all_layers: boolean. True -> export all layers
