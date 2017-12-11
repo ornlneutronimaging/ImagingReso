@@ -25,7 +25,7 @@ class Resonance(object):
     energy_min = np.NaN
     energy_step = np.NaN
 
-    def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001, database='ENDF_VII'):
+    def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001, database='ENDF_VIII'):
         """initialize resonance object
 
         :param stack: dictionary to store sample info
