@@ -5,15 +5,17 @@ from ImagingReso.resonance import Resonance
 
 
 class TestInitialization(unittest.TestCase):
+    database = '_data_for_unittest'
+
     def test_E_min(self):
         """assert E can not be set below a given threshold"""
         energy_min = 1e-6
-        self.assertRaises(ValueError, Resonance, energy_min=energy_min)
+        self.assertRaises(ValueError, Resonance, energy_min=energy_min, database=self.database)
 
     def test_E_max(self):
         """assert E can not be set above a given threshold"""
         energy_max = 10000
-        self.assertRaises(ValueError, Resonance, energy_max=energy_max)
+        self.assertRaises(ValueError, Resonance, energy_max=energy_max, database=self.database)
 
     def test_str(self):
         """assert print(object) works"""
@@ -32,7 +34,7 @@ class TestInitialization(unittest.TestCase):
         energy_max = 150
         energy_step = 1
         o_reso = Resonance(stack=_stack, energy_max=energy_max, energy_min=energy_min,
-                           energy_step=energy_step)
+                           energy_step=energy_step, database=self.database)
         self.assertIsInstance(o_reso.__str__(), str)
 
     def test_repr(self):
@@ -52,7 +54,7 @@ class TestInitialization(unittest.TestCase):
         energy_max = 150
         energy_step = 1
         o_reso = Resonance(stack=_stack, energy_max=energy_max, energy_min=energy_min,
-                           energy_step=energy_step)
+                           energy_step=energy_step, database=self.database)
         self.assertIsInstance(o_reso.__repr__(), str)
 
     def test_initialization_of_object(self):
@@ -72,7 +74,7 @@ class TestInitialization(unittest.TestCase):
         energy_max = 150
         energy_step = 1
         o_reso = Resonance(stack=_stack, energy_max=energy_max, energy_min=energy_min,
-                           energy_step=energy_step)
+                           energy_step=energy_step, database=self.database)
         self.assertEqual(o_reso.energy_max, energy_max)
         self.assertEqual(o_reso.energy_min, energy_min)
         self.assertEqual(o_reso.energy_step, energy_step)
@@ -94,7 +96,7 @@ class TestInitialization(unittest.TestCase):
         energy_max = 150
         energy_step = 1
         self.assertRaises(ValueError, Resonance, stack=_stack, energy_max=energy_max, energy_min=energy_min,
-                          energy_step=energy_step)
+                          energy_step=energy_step, database=self.database)
 
     def test_initialization_E_step_bigger_than_E_range_raises_error(self):
         """assert ValueError is raised if E_min == E_max"""
@@ -113,7 +115,7 @@ class TestInitialization(unittest.TestCase):
         energy_max = 10
         energy_step = 11
         self.assertRaises(ValueError, Resonance, stack=_stack, energy_max=energy_max, energy_min=energy_min,
-                          energy_step=energy_step)
+                          energy_step=energy_step, database=self.database)
 
     def test_get_sigma_isotopes(self):
         """assert get_sigma works"""
@@ -132,7 +134,7 @@ class TestInitialization(unittest.TestCase):
         energy_max = 150
         energy_step = 1
         o_reso = Resonance(stack=_stack, energy_max=energy_max, energy_min=energy_min,
-                           energy_step=energy_step)
+                           energy_step=energy_step, database=self.database)
         stack_sigma = o_reso.stack_sigma
 
         # for isotopes
@@ -156,13 +158,13 @@ class TestInitialization(unittest.TestCase):
                                        'units': 'mm'},
                          },
                   }
-        o_reso = Resonance(stack=_stack)
+        o_reso = Resonance(stack=_stack, database=self.database)
         _stack_returned = o_reso.stack
         self.assertEqual(_stack, _stack_returned)
 
     def test_adding_layer(self):
         """assert adding_layer works"""
-        o_reso = Resonance()
+        o_reso = Resonance(database=self.database)
 
         # layer 1
         layer1 = 'CoAg'
@@ -296,7 +298,7 @@ class TestInitialization(unittest.TestCase):
                                        'units': 'mm'},
                          },
                   }
-        o_reso = Resonance(stack=_stack)
+        o_reso = Resonance(stack=_stack, database=self.database)
 
         # molar mass
         stack = o_reso.stack
@@ -307,7 +309,7 @@ class TestInitialization(unittest.TestCase):
 
     def test_element_metadata_via_add_layer_initialization(self):
         """assert __element_metadata is correctly populated using add layer initialization"""
-        o_reso = Resonance()
+        o_reso = Resonance(database=self.database)
 
         # layer 1
         layer1 = 'CoAg'
@@ -351,7 +353,7 @@ class TestInitialization(unittest.TestCase):
                                      'units': 'g/cm3'},
                          },
                   }
-        o_reso = Resonance(stack=_stack)
+        o_reso = Resonance(stack=_stack, database=self.database)
 
         density_lock_before = 8.9
         density_lock_after = o_reso.stack['CoAg']['density']['value']
@@ -363,7 +365,7 @@ class TestInitialization(unittest.TestCase):
 
     def test_layer_density_locked_if_defined_during_initialization_add_layer(self):
         """assert the layer density is locked if defined at the beginning using add_layer"""
-        o_reso = Resonance()
+        o_reso = Resonance(database=self.database)
 
         # layer 1
         layer1 = 'CoAg'
@@ -386,6 +388,8 @@ class TestInitialization(unittest.TestCase):
 
 
 class TestGetterSetter(unittest.TestCase):
+    database = '_data_for_unittest'
+
     def setUp(self):
         _stack = {'CoAg': {'elements': ['Co', 'Ag'],
                            'stoichiometric_ratio': [1, 2],
@@ -402,13 +406,13 @@ class TestGetterSetter(unittest.TestCase):
                                     'units': 'g/cm3'},
                         },
                   }
-        self.o_reso = Resonance(stack=_stack)
+        self.o_reso = Resonance(stack=_stack, database=self.database)
 
         # stoichiometric ratio
 
     def test_retrieve_stoichiometric_of_uo3_sample(self):
         """assert retrieve stoichiometric work for complex sample such as UO3"""
-        o_reso = Resonance()
+        o_reso = self.o_reso
         o_reso.add_layer(formula='UO3', thickness=0.25, density=0.5)
         o_reso.add_layer(formula='AgCo', thickness=0.5, density=0.8)
         _stoichiometric_ratio = o_reso.get_isotopic_ratio(compound='UO3', element='U')
@@ -514,6 +518,8 @@ class TestGetterSetter(unittest.TestCase):
 
 
 class TestTransmissionAttenuation(unittest.TestCase):
+    database = '_data_for_unittest'
+
     def setUp(self):
         _stack = {'CoAg': {'elements': ['Co', 'Ag'],
                            'stoichiometric_ratio': [1, 2],
@@ -530,7 +536,7 @@ class TestTransmissionAttenuation(unittest.TestCase):
                                     'units': 'g/cm3'},
                         },
                   }
-        self.o_reso = Resonance(stack=_stack)
+        self.o_reso = Resonance(stack=_stack, database=self.database)
 
     def test_calculate_transmission_isotopes(self):
         """assert calculation of transmission for isotopes works"""
@@ -654,6 +660,8 @@ class TestTransmissionAttenuation(unittest.TestCase):
 
 
 class TestPlot(unittest.TestCase):
+    database = '_data_for_unittest'
+
     def setUp(self):
         _energy_min = 1
         _energy_max = 50
@@ -661,7 +669,8 @@ class TestPlot(unittest.TestCase):
         _layer_1 = 'Co'
         _thickness_1 = 0.025  # mm
 
-        o_reso = Resonance(energy_min=_energy_min, energy_max=_energy_max, energy_step=_energy_step)
+        o_reso = Resonance(energy_min=_energy_min, energy_max=_energy_max, energy_step=_energy_step,
+                           database=self.database)
         o_reso.add_layer(formula=_layer_1, thickness=_thickness_1)
         self.o_reso = o_reso
 
@@ -672,6 +681,8 @@ class TestPlot(unittest.TestCase):
 
 
 class TestExport(unittest.TestCase):
+    database = '_data_for_unittest'
+
     def setUp(self):
         _energy_min = 1
         _energy_max = 50
@@ -679,7 +690,8 @@ class TestExport(unittest.TestCase):
         _layer_1 = 'Co'
         _thickness_1 = 0.025  # mm
 
-        o_reso = Resonance(energy_min=_energy_min, energy_max=_energy_max, energy_step=_energy_step)
+        o_reso = Resonance(energy_min=_energy_min, energy_max=_energy_max, energy_step=_energy_step,
+                           database=self.database)
         o_reso.add_layer(formula=_layer_1, thickness=_thickness_1)
         self.o_reso = o_reso
 

@@ -17,8 +17,9 @@ setup(
     author="Yuxuan (Shawn) Zhang, Jean Bilheux",
     author_email="zhangy6@ornl.gov, bilheuxjm@ornl.gov",
     packages=find_packages(exclude=['tests', 'notebooks']),
-    package_data={'ImagingReso': ['reference_data/ENDF_VII/*',
-                                  'reference_data/ENDF_VIII/*']},
+    package_data={'ImagingReso': ['reference_data/_data_for_unittest/*',
+                                  'reference_data/*.zip',
+                                  ]},
     include_package_data=True,
     test_suite='tests',
     install_requires=[
@@ -31,7 +32,7 @@ setup(
     ],
     dependency_links=[
     ],
-    description="resonance imaging neutron data",
+    description="tool for resonance neutron imaging",
     long_description=read_file('README.rst'),
     license='BSD',
     keywords=['neutron', 'resonance', 'imaging'],
@@ -45,6 +46,5 @@ setup(
                  'Programming Language :: Python :: 3.6',
                  'Natural Language :: English'],
 )
-
 
 # End of file

@@ -2,6 +2,7 @@ import glob
 import numbers
 import os
 import re
+import zipfile
 
 import numpy as np
 import pandas as pd
@@ -10,45 +11,34 @@ from scipy.constants import Avogadro
 from scipy.interpolate import interp1d
 
 
-def is_element_in_database(element='', database='ENDF_VII'):
-    """will try to find the element in the folder (database) specified
-    
-    Parameters:
-    ==========
-    element: string. Name of the element. Not case sensitive
-    database: string (default is 'ENDF_VII'). Name of folder that has the list of elements
-    
-    Returns:
-    =======
-    bool: True if element was found in the database
-          False if element could not be found
-    """
-    if element == '':
-        return False
-
-    list_entry_from_database = get_list_element_from_database(database=database)
-    if element in list_entry_from_database:
-        return True
-    return False
+# def download_database(database_name):
+#     base_url = 'https://github.com/ornlneutronimaging/ImagingReso/blob/master/ImagingReso/reference_data/'
+#     url = base_url + database_name + '/'
 
 
 def get_list_element_from_database(database='ENDF_VII'):
     """return a string array of all the element from the database
-    
+
     Parameters:
     ==========
     database: string. Name of database
-    
+
     Raises:
     ======
     ValueError if database can not be found
-    
+
     """
     _file_path = os.path.abspath(os.path.dirname(__file__))
-    _database_folder = os.path.join(_file_path, 'reference_data', database)
+    _data_folder = os.path.join(_file_path, 'reference_data')
+    _database_folder = os.path.join(_data_folder, database)
 
     if not os.path.exists(_database_folder):
-        raise ValueError("Database {} does not exist!".format(database))
+        _database_zip_path = _database_folder + '.zip'
+        if os.path.exists(_database_zip_path):
+            _database_zip = zipfile.ZipFile(_database_zip_path)
+            _database_zip.extractall(path=_data_folder)
+        else:
+            raise ValueError("Database {} does not exist!".format(database))
 
     # if '/_elements_list.csv' NOT exist
     if not os.path.exists(_database_folder + '/_elements_list.csv'):
@@ -95,10 +85,32 @@ def get_list_element_from_database(database='ENDF_VII'):
     return _list_element
 
 
+def is_element_in_database(element='', database='ENDF_VII'):
+    """will try to find the element in the folder (database) specified
+
+    Parameters:
+    ==========
+    element: string. Name of the element. Not case sensitive
+    database: string (default is 'ENDF_VII'). Name of folder that has the list of elements
+
+    Returns:
+    =======
+    bool: True if element was found in the database
+          False if element could not be found
+    """
+    if element == '':
+        return False
+
+    list_entry_from_database = get_list_element_from_database(database=database)
+    if element in list_entry_from_database:
+        return True
+    return False
+
+
 def checking_stack(stack, database='ENDF_VII'):
-    """This method makes sure that all the elements from the various stacks are 
+    """This method makes sure that all the elements from the various stacks are
     in the database and that the thickness has the correct format (float)
-    
+
     Parameters:
     ==========
     stack: dictionary that defines the various stacks
@@ -403,6 +415,7 @@ def get_sigma(database_file_name='', e_min=np.NaN, e_max=np.NaN, e_step=np.NaN, 
                     'sigma_b': _dict['y_axis']}
     else:
         raise ValueError("Doppler broadened cross-section in not yet supported in current version.")
+
 
 # # '.h5' files
 # if file_extension == '.h5':

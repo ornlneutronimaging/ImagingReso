@@ -9,8 +9,6 @@ from ImagingReso import _utilities
 
 
 class Resonance(object):
-    # database = 'ENDF_VIII'
-
     e_min = 1e-5
     e_max = 3e3
 
@@ -25,7 +23,7 @@ class Resonance(object):
     energy_min = np.NaN
     energy_step = np.NaN
 
-    def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001, database='ENDF_VIII'):
+    def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001, database='ENDF_VII'):
         """initialize resonance object
 
         :param stack: dictionary to store sample info
@@ -54,6 +52,16 @@ class Resonance(object):
         :type database: str
 
         """
+        if database not in ['ENDF_VII', 'ENDF_VIII', '_data_for_unittest']:
+            raise ValueError(
+                "Database {} entered not existed. \nCurrent support: ['ENDF_VII', 'ENDF_VIII'] ".format(database))
+        # else:
+        #     _file_path = os.path.abspath(os.path.dirname(__file__))
+        #     _database_folder = os.path.join(_file_path, 'reference_data', database)
+        #
+        #     if not os.path.exists(_database_folder):
+        #         _utilities.download_database(database)
+
         self.database = database
         self.__element_metadata = {}
 
@@ -75,7 +83,7 @@ class Resonance(object):
 
         if not stack == {}:
             # checking that every element of each stack is defined
-            _utilities.checking_stack(stack=stack,database=self.database)
+            _utilities.checking_stack(stack=stack, database=self.database)
             new_stack = self.__update_stack_with_isotopes_infos(stack=stack)
             self.stack = new_stack
 

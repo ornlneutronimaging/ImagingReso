@@ -9,22 +9,24 @@ from ImagingReso._utilities import *
 
 
 class TestUtilities_1(unittest.TestCase):
+    database = '_data_for_unittest'
+
     def test_is_element_in_database(self):
         """assert is_element_in_database works correctly for good and bad input elements"""
 
         # empty element
         _element = ''
-        _answer = is_element_in_database(element=_element)
+        _answer = is_element_in_database(element=_element, database=self.database)
         self.assertFalse(_answer)
 
         # element not in database
         _element = 'Ne'
-        _answer = is_element_in_database(element=_element)
+        _answer = is_element_in_database(element=_element, database=self.database)
         self.assertFalse(_answer)
 
         # element in database
         _element = 'Co'
-        _answer = is_element_in_database(element=_element)
+        _answer = is_element_in_database(element=_element, database=self.database)
         self.assertTrue(_answer)
 
     def test_get_list_of_element_raise_error_if_wrong_database(self):
@@ -42,7 +44,7 @@ class TestUtilities_1(unittest.TestCase):
                                         'units': 'mm'},
                           },
                    }
-        _result_1 = checking_stack(stack=stack_1)
+        _result_1 = checking_stack(stack=stack_1, database=self.database)
         self.assertTrue(_result_1)
 
         # complex set of stacks
@@ -51,13 +53,13 @@ class TestUtilities_1(unittest.TestCase):
                           'thickness': {'value': 0.03,
                                         'units': 'mm'},
                           },
-                   'GdEu': {'elements': ['Gd', 'Eu'],
-                            'stoichiometric_ratio': [1, 1],
-                            'thickness': {'value': 0.025,
-                                          'units': 'mm'},
-                            },
+                   'UO3': {'elements': ['U', 'O'],
+                           'stoichiometric_ratio': [1, 3],
+                           'thickness': {'value': 0.025,
+                                         'units': 'mm'},
+                           },
                    }
-        _result_2 = checking_stack(stack=stack_2)
+        _result_2 = checking_stack(stack=stack_2, database=self.database)
         self.assertTrue(_result_2)
 
     def test_checking_stack_raises_value_error_if_element_missing_from_database(self):
@@ -115,7 +117,7 @@ class TestUtilities_1(unittest.TestCase):
 
         # 'Ag'
         _formula_1 = 'Ag'
-        _dict_returned = formula_to_dictionary(formula=_formula_1)
+        _dict_returned = formula_to_dictionary(formula=_formula_1, database=self.database)
         _dict_expected = {'Ag': {'elements': ['Ag'],
                                  'stoichiometric_ratio': [1],
                                  'thickness': {'value': np.NaN, 'units': 'mm'},
@@ -126,7 +128,7 @@ class TestUtilities_1(unittest.TestCase):
 
         # 'Ag2Co'
         _formula_2 = 'Ag2Co'
-        _dict_returned = formula_to_dictionary(formula=_formula_2, thickness=10)
+        _dict_returned = formula_to_dictionary(formula=_formula_2, thickness=10, database=self.database)
         _dict_expected = {'Ag2Co': {'elements': ['Ag', 'Co'],
                                     'stoichiometric_ratio': [2, 1],
                                     'thickness': {'value': 10, 'units': 'mm'},
@@ -137,7 +139,7 @@ class TestUtilities_1(unittest.TestCase):
 
         # 'Ag2CoU3'
         _formula_3 = 'Ag2CoU3'
-        _dict_returned = formula_to_dictionary(formula=_formula_3, density=20)
+        _dict_returned = formula_to_dictionary(formula=_formula_3, density=20, database=self.database)
         _dict_expected = {'Ag2CoU3': {'elements': ['Ag', 'Co', 'U'],
                                       'stoichiometric_ratio': [2, 1, 3],
                                       'thickness': {'value': np.NaN, 'units': 'mm'},
@@ -148,7 +150,7 @@ class TestUtilities_1(unittest.TestCase):
 
         # 'Ag2Co' with thickness=0.025
         _formula_2 = 'Ag2Co'
-        _dict_returned = formula_to_dictionary(formula=_formula_2, thickness=0.025)
+        _dict_returned = formula_to_dictionary(formula=_formula_2, thickness=0.025, database=self.database)
         _dict_expected = {'Ag2Co': {'elements': ['Ag', 'Co'],
                                     'stoichiometric_ratio': [2, 1],
                                     'thickness': {'value': 0.025, 'units': 'mm'},
@@ -160,7 +162,7 @@ class TestUtilities_1(unittest.TestCase):
     def test_get_isotope_dicts_returns_correct_dictionary(self):
         """assert get_isotope_dict works with typical entry element Ag"""
         _element = 'Ag'
-        _dict_returned = get_isotope_dicts(element=_element)
+        _dict_returned = get_isotope_dicts(element=_element, database=self.database)
         _dict_expected = {'density': {'value': 10.5,
                                       'units': 'g/cm3'},
                           'isotopes': {'list': ['107-Ag', '109-Ag', '110-Ag', '111-Ag'],
@@ -203,7 +205,7 @@ class TestUtilities_1(unittest.TestCase):
     def test_get_isotope_dicts_returns_correct_element(self):
         """assert get_isotopes_dict returns correct isotopes if element with single symbol such as C"""
         _element = 'V'
-        _dict_returned = get_isotope_dicts(element=_element)
+        _dict_returned = get_isotope_dicts(element=_element, database=self.database)
         _dict_expected = {'isotopes': {'list': ['50-V', '51-V'], 'file_names': ['V-50.csv', 'V-51.csv'],
                                        'density': {'value': [5.990737703208583, 6.110295499877311], 'units': 'g/cm3'},
                                        'mass': {'value': [49.9471628, 50.9439637], 'units': 'g/mol'},
@@ -243,9 +245,12 @@ class TestUtilities_1(unittest.TestCase):
 
 
 class TestUtilities_2(unittest.TestCase):
+    database = '_data_for_unittest'
+
     def setUp(self):
         _file_path = os.path.dirname(__file__)
-        self.database_path = os.path.abspath(os.path.join(_file_path, '../../ImagingReso/reference_data/ENDF_VIII'))
+        self.database_path = os.path.abspath(
+            os.path.join(_file_path, '../../ImagingReso/reference_data/_data_for_unittest'))
 
     def test_get_database_name_raises_error_if_wrong_file(self):
         """assert IOError is raised if get_database has wrong file name passed in"""
@@ -320,7 +325,7 @@ class TestUtilities_2(unittest.TestCase):
                                        'units': 'mm'},
                          },
                   }
-        o_reso = Resonance(stack=_stack)
+        o_reso = Resonance(stack=_stack, database=self.database)
         _stack_returned = o_reso.stack
         _atoms_per_cm3 = get_atoms_per_cm3_of_layer(compound_dict=_stack['CoAg'])
         self.assertAlmostEqual(_atoms_per_cm3['Ag'], 3.5381585765227393e22, delta=1)
