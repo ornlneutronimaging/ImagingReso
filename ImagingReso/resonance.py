@@ -25,24 +25,34 @@ class Resonance(object):
     energy_min = np.NaN
     energy_step = np.NaN
 
-    def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001, database='ENDF_VIII'):
+    def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001, database='ENDF_VII'):
         """initialize resonance object
 
-        Parameters:
-        ==========
-        stack: dictionary
-          example: {'layer1': {'elements':['Ag','Si],
-                               'atomic_ratio': [1, 2],
-                               'thickness': {'value': 0.025,
-                                             'units': 'mm',
-                                             },
-                               'density': {'units': 'g/cm3',
-                                           'value': 0.5,
-                                           },
-                                }
-        energy_max: float (default 300) max energy in eV to use in calculation
-        energy_min: float (default 0) min energy in eV to use in calculation
-        energy_step: float (default 0.1) energy step to use in extrapolation of sigma data
+        :param stack: dictionary to store sample info
+
+              example: {'layer1': {'elements':['Ag','Si],
+                                   'atomic_ratio': [1, 2],
+                                   'thickness': {'value': 0.025,
+                                                 'units': 'mm',
+                                                 },
+                                   'density': {'units': 'g/cm3',
+                                               'value': 0.5,
+                                               },
+                                    }
+        :type stack: dictionary
+
+        :param energy_max: (default 300) max energy in eV to use in calculation
+        :type energy_max: float
+
+        :param energy_min: (default 0) min energy in eV to use in calculation
+        :type energy_min: float
+
+        :param energy_step: (default 0.1) energy step to use in extrapolation of sigma data
+        :type energy_step: float
+
+        :param database: database to extract cross-section info. ['ENDF_VII', 'ENDF_VIII']
+        :type database: str
+
         """
         self.database = database
         self.__element_metadata = {}
