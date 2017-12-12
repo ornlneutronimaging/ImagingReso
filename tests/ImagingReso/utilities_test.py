@@ -9,6 +9,7 @@ from ImagingReso._utilities import *
 
 
 class TestUtilities_1(unittest.TestCase):
+
     database = '_data_for_unittest'
 
     def test_is_element_in_database(self):

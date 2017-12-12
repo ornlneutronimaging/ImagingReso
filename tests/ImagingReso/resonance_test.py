@@ -19,7 +19,7 @@ class TestInitialization(unittest.TestCase):
 
     def test_database(self):
         """assert ValueError if unsupported or wrong database passed to Resonance()"""
-        self.assertRaises(ValueError, Resonance, database='do_not_exist')
+        self.assertRaises(ValueError, Resonance, database='_do_not_exist')
 
     def test_str(self):
         """assert print(object) works"""
