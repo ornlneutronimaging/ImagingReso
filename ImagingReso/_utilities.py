@@ -78,7 +78,7 @@ def get_list_element_from_database(database='ENDF_VII'):
 
     if not os.path.exists(_database_folder):
         print("First time using database '{}'? ".format(database))
-        print("Retrieving database and store a local copy of '{}': ".format(database))
+        print("Retrieving and will store a local copy of database'{}': ".format(database))
         download_from_github(fname=database + '.zip', path=_ref_data_folder)
 
     # if '/_elements_list.csv' NOT exist
