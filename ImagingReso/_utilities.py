@@ -10,10 +10,56 @@ import periodictable as pt
 from scipy.constants import Avogadro
 from scipy.interpolate import interp1d
 
+from six.moves import input
+from six.moves.urllib.request import urlopen
+import sys
 
-# def download_database(database_name):
-#     base_url = 'https://github.com/ornlneutronimaging/ImagingReso/blob/master/ImagingReso/reference_data/'
-#     url = base_url + database_name + '/'
+
+def download_from_github(fname, path):
+    base_url = 'https://github.com/ornlneutronimaging/ImagingReso/blob/master/ImagingReso/reference_data/'
+    # Add GitHub junk to the file name for downloading.
+    f = fname + '?raw=true'
+    url = base_url + f
+    block_size = 16384
+    req = urlopen(url)
+
+    # Get file size from header
+    if sys.version_info[0] < 3:
+        file_size = int(req.info().getheaders('Content-Length')[0])
+    else:
+        file_size = req.length
+    downloaded = 0
+
+    # Check if file already downloaded
+    if os.path.exists(fname):
+        if os.path.getsize(fname) == file_size:
+            print("Skipping downloading '{}'".format(fname))
+        else:
+            overwrite = input("File size changed, overwrite '{}'? ([y]/n) ".format(fname))
+            if overwrite.lower().startswith('n'):
+                print("Local file '{}' kept without overwriting.".format(fname))
+
+    # Copy file to disk
+    print("Downloading '{}'... ".format(fname), end='')
+    with open(fname, 'wb') as fh:
+        while True:
+            chunk = req.read(block_size)
+            if not chunk: break
+            fh.write(chunk)
+            downloaded += len(chunk)
+            # status = '{0:10}  [{1:3.2f}%]'.format(downloaded, downloaded * 100. / file_size)
+            # print(status + chr(8) * len(status), end='')
+        print('')
+    print('Download completed.')
+    print("Unzipping '{}'... ".format(fname))
+
+    _database_zip = zipfile.ZipFile(fname)
+    _database_zip.extractall(path=path)
+    print("'{}' has been unzipped and database '{}' is ready to use.".format(fname, fname.replace('.zip', '')))
+
+    remove_zip = input("Delete '{}'? ([y]/n) ".format(fname))
+    if remove_zip.lower().startswith('y'):
+        os.remove(fname)
 
 
 def get_list_element_from_database(database='ENDF_VII'):
@@ -29,16 +75,13 @@ def get_list_element_from_database(database='ENDF_VII'):
 
     """
     _file_path = os.path.abspath(os.path.dirname(__file__))
-    _data_folder = os.path.join(_file_path, 'reference_data')
-    _database_folder = os.path.join(_data_folder, database)
+    _ref_data_folder = os.path.join(_file_path, 'reference_data')
+    _database_folder = os.path.join(_ref_data_folder, database)
 
     if not os.path.exists(_database_folder):
-        _database_zip_path = _database_folder + '.zip'
-        if os.path.exists(_database_zip_path):
-            _database_zip = zipfile.ZipFile(_database_zip_path)
-            _database_zip.extractall(path=_data_folder)
-        else:
-            raise ValueError("Database {} does not exist!".format(database))
+        print("First time using database '{}'? ".format(database))
+        print("Retrieving database and store a local copy of '{}': ".format(database))
+        download_from_github(fname=database + '.zip', path=_ref_data_folder)
 
     # if '/_elements_list.csv' NOT exist
     if not os.path.exists(_database_folder + '/_elements_list.csv'):

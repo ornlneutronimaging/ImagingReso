@@ -29,11 +29,6 @@ class TestUtilities_1(unittest.TestCase):
         _answer = is_element_in_database(element=_element, database=self.database)
         self.assertTrue(_answer)
 
-    def test_get_list_of_element_raise_error_if_wrong_database(self):
-        """assert ValueError if wrong database passed to get_list_element_from_database"""
-        _database_1 = 'do_not_exist'
-        self.assertRaises(ValueError, get_list_element_from_database, database=_database_1)
-
     def test_checking_stack(self):
         """assert checking_stack_works in all good cases (1 or more stacks)"""
 

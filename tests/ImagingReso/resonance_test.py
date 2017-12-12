@@ -17,6 +17,10 @@ class TestInitialization(unittest.TestCase):
         energy_max = 10000
         self.assertRaises(ValueError, Resonance, energy_max=energy_max, database=self.database)
 
+    def test_database(self):
+        """assert ValueError if unsupported or wrong database passed to Resonance()"""
+        self.assertRaises(ValueError, Resonance, database='do_not_exist')
+
     def test_str(self):
         """assert print(object) works"""
         _stack = {'CoAg': {'elements': ['Co', 'Ag'],

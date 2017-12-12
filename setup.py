@@ -18,7 +18,6 @@ setup(
     author_email="zhangy6@ornl.gov, bilheuxjm@ornl.gov",
     packages=find_packages(exclude=['tests', 'notebooks']),
     package_data={'ImagingReso': ['reference_data/_data_for_unittest/*',
-                                  'reference_data/*.zip',
                                   ]},
     include_package_data=True,
     test_suite='tests',
@@ -29,6 +28,7 @@ setup(
         'pprint',
         'scipy',
         'matplotlib',
+        'six',
     ],
     dependency_links=[
     ],
