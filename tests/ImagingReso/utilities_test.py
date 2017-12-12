@@ -71,7 +71,7 @@ class TestUtilities_1(unittest.TestCase):
                                           'units': 'mm'},
                             },
                    }
-        self.assertRaises(ValueError, checking_stack, stack=stack_2)
+        self.assertRaises(ValueError, checking_stack, stack=stack_2, database=self.database)
 
     def test_checking_stack_raises_value_error_if_thickness_has_wrong_format(self):
         """assert checking_stack raises an error if thickness is not a number"""
@@ -86,7 +86,7 @@ class TestUtilities_1(unittest.TestCase):
                                           'units': 'mm'},
                             },
                    }
-        self.assertRaises(ValueError, checking_stack, stack=stack_2)
+        self.assertRaises(ValueError, checking_stack, stack=stack_2, database=self.database)
 
     def test_raises_error_when_size_stoichiometric_ratio_is_different_from_elements(self):
         """assert checking_stack raises error if size of stoichiometric_ratio and elements do not match"""
@@ -101,12 +101,12 @@ class TestUtilities_1(unittest.TestCase):
                                         'units': 'mm'},
                           },
                  }
-        self.assertRaises(ValueError, checking_stack, stack=stack)
+        self.assertRaises(ValueError, checking_stack, stack=stack, database=self.database)
 
     def test_formula_to_dictionary_raises_error_when_unknow_element(self):
         """assert formula_to_dictionary raises error if element is unknown"""
         _formula = 'NeCo'
-        self.assertRaises(ValueError, formula_to_dictionary, formula=_formula)
+        self.assertRaises(ValueError, formula_to_dictionary, formula=_formula, database=self.database)
 
     def test_formula_to_dictionary_works_with_various_cases(self):
         """assert formulla_to_dictionary works in all cases"""
@@ -196,7 +196,7 @@ class TestUtilities_1(unittest.TestCase):
     def test_get_isotope_returns_empty_dict_if_missing_element(self):
         """assert get_isotopes_dict raises ValueError if element can not be found such as Xo"""
         _element = 'Xo'
-        self.assertRaises(ValueError, get_isotope_dicts, element=_element)
+        self.assertRaises(ValueError, get_isotope_dicts, element=_element, database=self.database)
 
     def test_get_isotope_dicts_returns_correct_element(self):
         """assert get_isotopes_dict returns correct isotopes if element with single symbol such as C"""
