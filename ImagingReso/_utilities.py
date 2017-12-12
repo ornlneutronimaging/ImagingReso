@@ -16,6 +16,17 @@ import sys
 
 
 def download_from_github(fname, path):
+    """
+    Download database from GitHub
+
+    :param fname: file name with extenstion ('.zip') of the target item
+    :type fname: str
+    :param path: path to save unzipped files
+    :type path: str
+
+    :return: database folder
+    :rtype: folder
+    """
     base_url = 'https://github.com/ornlneutronimaging/ImagingReso/blob/master/ImagingReso/reference_data/'
     # Add GitHub junk to the file name for downloading.
     f = fname + '?raw=true'
