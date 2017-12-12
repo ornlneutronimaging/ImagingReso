@@ -28,7 +28,7 @@ def download_from_github(fname, path):
         file_size = int(req.info().getheaders('Content-Length')[0])
     else:
         file_size = req.length
-    downloaded = 0
+    # downloaded = 0
 
     # Check if file already downloaded
     if os.path.exists(fname):
@@ -46,9 +46,7 @@ def download_from_github(fname, path):
             chunk = req.read(block_size)
             if not chunk: break
             fh.write(chunk)
-            downloaded += len(chunk)
-            # status = '{0:10}  [{1:3.2f}%]'.format(downloaded, downloaded * 100. / file_size)
-            # print(status + chr(8) * len(status), end='')
+            # downloaded += len(chunk)
         print('')
     print('Download completed.')
     print("Unzipping '{}'... ".format(fname))
