@@ -66,9 +66,8 @@ def download_from_github(fname, path):
     _database_zip.extractall(path=path)
     print("'{}' has been unzipped and database '{}' is ready to use.".format(fname, fname.replace('.zip', '')))
 
-    remove_zip = input("Delete '{}'? ([y]/n) ".format(fname))
-    if remove_zip.lower().startswith('y'):
-        os.remove(fname)
+    os.remove(fname)
+    print("'{}' has been deleted".format(fname))
 
 
 def get_list_element_from_database(database='ENDF_VII'):
