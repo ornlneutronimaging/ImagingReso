@@ -87,9 +87,13 @@ def get_list_element_from_database(database='ENDF_VII'):
     _ref_data_folder = os.path.join(_file_path, 'reference_data')
     _database_folder = os.path.join(_ref_data_folder, database)
 
+    if not os.path.exists(_ref_data_folder):
+        os.makedirs(_ref_data_folder)
+        print("Folder to store database files has been created: '{}'".format(_ref_data_folder))
+
     if not os.path.exists(_database_folder):
         print("First time using database '{}'? ".format(database))
-        print("Retrieving and will store a local copy of database'{}': ".format(database))
+        print("I will retrieve and store a local copy of database'{}': ".format(database))
         download_from_github(fname=database + '.zip', path=_ref_data_folder)
 
     # if '/_elements_list.csv' NOT exist
