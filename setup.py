@@ -17,8 +17,8 @@ setup(
     author="Yuxuan (Shawn) Zhang, Jean Bilheux",
     author_email="zhangy6@ornl.gov, bilheuxjm@ornl.gov",
     packages=find_packages(exclude=['tests', 'notebooks']),
-    # package_data={'ImagingReso': ['reference_data/_data_for_unittest/*',]},
-    # include_package_data=True,
+    package_data={'ImagingReso': ['reference_data/_data_for_unittest/*',]},
+    include_package_data=True,
     test_suite='tests',
     install_requires=[
         'numpy',
