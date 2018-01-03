@@ -19,7 +19,7 @@ def download_from_github(fname, path):
     """
     Download database from GitHub
 
-    :param fname: file name with extenstion ('.zip') of the target item
+    :param fname: file name with extension ('.zip') of the target item
     :type fname: str
     :param path: path to save unzipped files
     :type path: str
