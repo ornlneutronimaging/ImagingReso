@@ -10,7 +10,7 @@ from ImagingReso import _utilities
 
 class Resonance(object):
     e_min = 1e-5
-    e_max = 3e3
+    e_max = 1e8
 
     stack = {}  # compound, thickness, atomic_ratio of each layer with isotopes information
     stack_sigma = {}  # all the energy and sigma of the isotopes and compounds
@@ -528,15 +528,16 @@ class Resonance(object):
     def plot(self, y_axis='attenuation', x_axis='energy',
              x_in_log=False, y_in_log=False,
              mixed=True, all_layers=False, all_elements=False,
-             all_isotopes=False, items_to_plot=None, time_unit='us', offset_us=0., time_resolution_us=0.16,
-             source_to_detector_m=16., lambda_max_angstroms=1, t_start_us=1):
+             all_isotopes=False, items_to_plot=None, time_unit='us', offset_us=0.,
+             source_to_detector_m=16., lambda_max_angstroms=1,
+             time_resolution_us=0.16, t_start_us=1):
         # offset delay values is normal 2.99 us with NONE actual MCP delay settings
         """display the transmission or attenuation of compound, element and/or isotopes specified
 
         Parameters:
         ===========
         :param x_axis: string. x type for export. Must be either ['energy'|'lambda'|'time'|'number']
-        :param y_axis: string. y type for export. Must be either ['transmission'|'attenuation']
+        :param y_axis: string. y type for export. Must be either ['transmission'|'attenuation'|'sigma']
         :param x_in_log: True -> display x in log scale
         :type x_in_log: boolean.
         :param y_in_log: True -> display y in log scale
@@ -554,11 +555,14 @@ class Resonance(object):
                 [['CoAg','Ag','107-Ag'], ['CoAg']]
             if the dictionary is empty, everything is exported
         :param time_unit: string. Must be either ['s'|'us'|'ns']
-        :param offset_us:
-        :param time_resolution_us:
-        :param source_to_detector_m:
+               Note: this will be used only when x_axis='time'
+        :param offset_us: default: 0
+               Note: only used when x_axis='number' or 'time'
+        :param source_to_detector_m: Note: this will be used only when x_axis='number' or 'time'
         :param lambda_max_angstroms: maximum lambda to display
-        :param t_start_us: when is the first acquisition started. default: 1
+        :param time_resolution_us: Note: this will be used only when x_axis='number'
+        :param t_start_us: when is the first acquisition occurred. default: 1
+               Note: this will be used only when x_axis='number'
 
         """
         if x_axis not in ['energy', 'lambda', 'time', 'number']:
@@ -628,7 +632,7 @@ class Resonance(object):
             y_axis_label = 'Neutron Attenuation'
         else:  # y_axis == 'sigma'
             y_axis_tag = 'sigma_b'
-            y_axis_label = 'Sigma (barns)'
+            y_axis_label = 'Cross-section (barns)'
 
         if mixed:
             if y_axis_tag[:5] != 'sigma':
@@ -723,10 +727,13 @@ class Resonance(object):
                 [['CoAg','Ag','107-Ag'], ['CoAg']]
             if the dictionary is empty, everything is exported
         :param time_unit: string. Must be either 's' or 'us' or 'ns'
-        :param offset_us:
-        :param time_resolution_us:
-        :param source_to_detector_m:
-        :param t_start_us: when is the first acquisition started. default: 1
+               Note: this will be used only when x_axis='time'
+        :param offset_us: default: 0
+               Note: only used when x_axis='number' or 'time'
+        :param source_to_detector_m: Note: this will be used only when x_axis='number' or 'time'
+        :param time_resolution_us: Note: this will be used only when x_axis='number'
+        :param t_start_us: when is the first acquisition occurred. default: 1
+               Note: this will be used only when x_axis='number'
 
         :return: simulated resonance signals or sigma in clipboard or single .csv file
         """
