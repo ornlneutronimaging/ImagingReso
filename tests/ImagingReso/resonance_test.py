@@ -14,7 +14,7 @@ class TestInitialization(unittest.TestCase):
 
     def test_E_max(self):
         """assert E can not be set above a given threshold"""
-        energy_max = 10000
+        energy_max = 1e9
         self.assertRaises(ValueError, Resonance, energy_max=energy_max, database=self.database)
 
     def test_database(self):
