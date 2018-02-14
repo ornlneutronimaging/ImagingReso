@@ -27,7 +27,7 @@ setup(
         'pprint',
         'scipy',
         'matplotlib',
-        'six',
+        'six', 'plotly',
     ],
     dependency_links=[
     ],

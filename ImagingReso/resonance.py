@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 
 from ImagingReso import _utilities
+import plotly.tools as tls
 
 
 class Resonance(object):
@@ -530,14 +531,16 @@ class Resonance(object):
              mixed=True, all_layers=False, all_elements=False,
              all_isotopes=False, items_to_plot=None, time_unit='us', offset_us=0.,
              source_to_detector_m=16., lambda_max_angstroms=1,
-             time_resolution_us=0.16, t_start_us=1):
+             time_resolution_us=0.16, t_start_us=1, plotly=False):
         # offset delay values is normal 2.99 us with NONE actual MCP delay settings
         """display the transmission or attenuation of compound, element and/or isotopes specified
 
         Parameters:
         ===========
-        :param x_axis: string. x type for export. Must be either ['energy'|'lambda'|'time'|'number']
-        :param y_axis: string. y type for export. Must be either ['transmission'|'attenuation'|'sigma']
+        :param x_axis: x type for export. Must be either ['energy'|'lambda'|'time'|'number']
+        :type x_axis: str
+        :param y_axis: y type for export. Must be either ['transmission'|'attenuation'|'sigma']
+        :type y_axis: str
         :param x_in_log: True -> display x in log scale
         :type x_in_log: boolean.
         :param y_in_log: True -> display y in log scale
@@ -563,6 +566,8 @@ class Resonance(object):
         :param time_resolution_us: Note: this will be used only when x_axis='number'
         :param t_start_us: when is the first acquisition occurred. default: 1
                Note: this will be used only when x_axis='number'
+        :param plotly: control to use plotly to display or not.
+        :type plotly: bool
 
         """
         if x_axis not in ['energy', 'lambda', 'time', 'number']:
@@ -582,6 +587,10 @@ class Resonance(object):
         _x_axis = self.total_signal['energy_eV']
         x_axis_label = None
 
+        # Creating the matplotlib graph..
+        mpl_fig = plt.figure()
+        ax = mpl_fig.add_subplot(111)
+
         """X-axis"""
         # determine values and labels for x-axis with options from
         # 'energy(eV)' & 'lambda(A)' & 'time(us)' & 'image number(#)'
@@ -590,7 +599,7 @@ class Resonance(object):
         if x_axis == 'lambda':
             x_axis_label = u"Wavelength (\u212B)"
             _x_axis = _utilities.ev_to_angstroms(array=_x_axis)
-            plt.xlim(xmax=lambda_max_angstroms)
+            ax.set_xlim(xmax=lambda_max_angstroms)
         if x_axis == 'time':
             if time_unit == 's':
                 x_axis_label = 'Time (s)'
@@ -634,30 +643,35 @@ class Resonance(object):
             y_axis_tag = 'sigma_b'
             y_axis_label = 'Cross-section (barns)'
 
+        if y_axis_tag[:5] == 'sigma':
+            mixed = False
+            all_layers = False
+            print("'y_axis='sigma'' is selected. Auto force 'mixed=False', 'all_layers=False'")
+
         if mixed:
-            if y_axis_tag[:5] != 'sigma':
-                _y_axis = self.total_signal[y_axis_tag]
-                plt.plot(_x_axis, _y_axis, label="Total")
-            else:
-                raise ValueError("Mixed sigma is not supported.")
+            # if y_axis_tag[:5] != 'sigma':
+            _y_axis = self.total_signal[y_axis_tag]
+            ax.plot(_x_axis, _y_axis, label="Total")
+            # else:
+            #     print("Mixed sigma is not supported. 'mixed=True'")
 
         if all_layers:
             for _compound in _stack.keys():
-                if y_axis_tag[:5] != 'sigma':
-                    _y_axis = _stack_signal[_compound][y_axis_tag]
-                    plt.plot(_x_axis, _y_axis, label=_compound)
-                else:
-                    raise ValueError("Layer sigma is not supported.")
+                # if y_axis_tag[:5] != 'sigma':
+                _y_axis = _stack_signal[_compound][y_axis_tag]
+                ax.plot(_x_axis, _y_axis, label=_compound)
+                # else:
+                #     raise ValueError("Layer sigma is not supported.")
 
         if all_elements:
             for _compound in _stack.keys():
                 for _element in _stack[_compound]['elements']:
                     if y_axis_tag[:5] != 'sigma':
                         _y_axis = _stack_signal[_compound][_element][y_axis_tag]
-                        plt.plot(_x_axis, _y_axis, label="{}/{}".format(_compound, _element))
+                        ax.plot(_x_axis, _y_axis, label="{}/{}".format(_compound, _element))
                     else:
                         _y_axis = _stack_sigma[_compound][_element][y_axis_tag]
-                        plt.plot(_x_axis, _y_axis, label="{}/{}".format(_compound, _element))
+                        ax.plot(_x_axis, _y_axis, label="{}/{}".format(_compound, _element))
 
         if all_isotopes:
             for _compound in _stack.keys():
@@ -665,10 +679,10 @@ class Resonance(object):
                     for _isotope in _stack[_compound][_element]['isotopes']['list']:
                         if y_axis_tag[:5] != 'sigma':
                             _y_axis = _stack_signal[_compound][_element][_isotope][y_axis_tag]
-                            plt.plot(_x_axis, _y_axis, label="{}/{}/{}".format(_compound, _element, _isotope))
+                            ax.plot(_x_axis, _y_axis, label="{}/{}/{}".format(_compound, _element, _isotope))
                         else:
                             _y_axis = _stack_sigma[_compound][_element][_isotope][y_axis_tag]
-                            plt.plot(_x_axis, _y_axis, label="{}/{}/{}".format(_compound, _element, _isotope))
+                            ax.plot(_x_axis, _y_axis, label="{}/{}/{}".format(_compound, _element, _isotope))
 
         """Y-axis for specified items_to_plot"""
         if items_to_plot is not None:
@@ -684,19 +698,23 @@ class Resonance(object):
                     _live_path = _live_path[_item]
 
                 _y_axis = _live_path[y_axis_tag]
-                plt.plot(_x_axis, _y_axis, label=_label)
+                ax.plot(_x_axis, _y_axis, label=_label)
 
         if y_axis_tag != 'sigma_b':
-            plt.ylim(-0.01, 1.01)
+            ax.set_ylim(-0.01, 1.01)
         if y_in_log is True:
-            plt.yscale('log')
+            ax.set_yscale('log')
         if x_in_log is True:
-            plt.xscale('log')
-        plt.xlabel(x_axis_label)
-        plt.ylabel(y_axis_label)
-        plt.legend(loc='best')
-        plt.tight_layout()
-        plt.show()
+            ax.set_xscale('log')
+        ax.set_xlabel(x_axis_label)
+        ax.set_ylabel(y_axis_label)
+        if not plotly:
+            ax.legend(loc='best')
+            # plt.tight_layout()
+            return mpl_fig
+        else:
+            plotly_fig = tls.mpl_to_plotly(mpl_fig)
+            return plotly_fig
 
     def export(self, filename=None, x_axis='energy', y_axis='attenuation', mixed=True,
                all_layers=False, all_elements=False, all_isotopes=False, items_to_export=None,
