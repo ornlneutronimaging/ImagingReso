@@ -527,7 +527,7 @@ class Resonance(object):
         self.stack_sigma = stack_sigma
 
     def plot(self, y_axis='attenuation', x_axis='energy',
-             x_in_log=False, y_in_log=False,
+             logx=False, logy=False,
              mixed=True, all_layers=False, all_elements=False,
              all_isotopes=False, items_to_plot=None, time_unit='us', offset_us=0.,
              source_to_detector_m=16., lambda_max_angstroms=1,
@@ -541,10 +541,10 @@ class Resonance(object):
         :type x_axis: str
         :param y_axis: y type for export. Must be either ['transmission'|'attenuation'|'sigma']
         :type y_axis: str
-        :param x_in_log: True -> display x in log scale
-        :type x_in_log: boolean.
-        :param y_in_log: True -> display y in log scale
-        :type y_in_log: boolean.
+        :param logx: True -> display x in log scale
+        :type logx: boolean.
+        :param logy: True -> display y in log scale
+        :type logy: boolean.
         :param mixed: boolean. True -> display the total of each layer
                                False -> not displayed
         :param all_layers: boolean. True -> display all layers
@@ -702,9 +702,9 @@ class Resonance(object):
 
         if y_axis_tag != 'sigma_b':
             ax.set_ylim(-0.01, 1.01)
-        if y_in_log is True:
+        if logy is True:
             ax.set_yscale('log')
-        if x_in_log is True:
+        if logx is True:
             ax.set_xscale('log')
         ax.set_xlabel(x_axis_label)
         ax.set_ylabel(y_axis_label)
@@ -714,6 +714,7 @@ class Resonance(object):
             return mpl_fig
         else:
             plotly_fig = tls.mpl_to_plotly(mpl_fig)
+            plotly_fig.layout.showlegend = True
             return plotly_fig
 
     def export(self, filename=None, x_axis='energy', y_axis='attenuation', mixed=True,
