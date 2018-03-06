@@ -265,7 +265,8 @@ class TestUtilities_2(unittest.TestCase):
         df = get_database_data(file_name=file_name)
         e_min = 300
         e_max = 600
-        _dict = get_interpolated_data(df=df, e_min=e_min, e_max=e_max, e_step=10)
+        e_step = 10
+        _dict = get_interpolated_data(df=df, e_min=e_min, e_max=e_max, e_step=e_step)
 
         # first value
         x_axis_0_returned = _dict['x_axis'][0]
@@ -273,7 +274,7 @@ class TestUtilities_2(unittest.TestCase):
         x_axis_0_expected = 300
         y_axis_0_expected = 4.101356
         self.assertEqual(x_axis_0_expected, x_axis_0_returned)
-        self.assertAlmostEqual(y_axis_0_expected, y_axis_0_returned, delta=0.001)
+        self.assertAlmostEqual(y_axis_0_expected, y_axis_0_returned, delta=0.00001)
 
         # last value
         x_axis_last_returned = _dict['x_axis'][-1]
@@ -282,6 +283,10 @@ class TestUtilities_2(unittest.TestCase):
         y_axis_last_expected = 7.237503
         self.assertEqual(x_axis_last_expected, x_axis_last_returned)
         self.assertAlmostEqual(y_axis_last_expected, y_axis_last_returned, delta=0.00001)
+
+        x_returned = _dict['x_axis'][1]
+        x_expected = 310
+        self.assertEqual(x_expected, x_returned)
 
     def test_get_sigma(self):
         """assert get_sigma returns the correct dictionary of energy and sigma keys"""
@@ -296,7 +301,7 @@ class TestUtilities_2(unittest.TestCase):
         energy_0_expected = 300
         sigma_0_expected = 4.101356
         self.assertEqual(energy_0_expected, energy_0_returned)
-        self.assertAlmostEqual(sigma_0_expected, sigma_0_returned, delta=0.001)
+        self.assertAlmostEqual(sigma_0_expected, sigma_0_returned, delta=0.00001)
 
         # last value
         energy_last_returned = _dict_returned['energy_eV'][-1]
@@ -305,6 +310,10 @@ class TestUtilities_2(unittest.TestCase):
         sigma_last_expected = 7.2375030
         self.assertEqual(energy_last_expected, energy_last_returned)
         self.assertAlmostEquals(sigma_last_expected, sigma_last_returned, delta=0.0001)
+
+        energy_1_returned = _dict_returned['energy_eV'][1]
+        energy_1_expected = 310
+        self.assertEqual(energy_1_returned, energy_1_expected)
 
     def test_get_atoms_per_cm3_of_layer(self):
         """assert get_atoms_per_cm3_of_layer works"""
