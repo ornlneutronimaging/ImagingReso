@@ -646,7 +646,8 @@ class Resonance(object):
         if y_axis_tag[:5] == 'sigma':
             mixed = False
             all_layers = False
-            print("'y_axis='sigma'' is selected. Auto force 'mixed=False', 'all_layers=False'")
+            all_isotopes = True
+            print("'y_axis='sigma'' is selected. Auto force 'mixed=False', 'all_layers=False', 'all_isotopes=True'")
 
         if mixed:
             # if y_axis_tag[:5] != 'sigma':
