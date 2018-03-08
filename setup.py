@@ -24,7 +24,6 @@ setup(
         'numpy',
         'pandas',
         'periodictable',
-        'pprint',
         'scipy',
         'matplotlib',
         'six', 'plotly',

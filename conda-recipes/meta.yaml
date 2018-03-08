@@ -21,7 +21,6 @@ requirements:
   run:
     - python
     - matplotlib
-    - pprint
     - periodictable
     - numpy
     - scipy
@@ -36,5 +35,5 @@ test:
 about:
   home: https://github.com/ornlneutronimaging/ImagingReso
   license: BSD 3-Clause
-  summary: ipywidgets extensions for neutron scattering data analysis
+  summary: a tool to simulate neutron resonance signal for neutron resonance imaging
 
