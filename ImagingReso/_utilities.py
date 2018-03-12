@@ -51,7 +51,7 @@ def download_from_github(fname, path):
                 print("Local file '{}' kept without overwriting.".format(fname))
 
     # Copy file to disk
-    print("Downloading '{}'... ".format(fname), end='')
+    print("Downloading '{}'... ".format(fname))
     with open(fname, 'wb') as fh:
         while True:
             chunk = req.read(block_size)
