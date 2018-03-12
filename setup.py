@@ -13,7 +13,7 @@ def read_file(filename):
 
 setup(
     name="ImagingReso",
-    version="1.6.1",
+    version="1.6.2",
     author="Yuxuan (Shawn) Zhang, Jean Bilheux",
     author_email="zhangy6@ornl.gov, bilheuxjm@ornl.gov",
     packages=find_packages(exclude=['tests', 'notebooks']),
@@ -39,7 +39,6 @@ setup(
                  'License :: OSI Approved :: BSD License',
                  'Topic :: Scientific/Engineering :: Physics',
                  'Intended Audience :: Developers',
-                 'Programming Language :: Python',
                  'Programming Language :: Python :: 3.5',
                  'Programming Language :: Python :: 3.6',
                  'Natural Language :: English'],
