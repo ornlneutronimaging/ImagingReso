@@ -530,7 +530,7 @@ class Resonance(object):
              logx=False, logy=False,
              mixed=True, all_layers=False, all_elements=False,
              all_isotopes=False, items_to_plot=None, time_unit='us', offset_us=0.,
-             source_to_detector_m=16., lambda_max_angstroms=1,
+             source_to_detector_m=16.,
              time_resolution_us=0.16, t_start_us=1, plotly=False):
         # offset delay values is normal 2.99 us with NONE actual MCP delay settings
         """display the transmission or attenuation of compound, element and/or isotopes specified
@@ -562,7 +562,6 @@ class Resonance(object):
         :param offset_us: default: 0
                Note: only used when x_axis='number' or 'time'
         :param source_to_detector_m: Note: this will be used only when x_axis='number' or 'time'
-        :param lambda_max_angstroms: maximum lambda to display
         :param time_resolution_us: Note: this will be used only when x_axis='number'
         :param t_start_us: when is the first acquisition occurred. default: 1
                Note: this will be used only when x_axis='number'
@@ -599,7 +598,7 @@ class Resonance(object):
         if x_axis == 'lambda':
             x_axis_label = u"Wavelength (\u212B)"
             _x_axis = _utilities.ev_to_angstroms(array=_x_axis)
-            ax.set_xlim(xmax=lambda_max_angstroms)
+            # ax.set_xlim(xmax=lambda_max_angstroms)
         if x_axis == 'time':
             if time_unit == 's':
                 x_axis_label = 'Time (s)'
