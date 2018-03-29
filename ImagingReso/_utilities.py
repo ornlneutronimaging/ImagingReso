@@ -229,7 +229,7 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
     """
     _formula_parsed = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
 
-    _dictionary = {}
+    # _dictionary = {}
     _elements_array = []
     _atomic_ratio_array = []
     for _element in _formula_parsed:
@@ -292,7 +292,7 @@ def get_isotope_dicts(element='', database='ENDF_VII'):
                                    'units': 'g/mol'},
                     }
 
-    isotope_dict_mirror = {}
+    # isotope_dict_mirror = {}
     _isotopes_list = []
     _isotopes_list_files = []
     _isotopes_mass = []

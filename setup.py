@@ -13,7 +13,7 @@ def read_file(filename):
 
 setup(
     name="ImagingReso",
-    version="1.6.2",
+    version="1.6.3",
     author="Yuxuan (Shawn) Zhang, Jean Bilheux",
     author_email="zhangy6@ornl.gov, bilheuxjm@ornl.gov",
     packages=find_packages(exclude=['tests', 'notebooks']),
@@ -26,7 +26,8 @@ setup(
         'periodictable',
         'scipy',
         'matplotlib',
-        'six', 'plotly',
+        'six',
+        'plotly',
     ],
     dependency_links=[
     ],
