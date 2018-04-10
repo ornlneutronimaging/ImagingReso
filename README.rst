@@ -1,6 +1,10 @@
 ImagingReso
 ===========
 
+.. image:: https://anaconda.org/conda-forge/imagingreso/badges/latest_release_date.svg
+  :target: https://anaconda.org/conda-forge/imagingreso
+  :alt: latest_release_date
+
 .. image:: https://img.shields.io/pypi/v/ImagingReso.svg
   :target: https://pypi.python.org/pypi/ImagingReso
   :alt: pypi
@@ -9,13 +13,13 @@ ImagingReso
   :target: https://anaconda.org/conda-forge/imagingreso
   :alt: conda
 
+.. image:: https://anaconda.org/conda-forge/imagingreso/badges/platforms.svg
+  :target: https://anaconda.org/conda-forge/imagingreso
+  :alt: platform
+
 .. image:: https://readthedocs.org/projects/imagingreso/badge/?version=latest
   :target: http://imagingreso.readthedocs.io/en/latest/?badge=latest
   :alt: readthedocs
-
-.. image:: http://joss.theoj.org/papers/997d09281a9d76e95f4ec4d3279eeb8c/status.svg
-  :target: http://joss.theoj.org/papers/997d09281a9d76e95f4ec4d3279eeb8c
-  :alt: DOI
 
 .. image:: https://travis-ci.org/ornlneutronimaging/ImagingReso.svg?branch=master
   :target: https://travis-ci.org/ornlneutronimaging/ImagingReso
@@ -25,21 +29,17 @@ ImagingReso
   :target: https://codecov.io/gh/ornlneutronimaging/ImagingReso
   :alt: codecov
 
+.. image:: http://joss.theoj.org/papers/997d09281a9d76e95f4ec4d3279eeb8c/status.svg
+  :target: http://joss.theoj.org/papers/997d09281a9d76e95f4ec4d3279eeb8c
+  :alt: DOI
+
 .. image:: https://anaconda.org/conda-forge/imagingreso/badges/downloads.svg
   :target: https://anaconda.org/conda-forge/imagingreso
   :alt: downloads
 
-.. image:: https://anaconda.org/conda-forge/imagingreso/badges/platforms.svg
-  :target: https://anaconda.org/conda-forge/imagingreso
-  :alt: platform
-
 .. image:: https://anaconda.org/conda-forge/imagingreso/badges/license.svg
   :target: https://anaconda.org/conda-forge/imagingreso
   :alt: license
-
-.. image:: https://anaconda.org/conda-forge/imagingreso/badges/latest_release_date.svg
-  :target: https://anaconda.org/conda-forge/imagingreso
-  :alt: latest_release_date
 
 Abstract
 --------
@@ -111,9 +111,9 @@ or
 or by typing the following command under downloaded directory in
 Terminal:
 
-.. code-block:: python
+.. code-block:: bash
    
-   python setup.py
+   $ python setup.py
 
 Example usage
 -------------
