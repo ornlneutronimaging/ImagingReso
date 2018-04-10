@@ -57,6 +57,11 @@ Install **ImagingReso** by typing the following command in Terminal:
 
 ``pip install ImagingReso``
 
+or
+
+``conda config --add channels conda-forge``
+``conda install imagingreso``
+
 or by typing the following command under downloaded directory in
 Terminal:
 
