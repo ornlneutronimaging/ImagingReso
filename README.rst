@@ -17,6 +17,14 @@ ImagingReso
   :target: https://anaconda.org/conda-forge/imagingreso
   :alt: platform
 
+.. image:: https://anaconda.org/conda-forge/imagingreso/badges/downloads.svg
+  :target: https://anaconda.org/conda-forge/imagingreso
+  :alt: downloads
+
+.. image:: https://anaconda.org/conda-forge/imagingreso/badges/license.svg
+  :target: https://anaconda.org/conda-forge/imagingreso
+  :alt: license
+
 .. image:: https://readthedocs.org/projects/imagingreso/badge/?version=latest
   :target: http://imagingreso.readthedocs.io/en/latest/?badge=latest
   :alt: readthedocs
@@ -32,14 +40,6 @@ ImagingReso
 .. image:: http://joss.theoj.org/papers/997d09281a9d76e95f4ec4d3279eeb8c/status.svg
   :target: http://joss.theoj.org/papers/997d09281a9d76e95f4ec4d3279eeb8c
   :alt: DOI
-
-.. image:: https://anaconda.org/conda-forge/imagingreso/badges/downloads.svg
-  :target: https://anaconda.org/conda-forge/imagingreso
-  :alt: downloads
-
-.. image:: https://anaconda.org/conda-forge/imagingreso/badges/license.svg
-  :target: https://anaconda.org/conda-forge/imagingreso
-  :alt: license
 
 Abstract
 --------
