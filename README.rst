@@ -25,13 +25,13 @@ ImagingReso
   :target: https://anaconda.org/conda-forge/imagingreso
   :alt: license
 
-.. image:: https://readthedocs.org/projects/imagingreso/badge/?version=latest
-  :target: http://imagingreso.readthedocs.io/en/latest/?badge=latest
-  :alt: readthedocs
-
 .. image:: https://travis-ci.org/ornlneutronimaging/ImagingReso.svg?branch=master
   :target: https://travis-ci.org/ornlneutronimaging/ImagingReso
   :alt: travis
+
+.. image:: https://readthedocs.org/projects/imagingreso/badge/?version=latest
+  :target: http://imagingreso.readthedocs.io/en/latest/?badge=latest
+  :alt: readthedocs
 
 .. image:: https://codecov.io/gh/ornlneutronimaging/ImagingReso/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/ornlneutronimaging/ImagingReso
