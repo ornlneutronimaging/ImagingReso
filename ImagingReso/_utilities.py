@@ -431,9 +431,9 @@ def get_interpolated_data(df=pd.DataFrame, e_min=np.NaN, e_max=np.NaN, e_step=np
     :rtype: dict
     """
     nbr_point = int((e_max - e_min) / e_step + 1)
-    x_axis = np.linspace(e_min, e_max, nbr_point)
+    x_axis = np.linspace(e_min, e_max, nbr_point).round(5)
     y_axis_function = interp1d(x=df['E_eV'], y=df['Sig_b'], kind='linear')
-    y_axis = y_axis_function(x_axis.round(5))
+    y_axis = y_axis_function(x_axis)
 
     return {'x_axis': x_axis, 'y_axis': y_axis}
 

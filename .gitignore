@@ -36,6 +36,8 @@ MANIFEST
 .idea/**/misc.xml
 .idea/**/modules.xml
 .idea/**/vcs.xml
+.pytest_cache
+
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
