@@ -9,7 +9,7 @@ from ImagingReso import _utilities
 import plotly.tools as tls
 
 x_type_list = ['energy', 'lambda', 'time', 'number']
-y_type_list = ['transmission', 'attenuation', 'sigma', 'sigma_b_raw']
+y_type_list = ['transmission', 'attenuation', 'sigma', 'sigma_raw']
 time_unit_list = ['s', 'us', 'ns']
 
 
