@@ -8,6 +8,10 @@ import pandas as pd
 from ImagingReso import _utilities
 import plotly.tools as tls
 
+x_type_list = ['energy', 'lambda', 'time', 'number']
+y_type_list = ['transmission', 'attenuation', 'sigma', 'sigma_b_raw']
+time_unit_list = ['s', 'us', 'ns']
+
 
 class Resonance(object):
     e_min = 1e-5
@@ -569,13 +573,13 @@ class Resonance(object):
         :type plotly: bool
 
         """
-        if x_axis not in ['energy', 'lambda', 'time', 'number']:
-            raise ValueError("Please specify the x-axis type using one from '['energy', 'lambda', 'time', 'number']'.")
-        if time_unit not in ['s', 'us', 'ns']:
-            raise ValueError("Please specify the time unit using one from '['s', 'us', 'ns']'.")
-        if y_axis not in ['transmission', 'attenuation', 'sigma']:
+        if x_axis not in x_type_list:
+            raise ValueError("Please specify the x-axis type using one from '{}'.".format(x_type_list))
+        if time_unit not in time_unit_list:
+            raise ValueError("Please specify the time unit using one from '{}'.".format(time_unit_list))
+        if y_axis not in y_type_list:
             raise ValueError(
-                "Please specify the y-axis type using one from '['transmission', 'attenuation', 'sigma']'.")
+                "Please specify the y-axis type using one from '{}'.".format(y_type_list))
         # figure size
         # plt.figure(figsize=(8, 8))
 
@@ -638,8 +642,11 @@ class Resonance(object):
             y_axis_label = 'Neutron Transmission'
         elif y_axis == 'attenuation':
             y_axis_label = 'Neutron Attenuation'
-        else:  # y_axis == 'sigma'
+        elif y_axis == 'sigma':
             y_axis_tag = 'sigma_b'
+            y_axis_label = 'Cross-section (barns)'
+        else:  # y_axis == 'sigma_raw':
+            y_axis_tag = 'sigma_b_raw'
             y_axis_label = 'Cross-section (barns)'
 
         if y_axis_tag[:5] == 'sigma':
@@ -756,13 +763,13 @@ class Resonance(object):
 
         :return: simulated resonance signals or sigma in clipboard or single .csv file
         """
-        if x_axis not in ['energy', 'lambda', 'time', 'number']:
-            raise ValueError("Please specify the x-axis type using one from '['energy', 'lambda', 'time', 'number']'.")
-        if time_unit not in ['s', 'us', 'ns']:
-            raise ValueError("Please specify the time unit using one from '['s', 'us', 'ns']'.")
-        if y_axis not in ['transmission', 'attenuation', 'sigma']:
+        if x_axis not in x_type_list:
+            raise ValueError("Please specify the x-axis type using one from '{}'.".format(x_type_list))
+        if time_unit not in time_unit_list:
+            raise ValueError("Please specify the time unit using one from '{}'.".format(time_unit_list))
+        if y_axis not in y_type_list:
             raise ValueError(
-                "Please specify the y-axis type using one from '['transmission', 'attenuation', 'sigma']'.")
+                "Please specify the y-axis type using one from '{}'.".format(y_type_list))
         # stack from self
         _stack_signal = self.stack_signal
         _stack = self.stack
@@ -813,7 +820,7 @@ class Resonance(object):
         df[x_axis_label] = _x_axis
 
         """Y-axis"""
-        if y_axis != 'sigma':
+        if y_axis[:5] != 'sigma':
             # export transmission or attenuation
             y_axis_tag = y_axis
             if mixed:
@@ -851,8 +858,11 @@ class Resonance(object):
                     df[_label] = _y_axis
         else:
             # export sigma
+            if y_axis == 'sigma':
+                y_axis_tag = 'sigma_b'
+            else:
+                y_axis_tag = 'sigma_b_raw'
             _stack_sigma = self.stack_sigma
-            y_axis_tag = 'sigma_b'
             if items_to_export is None:
                 for _compound in _stack.keys():
                     for _element in _stack[_compound]['elements']:

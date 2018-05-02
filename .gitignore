@@ -23,7 +23,7 @@ MANIFEST
 
 # Unit test / coverage reports
 .coverage 
-
+.pytest_cache
 
 # User-specific stuff:
 .idea/**/tasks.xml
