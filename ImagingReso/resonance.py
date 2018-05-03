@@ -602,7 +602,6 @@ class Resonance(object):
         if x_axis == 'lambda':
             x_axis_label = u"Wavelength (\u212B)"
             _x_axis = _utilities.ev_to_angstroms(array=_x_axis)
-            # ax.set_xlim(xmax=lambda_max_angstroms)
         if x_axis == 'time':
             if time_unit == 's':
                 x_axis_label = 'Time (s)'
@@ -652,23 +651,16 @@ class Resonance(object):
         if y_axis_tag[:5] == 'sigma':
             mixed = False
             all_layers = False
-            all_isotopes = True
-            print("'y_axis='sigma'' is selected. Auto force 'mixed=False', 'all_layers=False', 'all_isotopes=True'")
+            print("'y_axis='sigma'' is selected. Auto force 'mixed=False', 'all_layers=False'")
 
         if mixed:
-            # if y_axis_tag[:5] != 'sigma':
             _y_axis = self.total_signal[y_axis_tag]
             ax.plot(_x_axis, _y_axis, label="Total")
-            # else:
-            #     print("Mixed sigma is not supported. 'mixed=True'")
 
         if all_layers:
             for _compound in _stack.keys():
-                # if y_axis_tag[:5] != 'sigma':
                 _y_axis = _stack_signal[_compound][y_axis_tag]
                 ax.plot(_x_axis, _y_axis, label=_compound)
-                # else:
-                #     raise ValueError("Layer sigma is not supported.")
 
         if all_elements:
             for _compound in _stack.keys():
@@ -677,7 +669,7 @@ class Resonance(object):
                         _y_axis = _stack_signal[_compound][_element][y_axis_tag]
                         ax.plot(_x_axis, _y_axis, label="{}/{}".format(_compound, _element))
                     else:
-                        _y_axis = _stack_sigma[_compound][_element][y_axis_tag]
+                        _y_axis = _stack_sigma[_compound][_element]['sigma_b']
                         ax.plot(_x_axis, _y_axis, label="{}/{}".format(_compound, _element))
 
         if all_isotopes:
@@ -695,7 +687,7 @@ class Resonance(object):
         if items_to_plot is not None:
             for _path_to_plot in items_to_plot:
                 _path_to_plot = list(_path_to_plot)
-                if y_axis_tag != 'sigma_b':
+                if y_axis_tag[:5] != 'sigma':
                     _live_path = _stack_signal
                 else:
                     _live_path = _stack_sigma
@@ -707,7 +699,7 @@ class Resonance(object):
                 _y_axis = _live_path[y_axis_tag]
                 ax.plot(_x_axis, _y_axis, label=_label)
 
-        if y_axis_tag != 'sigma_b':
+        if y_axis_tag[:5] != 'sigma':
             ax.set_ylim(-0.01, 1.01)
         if logy is True:
             ax.set_yscale('log')
@@ -862,11 +854,12 @@ class Resonance(object):
                 y_axis_tag = 'sigma_b'
             else:
                 y_axis_tag = 'sigma_b_raw'
+            # y_axis_tag = 'sigma_b_raw'
             _stack_sigma = self.stack_sigma
             if items_to_export is None:
                 for _compound in _stack.keys():
                     for _element in _stack[_compound]['elements']:
-                        _y_axis = _stack_sigma[_compound][_element][y_axis_tag]
+                        _y_axis = _stack_sigma[_compound][_element]['sigma_b']  # No 'sigma_b_raw' at this level
                         df[_compound + '/' + _element + '/atoms_per_cm3'] = _stack[_compound]['atoms_per_cm3'][_element]
                         df[_compound + '/' + _element] = _y_axis
                         if all_isotopes:
