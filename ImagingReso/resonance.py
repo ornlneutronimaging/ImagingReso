@@ -886,6 +886,7 @@ class Resonance(object):
         if len(df.columns) <= 1:
             raise ValueError("No y values have been selected to export!")
         if filename is None:
-            df.to_clipboard(excel=True)
+            df.to_clipboard(excel=True, index=False)
         else:
             df.to_csv(filename)
+        return df
