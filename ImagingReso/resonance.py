@@ -591,8 +591,7 @@ class Resonance(object):
         x_axis_label = None
 
         # Creating the matplotlib graph..
-        mpl_fig = plt.figure()
-        ax = mpl_fig.add_subplot(111)
+        mpl_fig, ax = plt.subplots()
 
         """X-axis"""
         # determine values and labels for x-axis with options from
@@ -710,7 +709,7 @@ class Resonance(object):
         if not plotly:
             ax.legend(loc='best')
             # plt.tight_layout()
-            return mpl_fig
+            return ax
         else:
             plotly_fig = tls.mpl_to_plotly(mpl_fig)
             plotly_fig.layout.showlegend = True
