@@ -536,7 +536,7 @@ class Resonance(object):
              all_isotopes=False, items_to_plot=None, time_unit='us', offset_us=0.,
              source_to_detector_m=16.,
              time_resolution_us=0.16, t_start_us=1, plotly=False, ax_mpl=None,
-             mt='-', ms='2', ls='-', lw='1.5'):
+             fmt='-', ms='2', lw='1.5', alpha=1):
         # offset delay values is normal 2.99 us with NONE actual MCP delay settings
         """display the transmission or attenuation of compound, element and/or isotopes specified
 
@@ -574,6 +574,14 @@ class Resonance(object):
         :type plotly: bool
         :param ax_mpl: matplotlib.axes to plot against
         :type ax_mpl: matplotlib.axes
+        :param fmt: matplotlib.axes.plot kwargs
+        :type fmt: str
+        :param ms: matplotlib.axes.plot kwargs
+        :type ms: float
+        :param lw: matplotlib.axes.plot kwargs
+        :type lw: float
+        :param alpha: matplotlib.axes.plot kwargs
+        :type alpha: float
 
         """
         if x_axis not in x_type_list:
@@ -659,22 +667,24 @@ class Resonance(object):
 
         if mixed:
             _y_axis = self.total_signal[y_axis_tag]
-            ax_mpl.plot(_x_axis, _y_axis, mt=mt, ms=ms, ls=ls, lw=lw, label="Total")
+            ax_mpl.plot(_x_axis, _y_axis, fmt, ms=ms, lw=lw, alpha=alpha, label="Total")
 
         if all_layers:
             for _compound in _stack.keys():
                 _y_axis = _stack_signal[_compound][y_axis_tag]
-                ax_mpl.plot(_x_axis, _y_axis, mt=mt, ms=ms, ls=ls, lw=lw, label=_compound)
+                ax_mpl.plot(_x_axis, _y_axis, fmt, ms=ms, lw=lw, alpha=alpha, label=_compound)
 
         if all_elements:
             for _compound in _stack.keys():
                 for _element in _stack[_compound]['elements']:
                     if y_axis_tag[:5] != 'sigma':
                         _y_axis = _stack_signal[_compound][_element][y_axis_tag]
-                        ax_mpl.plot(_x_axis, _y_axis, mt=mt, ms=ms, ls=ls, lw=lw, label="{}/{}".format(_compound, _element))
+                        ax_mpl.plot(_x_axis, _y_axis, fmt, ms=ms, lw=lw, alpha=alpha,
+                                    label="{}/{}".format(_compound, _element))
                     else:
                         _y_axis = _stack_sigma[_compound][_element]['sigma_b']
-                        ax_mpl.plot(_x_axis, _y_axis, mt=mt, ms=ms, ls=ls, lw=lw, label="{}/{}".format(_compound, _element))
+                        ax_mpl.plot(_x_axis, _y_axis, fmt, ms=ms, lw=lw, alpha=alpha,
+                                    label="{}/{}".format(_compound, _element))
 
         if all_isotopes:
             for _compound in _stack.keys():
@@ -682,10 +692,12 @@ class Resonance(object):
                     for _isotope in _stack[_compound][_element]['isotopes']['list']:
                         if y_axis_tag[:5] != 'sigma':
                             _y_axis = _stack_signal[_compound][_element][_isotope][y_axis_tag]
-                            ax_mpl.plot(_x_axis, _y_axis, mt=mt, ms=ms, ls=ls, lw=lw, label="{}/{}/{}".format(_compound, _element, _isotope))
+                            ax_mpl.plot(_x_axis, _y_axis, fmt, ms=ms, lw=lw, alpha=alpha,
+                                        label="{}/{}/{}".format(_compound, _element, _isotope))
                         else:
                             _y_axis = _stack_sigma[_compound][_element][_isotope][y_axis_tag]
-                            ax_mpl.plot(_x_axis, _y_axis, mt=mt, ms=ms, ls=ls, lw=lw, label="{}/{}/{}".format(_compound, _element, _isotope))
+                            ax_mpl.plot(_x_axis, _y_axis, fmt, ms=ms, lw=lw, alpha=alpha,
+                                        label="{}/{}/{}".format(_compound, _element, _isotope))
 
         """Y-axis for specified items_to_plot"""
         if items_to_plot is not None:
@@ -701,7 +713,7 @@ class Resonance(object):
                     _live_path = _live_path[_item]
 
                 _y_axis = _live_path[y_axis_tag]
-                ax_mpl.plot(_x_axis, _y_axis, mt=mt, ms=ms, ls=ls, lw=lw, label=_label)
+                ax_mpl.plot(_x_axis, _y_axis, fmt, ms=ms, lw=lw, alpha=alpha, label=_label)
 
         if y_axis_tag[:5] != 'sigma':
             ax_mpl.set_ylim(-0.01, 1.01)
