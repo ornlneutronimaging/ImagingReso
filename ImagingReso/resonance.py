@@ -11,6 +11,7 @@ import plotly.tools as tls
 x_type_list = ['energy', 'lambda', 'time', 'number']
 y_type_list = ['transmission', 'attenuation', 'sigma', 'sigma_raw']
 time_unit_list = ['s', 'us', 'ns']
+export_type_list = ['df', 'csv', 'clip']
 
 
 class Resonance(object):
@@ -733,7 +734,7 @@ class Resonance(object):
             plotly_fig.layout.showlegend = True
             return plotly_fig
 
-    def export(self, filename=None, x_axis='energy', y_axis='attenuation', mixed=True,
+    def export(self, output_type='df', filename=None, x_axis='energy', y_axis='attenuation', mixed=True,
                all_layers=False, all_elements=False, all_isotopes=False, items_to_export=None,
                offset_us=0., source_to_detector_m=16.,
                t_start_us=1, time_resolution_us=0.16, time_unit='us'):
@@ -743,6 +744,8 @@ class Resonance(object):
         'sigma_b' exported for each isotope is the product resulted from (sigma * isotopic ratio)
         'atoms_per_cm3' of each element is also exported in 'sigma' mode based on molar mass within stack.
 
+        :param output_type: export type : ['df', 'csv', 'clip']
+        :type output_type: str
         :param mixed: True -> display the total of each layer
                                False -> not displayed
         :type mixed: boolean
@@ -777,8 +780,9 @@ class Resonance(object):
         if time_unit not in time_unit_list:
             raise ValueError("Please specify the time unit using one from '{}'.".format(time_unit_list))
         if y_axis not in y_type_list:
-            raise ValueError(
-                "Please specify the y-axis type using one from '{}'.".format(y_type_list))
+            raise ValueError("Please specify the y-axis type using one from '{}'.".format(y_type_list))
+        if output_type not in export_type_list:
+            raise ValueError("Please specify export type using one from '{}'.".format(export_type_list))
         # stack from self
         _stack_signal = self.stack_signal
         _stack = self.stack
@@ -902,8 +906,11 @@ class Resonance(object):
 
         if len(df.columns) <= 1:
             raise ValueError("No y values have been selected to export!")
-        if filename is None:
+        if output_type == 'csv':
+            if filename is not None:
+                df.to_csv(filename, index=False)
+            else:
+                df.to_csv('data.csv', index=False)
+        elif output_type == 'clip':
             df.to_clipboard(excel=True, index=False)
-        else:
-            df.to_csv(filename)
         return df
