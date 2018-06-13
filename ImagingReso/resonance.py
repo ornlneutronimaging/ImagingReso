@@ -707,12 +707,14 @@ class Resonance(object):
                 if y_axis_tag[:5] != 'sigma':
                     _live_path = _stack_signal
                 else:
+                    if len(_path_to_plot) < 3:
+                        raise ValueError("'y_axis={}' is not supported for element level '{}'.".format(
+                            y_axis_tag, _path_to_plot[-1]))
                     _live_path = _stack_sigma
                 _label = "/".join(_path_to_plot)
                 while _path_to_plot:
                     _item = _path_to_plot.pop(0)
                     _live_path = _live_path[_item]
-
                 _y_axis = _live_path[y_axis_tag]
                 ax_mpl.plot(_x_axis, _y_axis, fmt, ms=ms, lw=lw, alpha=alpha, label=_label)
 
