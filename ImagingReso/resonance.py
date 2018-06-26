@@ -534,9 +534,10 @@ class Resonance(object):
     def plot(self, y_axis='attenuation', x_axis='energy',
              logx=False, logy=False,
              mixed=True, all_layers=False, all_elements=False,
-             all_isotopes=False, items_to_plot=None, time_unit='us', offset_us=0.,
-             source_to_detector_m=16.,
-             time_resolution_us=0.16, t_start_us=1, plotly=False, ax_mpl=None,
+             all_isotopes=False, items_to_plot=None,
+             time_unit='us', offset_us=0., source_to_detector_m=16.,
+             time_resolution_us=0.16, t_start_us=1,
+             plotly=False, ax_mpl=None,
              fmt='-', ms='2', lw='1.5', alpha=1):
         # offset delay values is normal 2.99 us with NONE actual MCP delay settings
         """display the transmission or attenuation of compound, element and/or isotopes specified
@@ -545,8 +546,8 @@ class Resonance(object):
         ===========
         :param x_axis: x type for export. Must be either ['energy'|'lambda'|'time'|'number']
         :type x_axis: str
-        :param y_axis: y type for export. Must be either ['transmission'|'attenuation'|'sigma']
-        :type y_axis: stra
+        :param y_axis: y type for export. Must be either ['transmission'|'attenuation'|'sigma'|'sigma_raw']
+        :type y_axis: str
         :param logx: True -> display x in log scale
         :type logx: boolean.
         :param logy: True -> display y in log scale
@@ -754,8 +755,8 @@ class Resonance(object):
         :param filename: string. filename (with .csv suffix) you would like to save as
                                 None -> export to clipboard
         :type filename: string
-        :param x_axis: string. x type for export. Must be either 'energy' or 'lambda' or 'time' or 'number'
-        :param y_axis: string. y type for export. Must be either 'transmission' or 'attenuation' or 'sigma'
+        :param x_axis: string. x type for export. Must in ['energy', 'lambda', 'time', 'number']
+        :param y_axis: string. y type for export. Must in ['transmission', 'attenuation', 'sigma', 'sigma_raw']
         :param all_layers: boolean. True -> export all layers
                                     False -> not export
         :param all_elements: boolean. True -> export all elements signal
@@ -775,7 +776,7 @@ class Resonance(object):
         :param t_start_us: when is the first acquisition occurred. default: 1
                Note: this will be used only when x_axis='number'
 
-        :return: simulated resonance signals or sigma in clipboard or single .csv file
+        :return: simulated resonance signals or sigma in the form of 'clipboard' or '.csv file' or 'pd.DataFrame'
         """
         if x_axis not in x_type_list:
             raise ValueError("Please specify the x-axis type using one from '{}'.".format(x_type_list))
@@ -909,10 +910,14 @@ class Resonance(object):
         if len(df.columns) <= 1:
             raise ValueError("No y values have been selected to export!")
         if output_type == 'csv':
-            if filename is not None:
-                df.to_csv(filename, index=False)
-            else:
-                df.to_csv('data.csv', index=False)
+            if filename is None:
+                filename = 'data.csv'
+            if '.csv' not in filename:
+                filename += '.csv'
+            df.to_csv(filename, index=False)
+            print("Exporting to file ('./{}') completed.".format(filename))
         elif output_type == 'clip':
             df.to_clipboard(excel=True, index=False)
-        return df
+            print('Exporting to clipboard completed.')
+        else:  # output_type == 'df'
+            return df
