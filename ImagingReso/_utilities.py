@@ -220,11 +220,11 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
       ex: {'AgCo2': {'elements': ['Ag','Co'],
                      'stoichiometric_ratio': [1,2],
                      'thickness': {'value': thickness,
-                                   'units': 'mm',
-                                   },
+                                   'units': 'mm'},
                      'density': {'value': density,
-                                 'units': 'g/cm3',
-                                 },
+                                 'units': 'g/cm3'},
+                     'molar_mass': {'value': np.nan,
+                                    'units': 'g/mol'},
                     }
     """
     _formula_parsed = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
@@ -242,16 +242,17 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
 
         _atomic_ratio_array.append(int(_atomic_ratio))
         _elements_array.append(_single_element)
-
-    return {formula: {'elements': _elements_array,
-                      'stoichiometric_ratio': _atomic_ratio_array,
-                      'thickness': {'value': thickness,
-                                    'units': 'mm'},
-                      'density': {'value': density,
-                                  'units': 'g/cm3',
-                                  }
-                      },
-            }
+    _dict = {formula: {'elements': _elements_array,
+                       'stoichiometric_ratio': _atomic_ratio_array,
+                       'thickness': {'value': thickness,
+                                     'units': 'mm'},
+                       'density': {'value': density,
+                                   'units': 'g/cm3'},
+                       'molar_mass': {'value': np.nan,
+                                      'units': 'g/mol'}
+                       }
+             }
+    return _dict
 
 
 def get_isotope_dicts(element='', database='ENDF_VII'):
@@ -392,6 +393,15 @@ def get_compound_density(list_density=[], list_ratio=[]):
     for _ratio, _density in _ratio_density:
         _density_compound += (_ratio * _density) / _sum_ratio
     return _density_compound
+
+
+def get_compound_molar_mass(list_molar_mass=[], list_ratio=[]):
+    """"""
+    _ratio_density = zip(list_ratio, list_molar_mass)
+    _molar_mass_compound = 0
+    for _i, _mass in enumerate(list_molar_mass):
+        _molar_mass_compound += _mass * list_ratio[_i]
+    return _molar_mass_compound
 
 
 def get_database_data(file_name=''):

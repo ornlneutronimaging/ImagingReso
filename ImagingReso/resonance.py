@@ -290,6 +290,9 @@ class Resonance(object):
         # populate compound density (if none provided)
         self.__update_layer_density()
 
+        # populate compound molar mass
+        self.__update_layer_molar_mass()
+
         # populate atoms_per_cm3
         self.__calculate_atoms_per_cm3(used_lock=used_lock)
 
@@ -412,29 +415,6 @@ class Resonance(object):
 
         return stack
 
-    def __update_layer_density(self):
-        """calculate or update the layer density"""
-        _stack = self.stack
-
-        _density_lock = self.density_lock
-
-        list_compound = _stack.keys()
-        for _key in list_compound:
-            if _density_lock[_key]:
-                continue
-
-            # if np.isnan(_stack[_key]['density']['value']):
-
-            _list_ratio = _stack[_key]['stoichiometric_ratio']
-            _list_density = []
-            for _element in _stack[_key]['elements']:
-                _list_density.append(_stack[_key][_element]['density']['value'])
-                _compound_density = _utilities.get_compound_density(list_density=_list_density,
-                                                                    list_ratio=_list_ratio)
-
-            _stack[_key]['density']['value'] = _compound_density
-        self.stack = _stack
-
     def __update_stack_with_isotopes_infos(self, stack={}):
         """retrieve the isotopes, isotopes file names, mass and atomic_ratio from each element in stack"""
         for _key in stack:
@@ -445,6 +425,25 @@ class Resonance(object):
 
         stack = self.__fill_missing_keys(stack=stack)
         return stack
+
+    def __update_layer_density(self):
+        """calculate or update the layer density"""
+        _stack = self.stack
+        _density_lock = self.density_lock
+        list_compound = _stack.keys()
+        for _key in list_compound:
+            if _density_lock[_key]:
+                continue
+
+            _list_ratio = _stack[_key]['stoichiometric_ratio']
+            _list_density = []
+            for _element in _stack[_key]['elements']:
+                _list_density.append(_stack[_key][_element]['density']['value'])
+                _compound_density = _utilities.get_compound_density(list_density=_list_density,
+                                                                    list_ratio=_list_ratio)
+
+            _stack[_key]['density']['value'] = _compound_density
+        self.stack = _stack
 
     def __update_density(self, compound='', element=''):
         """Re-calculate the density of the element given due to stoichiometric changes as
@@ -466,6 +465,21 @@ class Resonance(object):
         _density_lock = self.density_lock
         if not _density_lock[compound]:
             self.__update_layer_density()
+
+    def __update_layer_molar_mass(self):
+        """calculate or update the layer molar mass"""
+        _stack = self.stack
+        _molar_mass = np.nan
+        for _key in _stack.keys():
+            _list_ratio = _stack[_key]['stoichiometric_ratio']
+            _list_molar_mass = []
+            for _element in _stack[_key]['elements']:
+                _list_molar_mass.append(_stack[_key][_element]['molar_mass']['value'])
+                _molar_mass = _utilities.get_compound_molar_mass(list_molar_mass=_list_molar_mass,
+                                                                 list_ratio=_list_ratio)
+            _stack[_key]['molar_mass'] = {'value': _molar_mass,
+                                          'units': 'g/mol'}
+        self.stack = _stack
 
     def __update_molar_mass(self, compound='', element=''):
         """Re-calculate the molar mass of the element given due to stoichiometric changes

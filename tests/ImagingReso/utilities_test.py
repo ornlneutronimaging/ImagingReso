@@ -9,7 +9,6 @@ from ImagingReso._utilities import *
 
 
 class TestUtilities_1(unittest.TestCase):
-
     database = '_data_for_unittest'
 
     def test_is_element_in_database(self):
@@ -118,6 +117,7 @@ class TestUtilities_1(unittest.TestCase):
                                  'stoichiometric_ratio': [1],
                                  'thickness': {'value': np.NaN, 'units': 'mm'},
                                  'density': {'value': np.NaN, 'units': 'g/cm3'},
+                                 'molar_mass': {'value': np.NaN, 'units': 'g/mol'},
                                  },
                           }
         self.assertEqual(_dict_returned, _dict_expected)
@@ -129,6 +129,7 @@ class TestUtilities_1(unittest.TestCase):
                                     'stoichiometric_ratio': [2, 1],
                                     'thickness': {'value': 10, 'units': 'mm'},
                                     'density': {'value': np.NaN, 'units': 'g/cm3'},
+                                    'molar_mass': {'value': np.NaN, 'units': 'g/mol'},
                                     },
                           }
         self.assertEqual(_dict_returned, _dict_expected)
@@ -140,6 +141,7 @@ class TestUtilities_1(unittest.TestCase):
                                       'stoichiometric_ratio': [2, 1, 3],
                                       'thickness': {'value': np.NaN, 'units': 'mm'},
                                       'density': {'value': 20, 'units': 'g/cm3'},
+                                      'molar_mass': {'value': np.NaN, 'units': 'g/mol'},
                                       },
                           }
         self.assertEqual(_dict_returned, _dict_expected)
@@ -151,6 +153,7 @@ class TestUtilities_1(unittest.TestCase):
                                     'stoichiometric_ratio': [2, 1],
                                     'thickness': {'value': 0.025, 'units': 'mm'},
                                     'density': {'value': np.NaN, 'units': 'g/cm3'},
+                                    'molar_mass': {'value': np.NaN, 'units': 'g/mol'},
                                     },
                           }
         self.assertEqual(_dict_returned, _dict_expected)
@@ -237,6 +240,15 @@ class TestUtilities_1(unittest.TestCase):
         _returned_compound_density = get_compound_density(list_density=list_density,
                                                           list_ratio=list_ratio)
         _expected_compound_density = (1 * 10) / 3. + (2 * 20) / 3.
+        self.assertEqual(_returned_compound_density, _expected_compound_density)
+
+    def test_get_compound_molar_mass(self):
+        """assert the get_compound_molar_mass works"""
+        list_ratio = [2, 1]
+        list_mass = [10, 20]
+        _returned_compound_density = get_compound_molar_mass(list_molar_mass=list_mass,
+                                                             list_ratio=list_ratio)
+        _expected_compound_density = 2 * 10 + 1 * 20
         self.assertEqual(_returned_compound_density, _expected_compound_density)
 
 
@@ -332,6 +344,7 @@ class TestUtilities_2(unittest.TestCase):
                   }
         o_reso = Resonance(stack=_stack, database=self.database)
         _stack_returned = o_reso.stack
+        print(_stack_returned)
         _atoms_per_cm3 = get_atoms_per_cm3_of_layer(compound_dict=_stack['CoAg'])
         self.assertAlmostEqual(_atoms_per_cm3['Ag'], 3.5381585765227393e22, delta=1)
 
