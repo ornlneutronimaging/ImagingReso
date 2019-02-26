@@ -25,6 +25,11 @@ class TestUtilities_1(unittest.TestCase):
         _answer = is_element_in_database(element=_element, database=self.database)
         self.assertTrue(_answer)
 
+        # invalid element
+        _element = 'ab'
+        _answer = is_element_in_database(element=_element, database=self.database)
+        self.assertFalse(_answer)
+
     def test_checking_stack(self):
         """assert checking_stack_works in all good cases (1 or more stacks)"""
 
@@ -100,7 +105,23 @@ class TestUtilities_1(unittest.TestCase):
 
     def test_formula_to_dictionary_raises_error_when_unknow_element(self):
         """assert formula_to_dictionary raises error if element is unknown"""
+        # invalid element name
         _formula = 'NeCo'
+        self.assertRaises(ValueError, formula_to_dictionary, formula=_formula, database=self.database)
+
+        # all small letter
+        _formula = 'ab'
+        self.assertRaises(ValueError, formula_to_dictionary, formula=_formula, database=self.database)
+
+        # empty str
+        _formula = ''
+        self.assertRaises(ValueError, formula_to_dictionary, formula=_formula, database=self.database)
+
+        # float not supported due to parsing limitation
+        _formula = 'Co1.7Cu1.2'
+        self.assertRaises(ValueError, formula_to_dictionary, formula=_formula, database=self.database)
+
+        _formula = 'AA'
         self.assertRaises(ValueError, formula_to_dictionary, formula=_formula, database=self.database)
 
     def test_formula_to_dictionary_works_with_various_cases(self):
@@ -317,7 +338,7 @@ class TestUtilities_2(unittest.TestCase):
         energy_last_expected = 600
         sigma_last_expected = 7.2375030
         self.assertEqual(energy_last_expected, energy_last_returned)
-        self.assertAlmostEquals(sigma_last_expected, sigma_last_returned, delta=0.0001)
+        self.assertAlmostEqual(sigma_last_expected, sigma_last_returned, delta=0.0001)
 
         energy_1_returned = _dict_returned['energy_eV'][1]
         energy_1_expected = 310
@@ -392,10 +413,10 @@ class TestUtilities_2(unittest.TestCase):
         _to = ev_to_angstroms(array=_from)
         _back = angstroms_to_ev(array=_to)
 
-        self.assertAlmostEquals(_from[0], _back[0], delta=0.0001)
-        self.assertAlmostEquals(_from[1], _back[1], delta=0.0001)
-        self.assertAlmostEquals(_from[2], _back[2], delta=0.0001)
-        self.assertAlmostEquals(_from[3], _back[3], delta=0.0001)
+        self.assertAlmostEqual(_from[0], _back[0], delta=0.0001)
+        self.assertAlmostEqual(_from[1], _back[1], delta=0.0001)
+        self.assertAlmostEqual(_from[2], _back[2], delta=0.0001)
+        self.assertAlmostEqual(_from[3], _back[3], delta=0.0001)
 
     def test_ev_s_conversion(self):
         """assert ev_to_s works"""
@@ -403,20 +424,20 @@ class TestUtilities_2(unittest.TestCase):
         _to = ev_to_s(array=_from, offset_us=2.7, source_to_detector_m=16.)
         _back = s_to_ev(array=_to, offset_us=2.7, source_to_detector_m=16.)
 
-        self.assertAlmostEquals(_from[0], _back[0], delta=0.0001)
-        self.assertAlmostEquals(_from[1], _back[1], delta=0.0001)
-        self.assertAlmostEquals(_from[2], _back[2], delta=0.0001)
-        self.assertAlmostEquals(_from[3], _back[3], delta=0.0001)
+        self.assertAlmostEqual(_from[0], _back[0], delta=0.0001)
+        self.assertAlmostEqual(_from[1], _back[1], delta=0.0001)
+        self.assertAlmostEqual(_from[2], _back[2], delta=0.0001)
+        self.assertAlmostEqual(_from[3], _back[3], delta=0.0001)
 
     def test_angstroms_s_conversion(self):
         """assert ev_to_s works"""
         _from = np.linspace(1, 10, 10)
         _to = angstroms_to_s(array=_from, offset_us=2.7, source_to_detector_m=16.)
         _back = s_to_angstroms(array=_to, offset_us=2.7, source_to_detector_m=16.)
-        self.assertAlmostEquals(_from[0], _back[0], delta=0.0001)
-        self.assertAlmostEquals(_from[1], _back[1], delta=0.0001)
-        self.assertAlmostEquals(_from[2], _back[2], delta=0.0001)
-        self.assertAlmostEquals(_from[3], _back[3], delta=0.0001)
+        self.assertAlmostEqual(_from[0], _back[0], delta=0.0001)
+        self.assertAlmostEqual(_from[1], _back[1], delta=0.0001)
+        self.assertAlmostEqual(_from[2], _back[2], delta=0.0001)
+        self.assertAlmostEqual(_from[3], _back[3], delta=0.0001)
 
     def test_ev_to_image_number_conversion(self):
         """assert ev_to_s works"""
@@ -430,7 +451,7 @@ class TestUtilities_2(unittest.TestCase):
         _to_expected_1 = 1411.49845352
         _to_expected_2 = 1151.33676491
         _to_expected_3 = 996.2495455
-        self.assertAlmostEquals(_to_expected_0, _to[0], delta=0.0001)
-        self.assertAlmostEquals(_to_expected_1, _to[1], delta=0.0001)
-        self.assertAlmostEquals(_to_expected_2, _to[2], delta=0.0001)
-        self.assertAlmostEquals(_to_expected_3, _to[3], delta=0.0001)
+        self.assertAlmostEqual(_to_expected_0, _to[0], delta=0.0001)
+        self.assertAlmostEqual(_to_expected_1, _to[1], delta=0.0001)
+        self.assertAlmostEqual(_to_expected_2, _to[2], delta=0.0001)
+        self.assertAlmostEqual(_to_expected_3, _to[3], delta=0.0001)

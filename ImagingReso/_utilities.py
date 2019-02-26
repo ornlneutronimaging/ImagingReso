@@ -227,7 +227,12 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
                                     'units': 'g/mol'},
                     }
     """
+
+    if '.' in formula:
+        raise ValueError("formula '{}' is invalid, containing symbol '{}' !".format(formula, '.'))
     _formula_parsed = re.findall(r'([A-Z][a-z]*)(\d*)', formula)
+    if len(_formula_parsed) == 0:
+        raise ValueError("formula '{}' is invalid !".format(formula))
 
     # _dictionary = {}
     _elements_array = []
