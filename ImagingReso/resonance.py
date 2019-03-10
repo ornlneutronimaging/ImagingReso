@@ -291,7 +291,7 @@ class Resonance(object):
         self.__update_layer_density()
 
         # populate compound molar mass
-        self.__update_layer_molar_mass()
+        # self.__update_layer_molar_mass()  ### included in __calculate_atoms_per_cm3
 
         # populate atoms_per_cm3
         self.__calculate_atoms_per_cm3(used_lock=used_lock)
@@ -299,7 +299,7 @@ class Resonance(object):
         # calculate transmission and attenuation
         self.__calculate_transmission_attenuation()
 
-    def __lock_density_if_defined(self, stack={}):
+    def __lock_density_if_defined(self, stack: dict):
         """lock (True) the density lock if the density has been been defined during initialization
         Store the resulting dictionary into density_lock
 
@@ -334,6 +334,7 @@ class Resonance(object):
         # compound level
         for _name_of_compound in stack.keys():
             stack_signal[_name_of_compound] = {}
+            miu_per_cm_compound = 0
             transmission_compound = 1.
             energy_compound = []
 
@@ -345,35 +346,39 @@ class Resonance(object):
             # element level
             for _element in _list_element:
                 stack_signal[_name_of_compound][_element] = {}
-                _atoms_per_cm3 = stack[_name_of_compound]['atoms_per_cm3'][_element]
+                _atoms_per_cm3 = stack[_name_of_compound][_element]['atoms_per_cm3']
 
                 # isotope level
                 for _iso in stack[_name_of_compound][_element]['isotopes']['list']:
                     stack_signal[_name_of_compound][_element][_iso] = {}
                     _sigma_iso = stack_sigma[_name_of_compound][_element][_iso]['sigma_b']
-                    _transmission_iso = _utilities.calculate_transmission(
+                    _miu_per_cm_iso, _transmission_iso = _utilities.calculate_transmission(
                         thickness_cm=_thickness_cm,
                         atoms_per_cm3=_atoms_per_cm3,
                         sigma_b=_sigma_iso)
+                    stack_signal[_name_of_compound][_element][_iso]['miu_per_cm'] = _miu_per_cm_iso
                     stack_signal[_name_of_compound][_element][_iso]['transmission'] = _transmission_iso
                     stack_signal[_name_of_compound][_element][_iso]['attenuation'] = 1. - _transmission_iso
                     stack_signal[_name_of_compound][_element][_iso]['energy_eV'] = \
                         stack_sigma[_name_of_compound][_element][_iso]['energy_eV']
 
                 _sigma_ele = stack_sigma[_name_of_compound][_element]['sigma_b']
-                _transmission_ele = _utilities.calculate_transmission(
+                _miu_per_cm_ele, _transmission_ele = _utilities.calculate_transmission(
                     thickness_cm=_thickness_cm,
                     atoms_per_cm3=_atoms_per_cm3,
                     sigma_b=_sigma_ele)
+                stack_signal[_name_of_compound][_element]['miu_per_cm'] = _miu_per_cm_ele
                 stack_signal[_name_of_compound][_element]['transmission'] = _transmission_ele
                 stack_signal[_name_of_compound][_element]['attenuation'] = 1. - _transmission_ele
                 stack_signal[_name_of_compound][_element]['energy_eV'] = \
                     stack_sigma[_name_of_compound][_element]['energy_eV']
 
-                transmission_compound *= _transmission_ele
-                if energy_compound == []:
+                miu_per_cm_compound += _miu_per_cm_ele  # plus
+                transmission_compound *= _transmission_ele  # multiply
+                if len(energy_compound) == 0:
                     energy_compound = stack_sigma[_name_of_compound][_element]['energy_eV']
 
+            stack_signal[_name_of_compound]['miu_per_cm'] = miu_per_cm_compound
             stack_signal[_name_of_compound]['transmission'] = transmission_compound
             stack_signal[_name_of_compound]['attenuation'] = 1. - transmission_compound
             stack_signal[_name_of_compound]['energy_eV'] = energy_compound
@@ -396,11 +401,20 @@ class Resonance(object):
         for _name_of_compound in stack.keys():
             if used_lock and _density_lock[_name_of_compound]:
                 continue
-            atoms_per_cm3 = _utilities.get_atoms_per_cm3_of_layer(compound_dict=stack[_name_of_compound])
-            stack[_name_of_compound]['atoms_per_cm3'] = atoms_per_cm3
+            molar_mass_layer, atoms_per_cm3_layer = _utilities.get_atoms_per_cm3_of_layer(
+                compound_dict=stack[_name_of_compound])
+            # Update layer molar mass
+            stack[_name_of_compound]['molar_mass'] = {'value': molar_mass_layer,
+                                                      'units': 'g/mol'}
+            # Update atoms per cm3
+            stack[_name_of_compound]['atoms_per_cm3'] = atoms_per_cm3_layer
+            for _index, _name_of_ele in enumerate(stack[_name_of_compound]['elements']):
+                stack[_name_of_compound][_name_of_ele]['atoms_per_cm3'] = atoms_per_cm3_layer * \
+                                                                          stack[_name_of_compound][
+                                                                              'stoichiometric_ratio'][_index]
         self.stack = stack
 
-    def __fill_missing_keys(self, stack={}):
+    def __fill_missing_keys(self, stack: dict):
         _list_key_to_check = ['density']
         _list_key_value = [{'value': np.NaN,
                             'units': 'g/cm3'}]
@@ -415,7 +429,7 @@ class Resonance(object):
 
         return stack
 
-    def __update_stack_with_isotopes_infos(self, stack={}):
+    def __update_stack_with_isotopes_infos(self, stack: dict):
         """retrieve the isotopes, isotopes file names, mass and atomic_ratio from each element in stack"""
         for _key in stack:
             _elements = stack[_key]['elements']
@@ -466,20 +480,20 @@ class Resonance(object):
         if not _density_lock[compound]:
             self.__update_layer_density()
 
-    def __update_layer_molar_mass(self):
-        """calculate or update the layer molar mass"""
-        _stack = self.stack
-        _molar_mass = np.nan
-        for _key in _stack.keys():
-            _list_ratio = _stack[_key]['stoichiometric_ratio']
-            _list_molar_mass = []
-            for _element in _stack[_key]['elements']:
-                _list_molar_mass.append(_stack[_key][_element]['molar_mass']['value'])
-                _molar_mass = _utilities.get_compound_molar_mass(list_molar_mass=_list_molar_mass,
-                                                                 list_ratio=_list_ratio)
-            _stack[_key]['molar_mass'] = {'value': _molar_mass,
-                                          'units': 'g/mol'}
-        self.stack = _stack
+    # def __update_layer_molar_mass(self):
+    #     """calculate or update the layer molar mass"""
+    #     _stack = self.stack
+    #     _molar_mass = np.nan
+    #     for _key in _stack.keys():
+    #         _list_ratio = _stack[_key]['stoichiometric_ratio']
+    #         _list_molar_mass = []
+    #         for _element in _stack[_key]['elements']:
+    #             _list_molar_mass.append(_stack[_key][_element]['molar_mass']['value'])
+    #             _molar_mass = _utilities.get_compound_molar_mass(list_molar_mass=_list_molar_mass,
+    #                                                              list_ratio=_list_ratio)
+    #         _stack[_key]['molar_mass'] = {'value': _molar_mass,
+    #                                       'units': 'g/mol'}
+    #     self.stack = _stack
 
     def __update_molar_mass(self, compound='', element=''):
         """Re-calculate the molar mass of the element given due to stoichiometric changes

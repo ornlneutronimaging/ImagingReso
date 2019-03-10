@@ -182,7 +182,6 @@ class TestInitialization(unittest.TestCase):
         o_reso.add_layer(formula=layer2, thickness=thickness2, density=density2)
 
         returned_stack = o_reso.stack
-
         expected_stack = {'CoAg': {'elements': ['Co', 'Ag'],
                                    'stoichiometric_ratio': [1, 1],
                                    'thickness': {'value': 0.025,

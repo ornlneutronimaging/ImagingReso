@@ -55,7 +55,8 @@ def download_from_github(fname, path):
     with open(fname, 'wb') as fh:
         while True:
             chunk = req.read(block_size)
-            if not chunk: break
+            if not chunk:
+                break
             fh.write(chunk)
             # downloaded += len(chunk)
         print('')
@@ -388,7 +389,7 @@ def get_density(element):
     return pt.elements.isotope(element).density
 
 
-def get_compound_density(list_density=[], list_ratio=[]):
+def get_compound_density(list_density: list, list_ratio: list):
     """"""
     _ratio_density = zip(list_ratio, list_density)
     _density_compound = 0
@@ -400,7 +401,7 @@ def get_compound_density(list_density=[], list_ratio=[]):
     return _density_compound
 
 
-def get_compound_molar_mass(list_molar_mass=[], list_ratio=[]):
+def get_compound_molar_mass(list_molar_mass: list, list_ratio: list):
     """"""
     _ratio_density = zip(list_ratio, list_molar_mass)
     _molar_mass_compound = 0
@@ -430,7 +431,7 @@ def get_database_data(file_name=''):
     return df
 
 
-def get_interpolated_data(df=pd.DataFrame, e_min=np.NaN, e_max=np.NaN, e_step=np.NaN):
+def get_interpolated_data(df: pd.DataFrame, e_min=np.nan, e_max=np.nan, e_step=np.nan):
     """return the interpolated x and y axis for the given x range [e_min, e_max] with step defined
 
     :param df: input data frame
@@ -534,18 +535,15 @@ def get_sigma(database_file_name='', e_min=np.NaN, e_max=np.NaN, e_step=np.NaN, 
 #                 'sigma_b': y_axis}
 
 
-def get_atoms_per_cm3_of_layer(compound_dict={}):
-    """calculate the atoms per cm3 of the given compound (layer)
-    
-    Paramters:
-    ==========
-    compound_dict: {} 
-    
-    Returns:
-    ========
-    dictionary
+def get_atoms_per_cm3_of_layer(compound_dict: dict):
     """
-    atoms_per_cm3 = {}
+    calculate the atoms per cm3 of the given compound (layer)
+    :param compound_dict: compound infomation to pass
+    :type compound_dict: dict
+    :return: molar mass and atom density for layer
+    :rtype: float
+    """
+    # atoms_per_cm3 = {}
 
     _list_of_elements = compound_dict['elements']
     _stoichiometric_list = compound_dict['stoichiometric_ratio']
@@ -555,15 +553,54 @@ def get_atoms_per_cm3_of_layer(compound_dict={}):
     for _element, _stoichio in _element_stoichio:
         _molar_mass_sum += _stoichio * compound_dict[_element]['molar_mass']['value']
 
-    _element_stoichio = zip(_list_of_elements, _stoichiometric_list)
-    for _element, _stoichio in _element_stoichio:
-        _step1 = (compound_dict['density']['value'] * _stoichio) / _molar_mass_sum
-        atoms_per_cm3[_element] = Avogadro * _step1
+    atoms_per_cm3 = Avogadro * compound_dict['density']['value'] / _molar_mass_sum
+    # _element_stoichio = zip(_list_of_elements, _stoichiometric_list)
+    # for _element, _stoichio in _element_stoichio:
+    #     _step1 = (compound_dict['density']['value'] * _stoichio) / _molar_mass_sum
+    #     atoms_per_cm3[_element] = Avogadro * _step1
 
-    return atoms_per_cm3
+    return _molar_mass_sum, atoms_per_cm3
 
 
-def calculate_transmission(thickness_cm=np.NaN, atoms_per_cm3=np.NaN, sigma_b=[]):
+def calculate_linear_attenuation_coefficient(atoms_per_cm3: np.float, sigma_b: np.array):
+    """calculate the transmission signal using the formula
+
+    transmission = exp( - thickness_cm * atoms_per_cm3 * 1e-24 * sigma_b)
+
+    Parameters:
+    ===========
+    thickness: float (in cm)
+    atoms_per_cm3: float (number of atoms per cm3 of element/isotope)
+    sigma_b: np.array of sigma retrieved from database
+
+    Returns:
+    ========
+    transmission array
+    """
+    miu_per_cm = 1e-24 * sigma_b * atoms_per_cm3
+    return np.array(miu_per_cm)
+
+
+def calculate_trans(thickness_cm: np.float, miu_per_cm: np.array):
+    """calculate the transmission signal using the formula
+
+    transmission = exp( - thickness_cm * atoms_per_cm3 * 1e-24 * sigma_b)
+
+    Parameters:
+    ===========
+    thickness: float (in cm)
+    atoms_per_cm3: float (number of atoms per cm3 of element/isotope)
+    sigma_b: np.array of sigma retrieved from database
+
+    Returns:
+    ========
+    transmission array
+    """
+    transmission = np.exp(-thickness_cm * miu_per_cm)
+    return np.array(transmission)
+
+
+def calculate_transmission(thickness_cm: np.float, atoms_per_cm3: np.float, sigma_b: np.array):
     """calculate the transmission signal using the formula
     
     transmission = exp( - thickness_cm * atoms_per_cm3 * 1e-24 * sigma_b)
@@ -578,8 +615,9 @@ def calculate_transmission(thickness_cm=np.NaN, atoms_per_cm3=np.NaN, sigma_b=[]
     ========
     transmission array
     """
-    transmission = np.exp(-thickness_cm * 1e-24 * sigma_b * atoms_per_cm3)
-    return np.array(transmission)
+    miu_per_cm = calculate_linear_attenuation_coefficient(atoms_per_cm3=atoms_per_cm3, sigma_b=sigma_b)
+    transmission = calculate_trans(thickness_cm=thickness_cm, miu_per_cm=miu_per_cm)
+    return miu_per_cm, transmission
 
 
 def set_distance_units(value=np.NaN, from_units='mm', to_units='cm'):
