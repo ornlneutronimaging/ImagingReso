@@ -694,7 +694,9 @@ class Resonance(object):
             mixed = False
             all_layers = False
             print("'y_axis='sigma'' is selected. Auto force 'mixed=False', 'all_layers=False'")
-
+            if y_axis_tag[-3:] == 'raw':
+                all_elements = False
+                print("'y_axis='sigma_raw'' is selected. Auto force 'all_elements=False'")
         if mixed:
             _y_axis = self.total_signal[y_axis_tag]
             ax_mpl.plot(_x_axis, _y_axis, fmt, ms=ms, lw=lw, alpha=alpha, label="Total")
@@ -912,7 +914,7 @@ class Resonance(object):
                 for _compound in _stack.keys():
                     for _element in _stack[_compound]['elements']:
                         _y_axis = _stack_sigma[_compound][_element]['sigma_b']  # No 'sigma_b_raw' at this level
-                        df[_compound + '/' + _element + '/atoms_per_cm3'] = _stack[_compound]['atoms_per_cm3'][_element]
+                        df[_compound + '/' + _element + '/atoms_per_cm3'] = _stack[_compound][_element]['atoms_per_cm3']
                         df[_compound + '/' + _element] = _y_axis
                         if all_isotopes:
                             for _isotope in _stack[_compound][_element]['isotopes']['list']:
