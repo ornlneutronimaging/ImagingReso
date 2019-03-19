@@ -9,7 +9,7 @@ from ImagingReso import _utilities
 import plotly.tools as tls
 
 x_type_list = ['energy', 'lambda', 'time', 'number']
-y_type_list = ['transmission', 'attenuation', 'sigma', 'sigma_raw']
+y_type_list = ['transmission', 'attenuation', 'sigma', 'sigma_raw', 'miu_per_cm']
 time_unit_list = ['s', 'us', 'ns']
 export_type_list = ['df', 'csv', 'clip']
 
@@ -574,7 +574,7 @@ class Resonance(object):
         ===========
         :param x_axis: x type for export. Must be either ['energy'|'lambda'|'time'|'number']
         :type x_axis: str
-        :param y_axis: y type for export. Must be either ['transmission'|'attenuation'|'sigma'|'sigma_raw']
+        :param y_axis: y type for export. Must be either ['transmission'|'attenuation'|'sigma'|'sigma_raw'|'miu_per_cm']
         :type y_axis: str
         :param logx: True -> display x in log scale
         :type logx: boolean.
@@ -619,8 +619,7 @@ class Resonance(object):
         if time_unit not in time_unit_list:
             raise ValueError("Please specify the time unit using one from '{}'.".format(time_unit_list))
         if y_axis not in y_type_list:
-            raise ValueError(
-                "Please specify the y-axis type using one from '{}'.".format(y_type_list))
+            raise ValueError("Please specify the y-axis type using one from '{}'.".format(y_type_list))
         # figure size
         # plt.figure(figsize=(8, 8))
 
@@ -686,9 +685,12 @@ class Resonance(object):
         elif y_axis == 'sigma':
             y_axis_tag = 'sigma_b'
             y_axis_label = 'Cross-section (barns)'
-        else:  # y_axis == 'sigma_raw':
+        elif y_axis == 'sigma_raw':
             y_axis_tag = 'sigma_b_raw'
             y_axis_label = 'Cross-section (barns)'
+        else:
+            y_axis_tag = 'miu_per_cm'
+            y_axis_label = "Attenuation coefficient (cm\u207B\u00B9)"
 
         if y_axis_tag[:5] == 'sigma':
             mixed = False
@@ -697,6 +699,12 @@ class Resonance(object):
             if y_axis_tag[-3:] == 'raw':
                 all_elements = False
                 print("'y_axis='sigma_raw'' is selected. Auto force 'all_elements=False'")
+
+        if y_axis_tag == 'miu_per_cm':
+            mixed = False
+            print("'y_axis='miu_per_cm'' is selected. Auto force 'mixed=False'")
+
+        # Plotting begins
         if mixed:
             _y_axis = self.total_signal[y_axis_tag]
             ax_mpl.plot(_x_axis, _y_axis, fmt, ms=ms, lw=lw, alpha=alpha, label="Total")
@@ -738,9 +746,16 @@ class Resonance(object):
                 if y_axis_tag[:5] != 'sigma':
                     _live_path = _stack_signal
                 else:
-                    if len(_path_to_plot) < 3:
-                        raise ValueError("'y_axis={}' is not supported for element level '{}'.".format(
-                            y_axis_tag, _path_to_plot[-1]))
+                    _len_of_path = len(_path_to_plot)
+                    if y_axis_tag[-3:] == 'raw':
+                        if _len_of_path < 3:
+                            raise ValueError("'y_axis={}' is not supported for layer or element levels '{}'.".format(
+                                y_axis_tag, _path_to_plot[-1]))
+                    else:
+                        if _len_of_path < 2:
+                            raise ValueError("'y_axis={}' is not supported for layer level '{}'.".format(
+                                y_axis_tag, _path_to_plot[-1]))
+
                     _live_path = _stack_sigma
                 _label = "/".join(_path_to_plot)
                 while _path_to_plot:
@@ -749,7 +764,7 @@ class Resonance(object):
                 _y_axis = _live_path[y_axis_tag]
                 ax_mpl.plot(_x_axis, _y_axis, fmt, ms=ms, lw=lw, alpha=alpha, label=_label)
 
-        if y_axis_tag[:5] != 'sigma':
+        if y_axis_tag[:5] != 'sigma' and y_axis_tag != 'miu_per_cm':
             ax_mpl.set_ylim(-0.01, 1.01)
         if logy is True:
             ax_mpl.set_yscale('log')
@@ -786,7 +801,7 @@ class Resonance(object):
                                 None -> export to clipboard
         :type filename: string
         :param x_axis: string. x type for export. Must in ['energy', 'lambda', 'time', 'number']
-        :param y_axis: string. y type for export. Must in ['transmission', 'attenuation', 'sigma', 'sigma_raw']
+        :param y_axis: string. y type for export. Must in ['transmission', 'attenuation', 'sigma', 'sigma_raw', 'miu_per_cm']
         :param all_layers: boolean. True -> export all layers
                                     False -> not export
         :param all_elements: boolean. True -> export all elements signal
@@ -867,8 +882,11 @@ class Resonance(object):
 
         """Y-axis"""
         if y_axis[:5] != 'sigma':
-            # export transmission or attenuation
+            # export transmission or attenuation or miu_per_cm
             y_axis_tag = y_axis
+            if y_axis_tag == 'miu_per_cm':
+                mixed = False
+                print("'y_axis='miu_per_cm'' is selected. Auto force 'mixed=False'")
             if mixed:
                 _y_axis = self.total_signal[y_axis_tag]
                 df['Total_' + y_axis_tag] = _y_axis
@@ -923,11 +941,18 @@ class Resonance(object):
             else:
                 # export specified sigma
                 for _path_to_export in items_to_export:
-                    if len(_path_to_export) == 1:
-                        raise ValueError(
-                            "Getting total sigma of '{}' at layer level is not supported. "
-                            "If it is a single element layer, please follow ['layer', 'element'] format.".format(
-                                _path_to_export[0]))
+                    if y_axis_tag[-3:] == 'raw':
+                        if len(_path_to_export) < 3:
+                            raise ValueError(
+                                "Getting raw sigma of '{}' at layer or element level is not supported. "
+                                "If it is a single element layer, please follow "
+                                "['layer', 'element', 'isotope'] format.".format(_path_to_export[0]))
+                    else:
+                        if len(_path_to_export) < 2:
+                            raise ValueError(
+                                "Getting weighted sigma of '{}' at layer level is not supported. "
+                                "If it is a single element layer, please follow "
+                                "['layer', 'element'] format.".format(_path_to_export[0]))
                     _path_to_export = list(_path_to_export)
                     _live_path = _stack_sigma
                     _label = "/".join(_path_to_export)
