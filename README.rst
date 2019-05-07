@@ -1,6 +1,10 @@
 ImagingReso
 ===========
 
+.. image:: https://api.codacy.com/project/badge/Grade/7d9162fa8fb644019b2c336ddc61f9d3
+   :alt: Codacy Badge
+   :target: https://app.codacy.com/app/JeanBilheux/ImagingReso?utm_source=github.com&utm_medium=referral&utm_content=ornlneutronimaging/ImagingReso&utm_campaign=Badge_Grade_Dashboard
+
 .. image:: https://travis-ci.org/ornlneutronimaging/ImagingReso.svg?branch=master
   :target: https://travis-ci.org/ornlneutronimaging/ImagingReso
   :alt: travis
