@@ -427,7 +427,7 @@ def get_database_data(file_name=''):
     """
     if not os.path.exists(file_name):
         raise IOError("File {} does not exist!".format(file_name))
-    df = pd.read_csv(file_name, header=1)
+    df = pd.read_csv(file_name, header=0)
     return df
 
 
