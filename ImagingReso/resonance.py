@@ -54,19 +54,16 @@ class Resonance(object):
         :param energy_step: (default 0.1) energy step to use in extrapolation of sigma data
         :type energy_step: float
 
-        :param database: database to extract cross-section info. ['ENDF_VII', 'ENDF_VIII']
+        :param database: database to extract cross-section info. ['ENDF_VII', 'ENDF_VIII'], both are database at 294K
         :type database: str
 
         """
         if database not in ['ENDF_VII', 'ENDF_VIII', '_data_for_unittest']:
             raise ValueError(
                 "Database {} entered not existed. \nCurrent support: ['ENDF_VII', 'ENDF_VIII'] ".format(database))
-        # else:
-        #     _file_path = os.path.abspath(os.path.dirname(__file__))
-        #     _database_folder = os.path.join(_file_path, 'reference_data', database)
-        #
-        #     if not os.path.exists(_database_folder):
-        #         _utilities.download_database(database)
+
+        # ENDF_VII only has nuclide 'C-0', replaced with 'C-12' and 'C-13' from ENDF_VIII.
+        # ENDF_VIII data base has problematic 'B-10' ace file.
 
         self.database = database
         self.__element_metadata = {}
