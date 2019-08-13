@@ -9,7 +9,7 @@ from ImagingReso import _utilities
 import plotly.tools as tls
 
 x_type_list = ['energy', 'lambda', 'time', 'number']
-y_type_list = ['transmission', 'attenuation', 'sigma', 'sigma_raw', 'miu_per_cm']
+y_type_list = ['transmission', 'attenuation', 'sigma', 'sigma_raw', 'mu_per_cm']
 time_unit_list = ['s', 'us', 'ns']
 export_type_list = ['df', 'csv', 'clip']
 
@@ -334,7 +334,7 @@ class Resonance(object):
         # compound level
         for _name_of_compound in stack.keys():
             stack_signal[_name_of_compound] = {}
-            miu_per_cm_compound = 0
+            mu_per_cm_compound = 0
             transmission_compound = 1.
             energy_compound = []
 
@@ -352,33 +352,33 @@ class Resonance(object):
                 for _iso in stack[_name_of_compound][_element]['isotopes']['list']:
                     stack_signal[_name_of_compound][_element][_iso] = {}
                     _sigma_iso = stack_sigma[_name_of_compound][_element][_iso]['sigma_b']
-                    _miu_per_cm_iso, _transmission_iso = _utilities.calculate_transmission(
+                    _mu_per_cm_iso, _transmission_iso = _utilities.calculate_transmission(
                         thickness_cm=_thickness_cm,
                         atoms_per_cm3=_atoms_per_cm3,
                         sigma_b=_sigma_iso)
-                    stack_signal[_name_of_compound][_element][_iso]['miu_per_cm'] = _miu_per_cm_iso
+                    stack_signal[_name_of_compound][_element][_iso]['mu_per_cm'] = _mu_per_cm_iso
                     stack_signal[_name_of_compound][_element][_iso]['transmission'] = _transmission_iso
                     stack_signal[_name_of_compound][_element][_iso]['attenuation'] = 1. - _transmission_iso
                     stack_signal[_name_of_compound][_element][_iso]['energy_eV'] = \
                         stack_sigma[_name_of_compound][_element][_iso]['energy_eV']
 
                 _sigma_ele = stack_sigma[_name_of_compound][_element]['sigma_b']
-                _miu_per_cm_ele, _transmission_ele = _utilities.calculate_transmission(
+                _mu_per_cm_ele, _transmission_ele = _utilities.calculate_transmission(
                     thickness_cm=_thickness_cm,
                     atoms_per_cm3=_atoms_per_cm3,
                     sigma_b=_sigma_ele)
-                stack_signal[_name_of_compound][_element]['miu_per_cm'] = _miu_per_cm_ele
+                stack_signal[_name_of_compound][_element]['mu_per_cm'] = _mu_per_cm_ele
                 stack_signal[_name_of_compound][_element]['transmission'] = _transmission_ele
                 stack_signal[_name_of_compound][_element]['attenuation'] = 1. - _transmission_ele
                 stack_signal[_name_of_compound][_element]['energy_eV'] = \
                     stack_sigma[_name_of_compound][_element]['energy_eV']
 
-                miu_per_cm_compound += _miu_per_cm_ele  # plus
+                mu_per_cm_compound += _mu_per_cm_ele  # plus
                 transmission_compound *= _transmission_ele  # multiply
                 if len(energy_compound) == 0:
                     energy_compound = stack_sigma[_name_of_compound][_element]['energy_eV']
 
-            stack_signal[_name_of_compound]['miu_per_cm'] = miu_per_cm_compound
+            stack_signal[_name_of_compound]['mu_per_cm'] = mu_per_cm_compound
             stack_signal[_name_of_compound]['transmission'] = transmission_compound
             stack_signal[_name_of_compound]['attenuation'] = 1. - transmission_compound
             stack_signal[_name_of_compound]['energy_eV'] = energy_compound
@@ -574,7 +574,7 @@ class Resonance(object):
         ===========
         :param x_axis: x type for export. Must be either ['energy'|'lambda'|'time'|'number']
         :type x_axis: str
-        :param y_axis: y type for export. Must be either ['transmission'|'attenuation'|'sigma'|'sigma_raw'|'miu_per_cm']
+        :param y_axis: y type for export. Must be either ['transmission'|'attenuation'|'sigma'|'sigma_raw'|'mu_per_cm']
         :type y_axis: str
         :param logx: True -> display x in log scale
         :type logx: boolean.
@@ -689,7 +689,7 @@ class Resonance(object):
             y_axis_tag = 'sigma_b_raw'
             y_axis_label = 'Cross-section (barns)'
         else:
-            y_axis_tag = 'miu_per_cm'
+            y_axis_tag = 'mu_per_cm'
             y_axis_label = "Attenuation coefficient (cm\u207B\u00B9)"
 
         if y_axis_tag[:5] == 'sigma':
@@ -700,9 +700,9 @@ class Resonance(object):
                 all_elements = False
                 print("'y_axis='sigma_raw'' is selected. Auto force 'all_elements=False'")
 
-        if y_axis_tag == 'miu_per_cm':
+        if y_axis_tag == 'mu_per_cm':
             mixed = False
-            print("'y_axis='miu_per_cm'' is selected. Auto force 'mixed=False'")
+            print("'y_axis='mu_per_cm'' is selected. Auto force 'mixed=False'")
 
         # Plotting begins
         if mixed:
@@ -764,7 +764,7 @@ class Resonance(object):
                 _y_axis = _live_path[y_axis_tag]
                 ax_mpl.plot(_x_axis, _y_axis, fmt, ms=ms, lw=lw, alpha=alpha, label=_label)
 
-        if y_axis_tag[:5] != 'sigma' and y_axis_tag != 'miu_per_cm':
+        if y_axis_tag[:5] != 'sigma' and y_axis_tag != 'mu_per_cm':
             ax_mpl.set_ylim(-0.01, 1.01)
         if logy is True:
             ax_mpl.set_yscale('log')
@@ -801,7 +801,7 @@ class Resonance(object):
                                 None -> export to clipboard
         :type filename: string
         :param x_axis: string. x type for export. Must in ['energy', 'lambda', 'time', 'number']
-        :param y_axis: string. y type for export. Must in ['transmission', 'attenuation', 'sigma', 'sigma_raw', 'miu_per_cm']
+        :param y_axis: string. y type for export. Must in ['transmission', 'attenuation', 'sigma', 'sigma_raw', 'mu_per_cm']
         :param all_layers: boolean. True -> export all layers
                                     False -> not export
         :param all_elements: boolean. True -> export all elements signal
@@ -882,11 +882,11 @@ class Resonance(object):
 
         """Y-axis"""
         if y_axis[:5] != 'sigma':
-            # export transmission or attenuation or miu_per_cm
+            # export transmission or attenuation or mu_per_cm
             y_axis_tag = y_axis
-            if y_axis_tag == 'miu_per_cm':
+            if y_axis_tag == 'mu_per_cm':
                 mixed = False
-                print("'y_axis='miu_per_cm'' is selected. Auto force 'mixed=False'")
+                print("'y_axis='mu_per_cm'' is selected. Auto force 'mixed=False'")
             if mixed:
                 _y_axis = self.total_signal[y_axis_tag]
                 df['Total_' + y_axis_tag] = _y_axis

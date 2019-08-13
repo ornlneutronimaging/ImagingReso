@@ -577,11 +577,11 @@ def calculate_linear_attenuation_coefficient(atoms_per_cm3: np.float, sigma_b: n
     ========
     transmission array
     """
-    miu_per_cm = 1e-24 * sigma_b * atoms_per_cm3
-    return np.array(miu_per_cm)
+    mu_per_cm = 1e-24 * sigma_b * atoms_per_cm3
+    return np.array(mu_per_cm)
 
 
-def calculate_trans(thickness_cm: np.float, miu_per_cm: np.array):
+def calculate_trans(thickness_cm: np.float, mu_per_cm: np.array):
     """calculate the transmission signal using the formula
 
     transmission = exp( - thickness_cm * atoms_per_cm3 * 1e-24 * sigma_b)
@@ -596,7 +596,7 @@ def calculate_trans(thickness_cm: np.float, miu_per_cm: np.array):
     ========
     transmission array
     """
-    transmission = np.exp(-thickness_cm * miu_per_cm)
+    transmission = np.exp(-thickness_cm * mu_per_cm)
     return np.array(transmission)
 
 
@@ -615,9 +615,9 @@ def calculate_transmission(thickness_cm: np.float, atoms_per_cm3: np.float, sigm
     ========
     transmission array
     """
-    miu_per_cm = calculate_linear_attenuation_coefficient(atoms_per_cm3=atoms_per_cm3, sigma_b=sigma_b)
-    transmission = calculate_trans(thickness_cm=thickness_cm, miu_per_cm=miu_per_cm)
-    return miu_per_cm, transmission
+    mu_per_cm = calculate_linear_attenuation_coefficient(atoms_per_cm3=atoms_per_cm3, sigma_b=sigma_b)
+    transmission = calculate_trans(thickness_cm=thickness_cm, mu_per_cm=mu_per_cm)
+    return mu_per_cm, transmission
 
 
 def set_distance_units(value=np.NaN, from_units='mm', to_units='cm'):

@@ -369,7 +369,7 @@ class TestUtilities_2(unittest.TestCase):
         thickness = 10  # cm
         atoms_per_cm3 = 8.9e22
         sigma_b = np.linspace(1, 10, 10)
-        miu_per_cm_returned, transmission_returned = calculate_transmission(thickness_cm=thickness,
+        mu_per_cm_returned, transmission_returned = calculate_transmission(thickness_cm=thickness,
                                                                             atoms_per_cm3=atoms_per_cm3,
                                                                             sigma_b=sigma_b)
         transmission_expected = np.exp(-thickness * 1e-24 * sigma_b * atoms_per_cm3)
