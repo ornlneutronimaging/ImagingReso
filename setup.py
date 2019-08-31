@@ -13,8 +13,8 @@ def read_file(filename):
 
 setup(
     name="ImagingReso",
-    version="1.6.16",
-    author="Yuxuan (Shawn) Zhang, Jean Bilheux",
+    version="1.6.17",
+    author="Yuxuan Zhang, Jean Bilheux",
     author_email="zhangy6@ornl.gov, bilheuxjm@ornl.gov",
     packages=find_packages(exclude=['tests', 'notebooks']),
     package_data={'ImagingReso': ['reference_data/_data_for_unittest/*']},
