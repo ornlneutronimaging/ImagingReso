@@ -381,6 +381,7 @@ class TestUtilities_2(unittest.TestCase):
         mu_per_cm_returned, transmission_returned = calculate_transmission(thickness_cm=thickness,
                                                                            atoms_per_cm3=atoms_per_cm3,
                                                                            sigma_b=sigma_b)
+
         transmission_expected = np.exp(-thickness * 1e-24 * sigma_b * atoms_per_cm3)
         self.assertAlmostEqual(transmission_expected[0], transmission_returned[0], delta=1e-16)
         self.assertAlmostEqual(transmission_expected[1], transmission_returned[1], delta=1e-16)
