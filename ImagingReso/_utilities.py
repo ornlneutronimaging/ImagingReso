@@ -236,8 +236,8 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
         raise ValueError("formula '{}' is invalid !".format(formula))
 
     # _dictionary = {}
-    _elements_array = []
-    _atomic_ratio_array = []
+    _elements_list = []
+    _atomic_ratio_list = []
     for _element in _formula_parsed:
         [_single_element, _atomic_ratio] = list(_element)
         if not is_element_in_database(element=_single_element, database=database):
@@ -246,10 +246,15 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
         if _atomic_ratio == '':
             _atomic_ratio = 1
 
-        _atomic_ratio_array.append(int(_atomic_ratio))
-        _elements_array.append(_single_element)
-    _dict = {formula: {'elements': _elements_array,
-                       'stoichiometric_ratio': _atomic_ratio_array,
+        # Combine duplicated element symbol
+        try:
+            dup_element_index = _elements_list.index(_single_element)
+            _atomic_ratio_list[dup_element_index] = _atomic_ratio_list[dup_element_index] + int(_atomic_ratio)
+        except ValueError:
+            _elements_list.append(_single_element)
+            _atomic_ratio_list.append(int(_atomic_ratio))
+    _dict = {formula: {'elements': _elements_list,
+                       'stoichiometric_ratio': _atomic_ratio_list,
                        'thickness': {'value': thickness,
                                      'units': 'mm'},
                        'density': {'value': density,
@@ -258,6 +263,7 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
                                       'units': 'g/mol'}
                        }
              }
+    print(_dict)
     return _dict
 
 

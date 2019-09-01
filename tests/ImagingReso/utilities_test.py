@@ -30,6 +30,15 @@ class TestUtilities_1(unittest.TestCase):
         _answer = is_element_in_database(element=_element, database=self.database)
         self.assertFalse(_answer)
 
+    def test_formula_to_dictionary(self):
+        expected_dict = {'CoOCoCo': {'elements': ['Co', 'O'], 'stoichiometric_ratio': [3, 1],
+                                     'thickness': {'value': np.nan, 'units': 'mm'},
+                                     'density': {'value': np.nan, 'units': 'g/cm3'},
+                                     'molar_mass': {'value': np.nan, 'units': 'g/mol'}}}
+
+        output_dict = formula_to_dictionary(formula='CoOCoCo')
+        self.assertDictEqual(expected_dict, output_dict)
+
     def test_checking_stack(self):
         """assert checking_stack_works in all good cases (1 or more stacks)"""
 
@@ -370,8 +379,9 @@ class TestUtilities_2(unittest.TestCase):
         atoms_per_cm3 = 8.9e22
         sigma_b = np.linspace(1, 10, 10)
         mu_per_cm_returned, transmission_returned = calculate_transmission(thickness_cm=thickness,
-                                                                            atoms_per_cm3=atoms_per_cm3,
-                                                                            sigma_b=sigma_b)
+                                                                           atoms_per_cm3=atoms_per_cm3,
+                                                                           sigma_b=sigma_b)
+
         transmission_expected = np.exp(-thickness * 1e-24 * sigma_b * atoms_per_cm3)
         self.assertAlmostEqual(transmission_expected[0], transmission_returned[0], delta=1e-16)
         self.assertAlmostEqual(transmission_expected[1], transmission_returned[1], delta=1e-16)

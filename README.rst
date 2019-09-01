@@ -97,20 +97,20 @@ You can email authors for support.
 Installation instructions
 -------------------------
 
-Python 3.x is required for installing this package.
+Python 3.5+ is required for installing this package.
 
 Install **ImagingReso** by typing the following command in Terminal:
 
 .. code-block:: bash
 
-   $ pip install ImagingReso
+   $ conda config --add channels conda-forge
+   $ conda install imagingreso
 
 or
 
 .. code-block:: bash
 
-   $ conda config --add channels conda-forge
-   $ conda install imagingreso
+   $ python3 -m pip install ImagingReso
 
 or by typing the following command under downloaded directory in
 Terminal:
