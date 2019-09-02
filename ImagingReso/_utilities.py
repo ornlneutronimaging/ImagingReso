@@ -241,7 +241,7 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
     for _element in _formula_parsed:
         [_single_element, _atomic_ratio] = list(_element)
         if not is_element_in_database(element=_single_element, database=database):
-            raise ValueError("element '{}' not found in the database '{}'!".format(_single_element, database))
+            raise ValueError("element '{}' is not found in the database '{}'!".format(_single_element, database))
 
         if _atomic_ratio == '':
             _atomic_ratio = 1
