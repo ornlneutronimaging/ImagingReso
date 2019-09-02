@@ -29,7 +29,8 @@ class Resonance(object):
     energy_min = np.NaN
     energy_step = np.NaN
 
-    def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001, database='ENDF_VII'):
+    def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001,
+                 database='ENDF_VII', temperature='294K'):
         """initialize resonance object
 
         :param stack: dictionary to store sample info
@@ -63,7 +64,10 @@ class Resonance(object):
                 "Database {} entered not existed. \nCurrent support: ['ENDF_VII', 'ENDF_VIII'] ".format(database))
 
         # ENDF_VII only has nuclide 'C-0', replaced with 'C-12' and 'C-13' from ENDF_VIII.
-        # ENDF_VIII data base has problematic 'B-10' ace file.
+        # ENDF_VIII data base has problematic 'B-10' ace file, replaced with 'B-10' from ENFF_VII.
+
+        if database is 'ENDF_VIII':
+            pass
 
         self.database = database
         self.__element_metadata = {}
