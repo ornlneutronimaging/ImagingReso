@@ -263,7 +263,6 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
                                       'units': 'g/mol'}
                        }
              }
-    print(_dict)
     return _dict
 
 
