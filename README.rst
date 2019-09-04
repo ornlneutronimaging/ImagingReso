@@ -19,7 +19,7 @@ ImagingReso
 
 .. image:: http://joss.theoj.org/papers/997d09281a9d76e95f4ec4d3279eeb8c/status.svg
   :target: http://joss.theoj.org/papers/997d09281a9d76e95f4ec4d3279eeb8c
-  :alt: DOI
+  :alt: JOSS
 
 .. image:: https://zenodo.org/badge/97753107.svg
    :target: https://zenodo.org/badge/latestdoi/97753107
@@ -52,7 +52,7 @@ ImagingReso
 Announcement
 ------------
 
-A web-based Graphical User Interface (GUI), *Neutron Imaging Toolbox*
+- A web-based Graphical User Interface (GUI), *Neutron Imaging Toolbox*
 (`NEUIT) <https://github.com/ornlneutronimaging/NEUIT>`__), is now available at http://isc.sns.gov/.
 
 Abstract
