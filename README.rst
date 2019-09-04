@@ -49,7 +49,10 @@ ImagingReso
   :target: https://anaconda.org/conda-forge/imagingreso
   :alt: license
 
-A web-based Graphical User Interface (GUI), **NEU**tron **I**maging **T**oolbox
+Announcement
+------------
+
+A web-based Graphical User Interface (GUI), *Neutron Imaging Toolbox*
 (`NEUIT) <https://github.com/ornlneutronimaging/NEUIT>`__), is now available at http://isc.sns.gov/.
 
 Abstract
