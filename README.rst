@@ -21,6 +21,10 @@ ImagingReso
   :target: http://joss.theoj.org/papers/997d09281a9d76e95f4ec4d3279eeb8c
   :alt: DOI
 
+.. image:: https://zenodo.org/badge/97753107.svg
+   :target: https://zenodo.org/badge/latestdoi/97753107
+   :alt: zenodo
+
 .. image:: https://img.shields.io/pypi/v/ImagingReso.svg
   :target: https://pypi.python.org/pypi/ImagingReso
   :alt: pypi
@@ -44,6 +48,9 @@ ImagingReso
 .. image:: https://anaconda.org/conda-forge/imagingreso/badges/license.svg
   :target: https://anaconda.org/conda-forge/imagingreso
   :alt: license
+
+A web-based Graphical User Interface (GUI), **NEU**tron **I**maging **T**oolbox
+(`NEUIT) <https://github.com/ornlneutronimaging/NEUIT>`__), is now available at http://isc.sns.gov/.
 
 Abstract
 --------
