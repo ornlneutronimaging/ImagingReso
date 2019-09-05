@@ -17,11 +17,17 @@ isotopic contributions in the total resonance signal.
 The energy dependent cross-section data used in this library are from
 `National Nuclear Data Center <http://www.nndc.bnl.gov/>`__, a published
 online database. `Evaluated Nuclear Data File
-(ENDF/B-VII.1) <http://www.nndc.bnl.gov/exfor/endf00.jsp>`__ [1] is currently
+(ENDF/B) <http://www.nndc.bnl.gov/exfor/endf00.jsp>`__ [1] is currently
 supported and more evaluated databases will be added in future.
 
 Python packages used are: SciPy [2], NumPy [3], Matplotlib [4], Pandas
 [5] and Periodictable [6].
+
+Announcement
+############
+
+A web-based Graphical User Interface (GUI), *Neutron Imaging Toolbox*
+(`NEUIT) <https://github.com/ornlneutronimaging/NEUIT>`__), is now available at http://isc.sns.gov/.
 
 Statement of need
 #################
@@ -51,16 +57,16 @@ You can email authors for support.
 Installation instructions
 #########################
 
-Python 3.x is required for installing this package.
+Python 3.5+ is required for installing this package.
 
 Install **ImagingReso** by typing the following command in Terminal:
 
-``pip install ImagingReso``
+``conda config --add channels conda-forge``
+``conda install imagingreso``
 
 or
 
-``conda config --add channels conda-forge``
-``conda install imagingreso``
+``python3 -m pip install ImagingReso``
 
 or by typing the following command under downloaded directory in
 Terminal:
