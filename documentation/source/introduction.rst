@@ -27,7 +27,7 @@ Announcement
 ############
 
 A web-based Graphical User Interface (GUI), *Neutron Imaging Toolbox*
-(`NEUIT) <https://github.com/ornlneutronimaging/NEUIT>`__), is now available at http://isc.sns.gov/.
+(`NEUIT <https://github.com/ornlneutronimaging/NEUIT>`__), is now available at http://isc.sns.gov/.
 
 Statement of need
 #################
