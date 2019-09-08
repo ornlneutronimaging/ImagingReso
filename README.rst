@@ -21,10 +21,6 @@ ImagingReso
   :target: http://joss.theoj.org/papers/997d09281a9d76e95f4ec4d3279eeb8c
   :alt: JOSS
 
-.. image:: https://zenodo.org/badge/97753107.svg
-   :target: https://zenodo.org/badge/latestdoi/97753107
-   :alt: zenodo
-
 .. image:: https://img.shields.io/pypi/v/ImagingReso.svg
   :target: https://pypi.python.org/pypi/ImagingReso
   :alt: pypi
