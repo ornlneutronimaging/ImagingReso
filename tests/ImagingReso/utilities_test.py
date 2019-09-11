@@ -240,6 +240,11 @@ class TestUtilities_1(unittest.TestCase):
 
         self.assertEqual(_dict_returned, _dict_expected)
 
+    def test_check_iso_ratios(self):
+        self.assertRaises(ValueError, check_iso_ratios, ratios=[0, 0, 1.06], tol=0.005)
+        self.assertRaises(ValueError, check_iso_ratios, ratios=[0, 0, 0], tol=0.005)
+        self.assertTrue(check_iso_ratios(ratios=[0, 0, 1], tol=0.005))
+
     def test_get_mass(self):
         """assert get_mass works for isotopes and elements"""
         _isotope = '107-Ag'

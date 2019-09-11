@@ -199,6 +199,13 @@ def checking_stack(stack, database='ENDF_VII'):
     return True
 
 
+def check_iso_ratios(ratios: list, tol: float):
+    if abs(sum(ratios) - 1.0) >= tol:
+        raise ValueError("The sum of the ratios '{}' is '{}' instead of '1.0'!".format(ratios, sum(ratios)))
+    else:
+        return True
+
+
 def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database='ENDF_VII'):
     """create dictionary based on formula given
     
@@ -341,6 +348,8 @@ def get_isotope_dicts(element='', database='ENDF_VII'):
         _isotopes_density.append(get_density(isotope))
         _density = get_density(element)
         _molar_mass = get_mass(element)
+
+    check_iso_ratios(ratios=_isotopes_atomic_ratio, tol=0.005)
 
     isotope_dict['isotopes']['list'] = _isotopes_list
     isotope_dict['isotopes']['file_names'] = _isotopes_list_files

@@ -226,10 +226,11 @@ class Resonance(object):
             list_element_joined = ', '.join(list_element)
             raise ValueError("Element '{}' should be any of those elements: {}".format(element, list_element_joined))
 
-        old_list_ratio = _stack[compound][element]['isotopes']['list']
+        old_list_ratio = _stack[compound][element]['isotopes']['isotopic_ratio']
         if not (len(old_list_ratio) == len(list_ratio)):
             raise ValueError("New list of ratio ({} elements) does not match old list size ({} elements!".format(len(
                 list_ratio), len(old_list_ratio)))
+        _utilities.check_iso_ratios(ratios=list_ratio, tol=0.005)
 
         self.stack[compound][element]['isotopes']['isotopic_ratio'] = list_ratio
         self.__update_molar_mass(compound=compound, element=element)
