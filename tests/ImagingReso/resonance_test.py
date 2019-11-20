@@ -287,6 +287,19 @@ class TestInitialization(unittest.TestCase):
         self.assertEqual(returned_stack['CoAg']['Co']['molar_mass']['value'],
                          expected_stack['CoAg']['Co']['molar_mass']['value'])
 
+    def test_duplicated_layer_name(self):
+        o_reso = Resonance(database=self.database)
+
+        # layer 1
+        layer1 = 'CoAg'
+        thickness1 = 0.025
+        o_reso.add_layer(formula=layer1, thickness=thickness1)
+
+        # Duplicated layer name
+        layer2 = 'CoAg'
+        thickness2 = 0.01
+        self.assertRaises(ValueError, o_reso.add_layer, formula=layer2, thickness=thickness2)
+
     def test_element_metadata_via_stack_initialization(self):
         """assert __element_metadata is correctly populated using stack initialization"""
 

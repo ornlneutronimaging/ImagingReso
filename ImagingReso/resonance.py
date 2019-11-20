@@ -129,7 +129,8 @@ class Resonance(object):
         """
         if formula == '':
             return
-
+        if formula in self.stack.keys():
+            raise ValueError("Layer '{}' is already in the sample stack.".format(formula))
         _new_stack = _utilities.formula_to_dictionary(formula=formula,
                                                       thickness=thickness,
                                                       density=density,
