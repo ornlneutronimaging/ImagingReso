@@ -1,5 +1,6 @@
 import unittest
 import numpy as np
+from pprint import pprint
 
 from ImagingReso.resonance import Resonance
 
@@ -660,6 +661,21 @@ class TestTransmissionAttenuation(unittest.TestCase):
         self.assertAlmostEqual(expected_tran_0, attenuation[0], delta=0.001)
         self.assertAlmostEqual(expected_tran_1, attenuation[1], delta=0.001)
         self.assertAlmostEqual(expected_tran_2, attenuation[2], delta=0.001)
+
+    def test_attenuation_coefficient(self):
+        """assert calculation of transmission for isotopes works"""
+        o_reso = Resonance()
+        o_reso.add_layer(formula='H2O', thickness=2, density=1)
+        pprint(o_reso.stack['H2O']['atoms_per_cm3'])
+        pprint(o_reso.stack_signal['H2O']['mu_per_cm'][0])
+
+        n_reso = Resonance()
+        n_reso.add_layer(formula='H2O', thickness=1, density=1)
+        pprint(n_reso.stack['H2O']['atoms_per_cm3'])
+        pprint(n_reso.stack_signal['H2O']['mu_per_cm'][0])
+        self.assertAlmostEqual(o_reso.stack['H2O']['atoms_per_cm3'], n_reso.stack['H2O']['atoms_per_cm3'], delta=0.001)
+        self.assertAlmostEqual(o_reso.stack_signal['H2O']['mu_per_cm'][0], n_reso.stack_signal['H2O']['mu_per_cm'][0],
+                               delta=0.001)
 
 
 class TestPlot(unittest.TestCase):
