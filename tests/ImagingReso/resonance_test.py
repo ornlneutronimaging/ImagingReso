@@ -1,5 +1,6 @@
 import unittest
 import numpy as np
+import pprint
 
 from ImagingReso.resonance import Resonance
 
@@ -715,3 +716,33 @@ class TestExport(unittest.TestCase):
         self.assertRaises(ValueError, self.o_reso.export, x_axis='wrong_x_word')
         self.assertRaises(ValueError, self.o_reso.export, time_unit='wrong_unit')
         self.assertRaises(ValueError, self.o_reso.export, y_axis='wrong_y_word')
+
+
+class Bonded_H(unittest.TestCase):
+    database = '_data_for_unittest'
+
+    def setUp(self):
+        _energy_min = 0.004
+        _energy_max = 1
+        _energy_step = 0.01
+        o_reso = Resonance(energy_min=_energy_min, energy_max=_energy_max, energy_step=_energy_step,
+                           database=self.database)
+        self.o_reso = o_reso
+
+    def test_H_sigma(self):
+        _layer_1 = 'H2'
+        _thickness_1 = 0.025  # mm
+        _layer_2 = 'H'
+        _thickness_2 = 0.01
+        _layer_3 = 'CH4'
+        _thickness_3 = 0.01
+        o_reso = self.o_reso
+        o_reso.add_layer(formula=_layer_1, thickness=_thickness_1)
+        o_reso.add_layer(formula=_layer_2, thickness=_thickness_2)
+        o_reso.add_layer(formula=_layer_3, thickness=_thickness_3)
+        layer1_sigma = o_reso.stack_sigma[_layer_1]['H']['1-H']['sigma_b_raw'][0]
+        layer2_sigma = o_reso.stack_sigma[_layer_2]['H']['1-H']['sigma_b_raw'][0]
+        layer3_sigma = o_reso.stack_sigma[_layer_3]['H']['1-H']['sigma_b_raw'][0]
+        self.assertNotEqual(layer1_sigma, layer2_sigma)
+        self.assertNotEqual(layer1_sigma, layer3_sigma)
+        self.assertNotEqual(layer2_sigma, layer3_sigma)

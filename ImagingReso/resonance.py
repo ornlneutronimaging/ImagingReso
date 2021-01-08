@@ -12,6 +12,17 @@ x_type_list = ['energy', 'lambda', 'time', 'number']
 y_type_list = ['transmission', 'attenuation', 'sigma', 'sigma_raw', 'mu_per_cm']
 time_unit_list = ['s', 'us', 'ns']
 export_type_list = ['df', 'csv', 'clip']
+h_bond_list = ['H2', 'C4H10', 'C16H34', 'C4H6', 'CH4', 'C2H6', 'C3H8', 'C2H4']
+h_dict = {
+    'H2': 'Hydrogen gas',
+    'C4H10': 'Butane',
+    'C16H34': 'Cetane',
+    'C4H6': 'Butadiene',
+    'CH4': 'Methane',
+    'C2H6': 'Ethane',
+    'C3H8': 'Propane',
+    'C2H4': 'Ethylene'
+}
 
 
 class Resonance(object):
@@ -66,7 +77,7 @@ class Resonance(object):
         # ENDF_VII only has nuclide 'C-0', replaced with 'C-12' and 'C-13' from ENDF_VIII.
         # ENDF_VIII data base has problematic 'B-10' ace file, replaced with 'B-10' from ENFF_VII.
 
-        if database is 'ENDF_VIII':
+        if database == 'ENDF_VIII':
             pass
 
         self.database = database
@@ -527,7 +538,6 @@ class Resonance(object):
         for _compound in _list_compounds:
             _list_element = _stack[_compound]['elements']
             stack_sigma[_compound] = {}
-
             for _element in _list_element:
                 stack_sigma[_compound][_element] = {}
                 _list_isotopes = _stack[_compound][_element]['isotopes']['list']
@@ -542,8 +552,20 @@ class Resonance(object):
 
                 for _iso, _file, _ratio in _iso_file_ratio:
                     stack_sigma[_compound][_element][_iso] = {}
-                    _file = os.path.join(_database_folder, _file)
-                    _dict = _utilities.get_sigma(database_file_name=_file,
+                    # print(_iso,  _file, _ratio)
+                    if _compound in h_bond_list:
+                        if _iso == '1-H':
+                            _database_folder_h = os.path.join(_file_path, 'reference_data', 'Bonded_H')
+                            sigma_file = os.path.join(_database_folder_h, 'H-{}.csv'.format(_compound))
+                            print("NOTICE:\n"
+                                  "Your entry contains chemicals in {}, \n"
+                                  "'1-H' cross-section has been replaced by corresponding bonded H cross-sections "
+                                  "reported at https://doi.org/10.1103/PhysRev.76.1750".format(h_bond_list))
+                        else:
+                            sigma_file = os.path.join(_database_folder, _file)
+                    else:
+                        sigma_file = os.path.join(_database_folder, _file)
+                    _dict = _utilities.get_sigma(database_file_name=sigma_file,
                                                  e_min=self.energy_min,
                                                  e_max=self.energy_max,
                                                  e_step=self.energy_step)
@@ -698,7 +720,8 @@ class Resonance(object):
         if y_axis_tag[:5] == 'sigma':
             mixed = False
             all_layers = False
-            print("'y_axis='sigma'' is selected. Auto force 'mixed=False', 'all_layers=False'")
+            all_isotopes = True
+            print("'y_axis='sigma'' is selected. Auto force 'mixed=False', 'all_layers=False', 'all_isotopes=True'")
             if y_axis_tag[-3:] == 'raw':
                 all_elements = False
                 print("'y_axis='sigma_raw'' is selected. Auto force 'all_elements=False'")

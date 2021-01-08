@@ -13,11 +13,11 @@ def read_file(filename):
 
 setup(
     name="ImagingReso",
-    version="1.6.20",
+    version="1.7.0",
     author="Yuxuan Zhang, Jean Bilheux",
     author_email="zhangy6@ornl.gov, bilheuxjm@ornl.gov",
     packages=find_packages(exclude=['tests', 'notebooks']),
-    package_data={'ImagingReso': ['reference_data/_data_for_unittest/*']},
+    package_data={'ImagingReso': ['reference_data/_data_for_unittest/*', 'reference_data/Bonded_H/*']},
     include_package_data=True,
     test_suite='tests',
     install_requires=[
@@ -40,9 +40,9 @@ setup(
                  'License :: OSI Approved :: BSD License',
                  'Topic :: Scientific/Engineering :: Physics',
                  'Intended Audience :: Developers',
-                 'Programming Language :: Python :: 3.5',
                  'Programming Language :: Python :: 3.6',
                  'Programming Language :: Python :: 3.7',
+                 'Programming Language :: Python :: 3.8',
                  'Natural Language :: English'],
 )
 

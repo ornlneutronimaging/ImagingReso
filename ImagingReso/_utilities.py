@@ -463,7 +463,12 @@ def get_interpolated_data(df: pd.DataFrame, e_min=np.nan, e_max=np.nan, e_step=n
     nbr_point = int((e_max - e_min) / e_step + 1)
     x_axis = np.linspace(e_min, e_max, nbr_point).round(6)
     y_axis_function = interp1d(x=df['E_eV'], y=df['Sig_b'], kind='linear')
-    y_axis = y_axis_function(x_axis)
+    try:
+        y_axis = y_axis_function(x_axis)
+    except ValueError:
+        print('Oops, the experimental data does not cover the specified energy range ({}, {}), please adjust.'.format(
+            e_min, e_max))
+        sys.exit(1)
 
     return {'x_axis': x_axis, 'y_axis': y_axis}
 
@@ -796,3 +801,23 @@ def ev_to_image_number(offset_us, source_to_detector_m, time_resolution_us, t_st
     time_record_us = (time_tot_us + offset_us)
     image_number = (time_record_us - t_start_us) / time_resolution_us
     return image_number
+
+
+def m_per_s_to_ev(array):
+    """
+
+    :param array:
+    :return:
+    """
+    a = 3956 * np.sqrt(1000 / 81.787)
+    return pow(array / a, 2)
+
+
+def ev_to_m_per_s(array):
+    """
+
+    :param array:
+    :return:
+    """
+    a = 3956 * np.sqrt(1000 / 81.787)
+    return a * np.sqrt(array)
