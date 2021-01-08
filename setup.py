@@ -25,7 +25,7 @@ setup(
         'pandas',
         'periodictable',
         'scipy',
-        'matplotlib',
+        'matplotlib==3.1.3',
         'six',
         'plotly',
     ],
