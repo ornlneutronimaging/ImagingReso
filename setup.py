@@ -13,7 +13,7 @@ def read_file(filename):
 
 setup(
     name="ImagingReso",
-    version="1.7.0",
+    version="1.7.1",
     author="Yuxuan Zhang, Jean Bilheux",
     author_email="zhangy6@ornl.gov, bilheuxjm@ornl.gov",
     packages=find_packages(exclude=['tests', 'notebooks']),
