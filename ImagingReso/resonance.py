@@ -555,6 +555,7 @@ class Resonance(object):
                     # print(_iso,  _file, _ratio)
                     if _compound in h_bond_list:
                         if _iso == '1-H':
+                            _utilities.is_element_in_database(element='H', database='Bonded_H')
                             _database_folder_h = os.path.join(_file_path, 'reference_data', 'Bonded_H')
                             sigma_file = os.path.join(_database_folder_h, 'H-{}.csv'.format(_compound))
                             print("NOTICE:\n"

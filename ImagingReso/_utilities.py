@@ -466,8 +466,17 @@ def get_interpolated_data(df: pd.DataFrame, e_min=np.nan, e_max=np.nan, e_step=n
     try:
         y_axis = y_axis_function(x_axis)
     except ValueError:
-        print('Oops, the experimental data does not cover the specified energy range ({}, {}), please adjust.'.format(
-            e_min, e_max))
+        a_min = round(ev_to_angstroms(e_max), 6)
+        a_max = round(ev_to_angstroms(e_min), 6)
+        data_e_min = round(min(df['E_eV']), 6)
+        data_e_max = round(max(df['E_eV']), 6)
+        data_a_min = round(ev_to_angstroms(data_e_max), 6)
+        data_a_max = round(ev_to_angstroms(data_e_min), 6)
+        print("Oops, the experimental data does not cover the specified range ({}, {}) eV or ({}, {}) \u212B,"
+              u" please adjust to numbers within ({}, {}) eV or ({}, {}) \u212B.".format(e_min, e_max,
+                                                                                         a_min, a_max,
+                                                                                         data_e_min, data_e_max,
+                                                                                         data_a_min, data_a_max))
         sys.exit(1)
 
     return {'x_axis': x_axis, 'y_axis': y_axis}
