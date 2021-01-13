@@ -167,6 +167,13 @@ class TestInitialization(unittest.TestCase):
         _stack_returned = o_reso.stack
         self.assertEqual(_stack, _stack_returned)
 
+    def test_abundance(self):
+        """assert"""
+        o_reso = Resonance(database=self.database)
+        o_reso.add_layer(formula='C', thickness=1)
+        self.assertAlmostEqual(o_reso.stack['C']['C']['isotopes']['isotopic_ratio'][0], 0.9893, delta=0.0001)
+        self.assertAlmostEqual(o_reso.stack['C']['C']['isotopes']['isotopic_ratio'][1], 0.0107, delta=0.0001)
+
     def test_adding_layer(self):
         """assert adding_layer works"""
         o_reso = Resonance(database=self.database)
