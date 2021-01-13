@@ -8,22 +8,6 @@ import pandas as pd
 from ImagingReso import _utilities
 import plotly.tools as tls
 
-x_type_list = ['energy', 'lambda', 'time', 'number']
-y_type_list = ['transmission', 'attenuation', 'sigma', 'sigma_raw', 'mu_per_cm']
-time_unit_list = ['s', 'us', 'ns']
-export_type_list = ['df', 'csv', 'clip']
-h_bond_list = ['H2', 'C4H10', 'C16H34', 'C4H6', 'CH4', 'C2H6', 'C3H8', 'C2H4']
-h_dict = {
-    'H2': 'Hydrogen gas',
-    'C4H10': 'Butane',
-    'C16H34': 'Cetane',
-    'C4H6': 'Butadiene',
-    'CH4': 'Methane',
-    'C2H6': 'Ethane',
-    'C3H8': 'Propane',
-    'C2H4': 'Ethylene'
-}
-
 
 class Resonance(object):
     e_min = 1e-5
@@ -549,19 +533,18 @@ class Resonance(object):
                 # _dict_sigma_isotopes_sum = {}
                 _sigma_all_isotopes = 0
                 _energy_all_isotpes = 0
-
                 for _iso, _file, _ratio in _iso_file_ratio:
                     stack_sigma[_compound][_element][_iso] = {}
                     # print(_iso,  _file, _ratio)
-                    if _compound in h_bond_list:
+                    if _compound in _utilities.h_bond_list:
                         if _iso == '1-H':
                             _utilities.is_element_in_database(element='H', database='Bonded_H')
                             _database_folder_h = os.path.join(_file_path, 'reference_data', 'Bonded_H')
                             sigma_file = os.path.join(_database_folder_h, 'H-{}.csv'.format(_compound))
                             print("NOTICE:\n"
-                                  "Your entry contains chemicals in {}, \n"
-                                  "'1-H' cross-section has been replaced by corresponding bonded H cross-sections "
-                                  "reported at https://doi.org/10.1103/PhysRev.76.1750".format(h_bond_list))
+                                  "Your entry {} contains bonded H, and has experimental data available. \n"
+                                  "Therefore, '1-H' cross-section has been replaced by the data "
+                                  "reported at https://doi.org/10.1103/PhysRev.76.1750".format(_compound))
                         else:
                             sigma_file = os.path.join(_database_folder, _file)
                     else:
@@ -640,12 +623,12 @@ class Resonance(object):
         :type alpha: float
 
         """
-        if x_axis not in x_type_list:
-            raise ValueError("Please specify the x-axis type using one from '{}'.".format(x_type_list))
-        if time_unit not in time_unit_list:
-            raise ValueError("Please specify the time unit using one from '{}'.".format(time_unit_list))
-        if y_axis not in y_type_list:
-            raise ValueError("Please specify the y-axis type using one from '{}'.".format(y_type_list))
+        if x_axis not in _utilities.x_type_list:
+            raise ValueError("Please specify the x-axis type using one from '{}'.".format(_utilities.x_type_list))
+        if time_unit not in _utilities.time_unit_list:
+            raise ValueError("Please specify the time unit using one from '{}'.".format(_utilities.time_unit_list))
+        if y_axis not in _utilities.y_type_list:
+            raise ValueError("Please specify the y-axis type using one from '{}'.".format(_utilities.y_type_list))
         # figure size
         # plt.figure(figsize=(8, 8))
 
@@ -850,14 +833,14 @@ class Resonance(object):
 
         :return: simulated resonance signals or sigma in the form of 'clipboard' or '.csv file' or 'pd.DataFrame'
         """
-        if x_axis not in x_type_list:
-            raise ValueError("Please specify the x-axis type using one from '{}'.".format(x_type_list))
-        if time_unit not in time_unit_list:
-            raise ValueError("Please specify the time unit using one from '{}'.".format(time_unit_list))
-        if y_axis not in y_type_list:
-            raise ValueError("Please specify the y-axis type using one from '{}'.".format(y_type_list))
-        if output_type not in export_type_list:
-            raise ValueError("Please specify export type using one from '{}'.".format(export_type_list))
+        if x_axis not in _utilities.x_type_list:
+            raise ValueError("Please specify the x-axis type using one from '{}'.".format(_utilities.x_type_list))
+        if time_unit not in _utilities.time_unit_list:
+            raise ValueError("Please specify the time unit using one from '{}'.".format(_utilities.time_unit_list))
+        if y_axis not in _utilities.y_type_list:
+            raise ValueError("Please specify the y-axis type using one from '{}'.".format(_utilities.y_type_list))
+        if output_type not in _utilities.export_type_list:
+            raise ValueError("Please specify export type using one from '{}'.".format(_utilities.export_type_list))
         # stack from self
         _stack_signal = self.stack_signal
         _stack = self.stack

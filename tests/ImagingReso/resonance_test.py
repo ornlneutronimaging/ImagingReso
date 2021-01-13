@@ -728,22 +728,26 @@ class TestExport(unittest.TestCase):
 class Bonded_H(unittest.TestCase):
     database = '_data_for_unittest'
 
-    def setUp(self):
+    def test_raises(self):
+        _energy_min = 0.002
+        _energy_max = 1
+        _energy_step = 0.01
+        o_reso = Resonance(energy_min=_energy_min, energy_max=_energy_max, energy_step=_energy_step,
+                           database=self.database)
+        self.assertRaises(Exception)
+
+    def test_H_sigma(self):
         _energy_min = 0.004
         _energy_max = 1
         _energy_step = 0.01
         o_reso = Resonance(energy_min=_energy_min, energy_max=_energy_max, energy_step=_energy_step,
                            database=self.database)
-        self.o_reso = o_reso
-
-    def test_H_sigma(self):
         _layer_1 = 'H2'
         _thickness_1 = 0.025  # mm
         _layer_2 = 'H'
         _thickness_2 = 0.01
         _layer_3 = 'CH4'
         _thickness_3 = 0.01
-        o_reso = self.o_reso
         o_reso.add_layer(formula=_layer_1, thickness=_thickness_1)
         o_reso.add_layer(formula=_layer_2, thickness=_thickness_2)
         o_reso.add_layer(formula=_layer_3, thickness=_thickness_3)

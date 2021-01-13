@@ -14,6 +14,22 @@ from six.moves import input
 from six.moves.urllib.request import urlopen
 import sys
 
+x_type_list = ['energy', 'lambda', 'time', 'number']
+y_type_list = ['transmission', 'attenuation', 'sigma', 'sigma_raw', 'mu_per_cm']
+time_unit_list = ['s', 'us', 'ns']
+export_type_list = ['df', 'csv', 'clip']
+h_bond_list = ['H2', 'C4H10', 'C16H34', 'C4H6', 'CH4', 'C2H6', 'C3H8', 'C2H4']
+h_dict = {
+    'H2': 'Hydrogen gas',
+    'C4H10': 'Butane',
+    'C16H34': 'Cetane',
+    'C4H6': 'Butadiene',
+    'CH4': 'Methane',
+    'C2H6': 'Ethane',
+    'C3H8': 'Propane',
+    'C2H4': 'Ethylene'
+}
+
 
 def download_from_github(fname, path):
     """
@@ -465,21 +481,20 @@ def get_interpolated_data(df: pd.DataFrame, e_min=np.nan, e_max=np.nan, e_step=n
     y_axis_function = interp1d(x=df['E_eV'], y=df['Sig_b'], kind='linear')
     try:
         y_axis = y_axis_function(x_axis)
-    except ValueError:
+    except ValueError as err:
         a_min = round(ev_to_angstroms(e_max), 6)
         a_max = round(ev_to_angstroms(e_min), 6)
         data_e_min = round(min(df['E_eV']), 6)
         data_e_max = round(max(df['E_eV']), 6)
         data_a_min = round(ev_to_angstroms(data_e_max), 6)
         data_a_max = round(ev_to_angstroms(data_e_min), 6)
-        raise ValueError(
-            "Oops, the experimental data does not cover the specified range ({}, {}) eV or ({}, {}) \u212B,"
-            u" please adjust to numbers within ({}, {}) eV or ({}, {}) \u212B.".format(e_min, e_max,
-                                                                                       a_min, a_max,
-                                                                                       data_e_min, data_e_max,
-                                                                                       data_a_min, data_a_max))
+        errmsg = "Oops, the experimental data does not cover the specified range ({}, {}) eV or ({}, {}) \u212B, please adjust to numbers within ({}, {}) eV or ({}, {}) \u212B.".format(
+            e_min, e_max,
+            a_min, a_max,
+            data_e_min, data_e_max,
+            data_a_min, data_a_max)
+        raise Exception(errmsg) from err
         sys.exit(1)
-
     return {'x_axis': x_axis, 'y_axis': y_axis}
 
 
