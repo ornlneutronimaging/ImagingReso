@@ -18,7 +18,7 @@ x_type_list = ['energy', 'lambda', 'time', 'number']
 y_type_list = ['transmission', 'attenuation', 'sigma', 'sigma_raw', 'mu_per_cm']
 time_unit_list = ['s', 'us', 'ns']
 export_type_list = ['df', 'csv', 'clip']
-h_bond_list = ['H2', 'C4H10', 'C16H34', 'C4H6', 'CH4', 'C2H6', 'C3H8', 'C2H4']
+h_bond_list = ['H2', 'C4H10', 'C16H34', 'C4H6', 'CH4', 'C2H6', 'C3H8', 'C2H4', 'ZrH']
 h_dict = {
     'H2': 'Hydrogen gas',
     'C4H10': 'Butane',

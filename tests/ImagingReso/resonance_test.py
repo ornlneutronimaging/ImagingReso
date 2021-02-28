@@ -748,12 +748,19 @@ class Bonded_H(unittest.TestCase):
         _thickness_2 = 0.01
         _layer_3 = 'CH4'
         _thickness_3 = 0.01
+        _layer_4 = 'ZrH'
+        _thickness_4 = 0.01
         o_reso.add_layer(formula=_layer_1, thickness=_thickness_1)
         o_reso.add_layer(formula=_layer_2, thickness=_thickness_2)
         o_reso.add_layer(formula=_layer_3, thickness=_thickness_3)
+        o_reso.add_layer(formula=_layer_4, thickness=_thickness_4)
         layer1_sigma = o_reso.stack_sigma[_layer_1]['H']['1-H']['sigma_b_raw'][0]
         layer2_sigma = o_reso.stack_sigma[_layer_2]['H']['1-H']['sigma_b_raw'][0]
         layer3_sigma = o_reso.stack_sigma[_layer_3]['H']['1-H']['sigma_b_raw'][0]
+        layer4_sigma = o_reso.stack_sigma[_layer_4]['H']['1-H']['sigma_b_raw'][0]
         self.assertNotEqual(layer1_sigma, layer2_sigma)
         self.assertNotEqual(layer1_sigma, layer3_sigma)
+        self.assertNotEqual(layer1_sigma, layer4_sigma)
         self.assertNotEqual(layer2_sigma, layer3_sigma)
+        self.assertNotEqual(layer2_sigma, layer4_sigma)
+        self.assertNotEqual(layer3_sigma, layer4_sigma)

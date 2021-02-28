@@ -532,7 +532,7 @@ class Resonance(object):
 
                 # _dict_sigma_isotopes_sum = {}
                 _sigma_all_isotopes = 0
-                _energy_all_isotpes = 0
+                _energy_all_isotopes = 0
                 for _iso, _file, _ratio in _iso_file_ratio:
                     stack_sigma[_compound][_element][_iso] = {}
                     # print(_iso,  _file, _ratio)
@@ -541,10 +541,16 @@ class Resonance(object):
                             _utilities.is_element_in_database(element='H', database='Bonded_H')
                             _database_folder_h = os.path.join(_file_path, 'reference_data', 'Bonded_H')
                             sigma_file = os.path.join(_database_folder_h, 'H-{}.csv'.format(_compound))
-                            print("NOTICE:\n"
-                                  "Your entry {} contains bonded H, and has experimental data available. \n"
-                                  "Therefore, '1-H' cross-section has been replaced by the data "
-                                  "reported at https://doi.org/10.1103/PhysRev.76.1750".format(_compound))
+                            if _compound == 'ZrH':
+                                print("NOTICE:\n"
+                                      "Your entry {} contains bonded H, and has experimental data available.\n"
+                                      "Therefore, '1-H' cross-section has been replaced by the data "
+                                      "reported at https://t2.lanl.gov/nis/data/endf/endfvii-thermal.html".format(_compound))
+                            else:
+                                print("NOTICE:\n"
+                                      "Your entry {} contains bonded H, and has experimental data available.\n"
+                                      "Therefore, '1-H' cross-section has been replaced by the data "
+                                      "reported at https://doi.org/10.1103/PhysRev.76.1750".format(_compound))
                         else:
                             sigma_file = os.path.join(_database_folder, _file)
                     else:
@@ -559,10 +565,10 @@ class Resonance(object):
 
                     # sigma for all isotopes with their isotopic ratio
                     _sigma_all_isotopes += _dict['sigma_b'] * _ratio
-                    _energy_all_isotpes += _dict['energy_eV']
+                    _energy_all_isotopes += _dict['energy_eV']
 
                 # energy axis (x-axis) is averaged to take into account differences between x-axis of isotopes
-                _mean_energy_all_isotopes = _energy_all_isotpes / len(_list_isotopes)
+                _mean_energy_all_isotopes = _energy_all_isotopes / len(_list_isotopes)
                 stack_sigma[_compound][_element]['energy_eV'] = _mean_energy_all_isotopes
                 stack_sigma[_compound][_element]['sigma_b'] = _sigma_all_isotopes
 
