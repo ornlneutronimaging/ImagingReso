@@ -1,6 +1,6 @@
 {% set name = "ImagingReso" %}
-{% set version = "1.6.2" %}
-{% set git_rev = "1.6.2" %}
+{% set version = "1.7.5" %}
+{% set git_rev = "1.7.5" %}
 
 package:
   name: {{ name|lower }}
@@ -22,7 +22,7 @@ requirements:
   run:
     - python
     - matplotlib
-    - periodictable
+    - periodictable=1.5.2
     - numpy
     - scipy
     - pandas
