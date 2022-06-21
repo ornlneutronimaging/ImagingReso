@@ -21,7 +21,7 @@ setup(
     include_package_data=True,
     test_suite='tests',
     install_requires=[
-        'numpy==1.19.2',
+        'numpy==1.22.0',
         'pandas==1.1.3',
         'periodictable==1.5.2',
         'scipy==1.5.2',
