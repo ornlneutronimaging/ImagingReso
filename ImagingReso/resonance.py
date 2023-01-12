@@ -471,7 +471,7 @@ class Resonance(object):
         list_density = self.stack[compound][element]['isotopes']['density']['value']
         ratio_density = zip(list_ratio, list_density)
         for _ratio, _density in ratio_density:
-            _density_element += np.float(_ratio) * np.float(_density)
+            _density_element += float(_ratio) * float(_density)
         self.stack[compound][element]['density']['value'] = _density_element
 
         _density_lock = self.density_lock
@@ -506,7 +506,7 @@ class Resonance(object):
         list_mass = self.stack[compound][element]['isotopes']['mass']['value']
         ratio_mass = zip(list_ratio, list_mass)
         for _ratio, _mass in ratio_mass:
-            _molar_mass_element += np.float(_ratio) * np.float(_mass)
+            _molar_mass_element += float(_ratio) * float(_mass)
         self.stack[compound][element]['molar_mass']['value'] = _molar_mass_element
 
     def __get_sigmas(self):

@@ -606,7 +606,7 @@ def get_atoms_per_cm3_of_layer(compound_dict: dict):
     return _molar_mass_sum, atoms_per_cm3
 
 
-def calculate_linear_attenuation_coefficient(atoms_per_cm3: np.float, sigma_b: np.array):
+def calculate_linear_attenuation_coefficient(atoms_per_cm3: float, sigma_b: np.array):
     """calculate the transmission signal using the formula
 
     transmission = exp( - thickness_cm * atoms_per_cm3 * 1e-24 * sigma_b)
@@ -625,7 +625,7 @@ def calculate_linear_attenuation_coefficient(atoms_per_cm3: np.float, sigma_b: n
     return np.array(mu_per_cm)
 
 
-def calculate_trans(thickness_cm: np.float, mu_per_cm: np.array):
+def calculate_trans(thickness_cm: float, mu_per_cm: np.array):
     """calculate the transmission signal using the formula
 
     transmission = exp( - thickness_cm * atoms_per_cm3 * 1e-24 * sigma_b)
@@ -644,7 +644,7 @@ def calculate_trans(thickness_cm: np.float, mu_per_cm: np.array):
     return np.array(transmission)
 
 
-def calculate_transmission(thickness_cm: np.float, atoms_per_cm3: np.float, sigma_b: np.array):
+def calculate_transmission(thickness_cm: float, atoms_per_cm3: float, sigma_b: np.array):
     """calculate the transmission signal using the formula
     
     transmission = exp( - thickness_cm * atoms_per_cm3 * 1e-24 * sigma_b)
