@@ -29,6 +29,20 @@ h_dict = {
     'C3H8': 'Propane',
     'C2H4': 'Ethylene'
 }
+ele_density_dict = {
+    'Ra': 5.5,
+    'Ac': 10,
+    'Cf': 15.1,
+    'Es': 8.84,
+    'Fm': 9.71
+}
+iso_dict = {
+    'Ra': 226,
+    'Ac': 227,
+    'Cf': 252,
+    'Es': 253,
+    'Fm': 255
+}
 
 
 def download_from_github(fname, path):
@@ -219,7 +233,7 @@ def check_iso_ratios(ratios: list, tol: float):
     _sum = sum(ratios)
     assert all(x >= 0 for x in ratios)
     if _sum == 0:
-        print("The sum of the isotopic ratios is 0! Element with no natural abundance, or typo?")
+        print("Element with no natural abundance, please enter manually, or only 'sigma_raw' is available to plot.")
         return True
     elif abs(_sum - 1.0) <= tol:
         return True
@@ -421,7 +435,24 @@ def get_density(element):
     ========
     the density of the element in g.cm-3 units
     """
-    return pt.elements.isotope(element).density
+    try:
+        _density = pt.elements.isotope(element).density
+    except TypeError as e:
+        print(
+            "{} is an isotope with no density data available in periodictable. Output is scaled from literature data.".format(
+                element))
+        _str = element.split("-")
+        _num = int(_str[0])
+        _ele = _str[-1]
+        _num_w = iso_dict[_ele]
+        _density = ele_density_dict[_ele] * _num / _num_w
+    if _density is None:
+        print(
+            "Density of '{}' is not available in periodictable, density from literature is used, please change if desired.".format(
+                element))
+        return ele_density_dict[element]
+    else:
+        return _density
 
 
 def get_compound_density(list_density: list, list_ratio: list):
