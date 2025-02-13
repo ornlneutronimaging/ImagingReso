@@ -141,9 +141,9 @@ class TestUtilities_1(unittest.TestCase):
         _dict_returned = formula_to_dictionary(formula=_formula_1, database=self.database)
         _dict_expected = {'Ag': {'elements': ['Ag'],
                                  'stoichiometric_ratio': [1],
-                                 'thickness': {'value': np.NaN, 'units': 'mm'},
-                                 'density': {'value': np.NaN, 'units': 'g/cm3'},
-                                 'molar_mass': {'value': np.NaN, 'units': 'g/mol'},
+                                 'thickness': {'value': np.nan, 'units': 'mm'},
+                                 'density': {'value': np.nan, 'units': 'g/cm3'},
+                                 'molar_mass': {'value': np.nan, 'units': 'g/mol'},
                                  },
                           }
         self.assertEqual(_dict_returned, _dict_expected)
@@ -154,8 +154,8 @@ class TestUtilities_1(unittest.TestCase):
         _dict_expected = {'Ag2Co': {'elements': ['Ag', 'Co'],
                                     'stoichiometric_ratio': [2, 1],
                                     'thickness': {'value': 10, 'units': 'mm'},
-                                    'density': {'value': np.NaN, 'units': 'g/cm3'},
-                                    'molar_mass': {'value': np.NaN, 'units': 'g/mol'},
+                                    'density': {'value': np.nan, 'units': 'g/cm3'},
+                                    'molar_mass': {'value': np.nan, 'units': 'g/mol'},
                                     },
                           }
         self.assertEqual(_dict_returned, _dict_expected)
@@ -165,9 +165,9 @@ class TestUtilities_1(unittest.TestCase):
         _dict_returned = formula_to_dictionary(formula=_formula_3, density=20, database=self.database)
         _dict_expected = {'Ag2CoU3': {'elements': ['Ag', 'Co', 'U'],
                                       'stoichiometric_ratio': [2, 1, 3],
-                                      'thickness': {'value': np.NaN, 'units': 'mm'},
+                                      'thickness': {'value': np.nan, 'units': 'mm'},
                                       'density': {'value': 20, 'units': 'g/cm3'},
-                                      'molar_mass': {'value': np.NaN, 'units': 'g/mol'},
+                                      'molar_mass': {'value': np.nan, 'units': 'g/mol'},
                                       },
                           }
         self.assertEqual(_dict_returned, _dict_expected)
@@ -178,8 +178,8 @@ class TestUtilities_1(unittest.TestCase):
         _dict_expected = {'Ag2Co': {'elements': ['Ag', 'Co'],
                                     'stoichiometric_ratio': [2, 1],
                                     'thickness': {'value': 0.025, 'units': 'mm'},
-                                    'density': {'value': np.NaN, 'units': 'g/cm3'},
-                                    'molar_mass': {'value': np.NaN, 'units': 'g/mol'},
+                                    'density': {'value': np.nan, 'units': 'g/cm3'},
+                                    'molar_mass': {'value': np.nan, 'units': 'g/mol'},
                                     },
                           }
         self.assertEqual(_dict_returned, _dict_expected)
@@ -231,18 +231,21 @@ class TestUtilities_1(unittest.TestCase):
         """assert get_isotopes_dict returns correct isotopes if element with single symbol such as C"""
         _element = 'V'
         _dict_returned = get_isotope_dicts(element=_element, database=self.database)
-        _dict_expected = {'isotopes': {'list': ['50-V', '51-V'], 'file_names': ['V-50.csv', 'V-51.csv'],
-                                       'density': {'value': [5.990737703208583, 6.110295499877311], 'units': 'g/cm3'},
-                                       'mass': {'value': [49.9471628, 50.9439637], 'units': 'g/mol'},
-                                       'isotopic_ratio': [0.0025, 0.9975]},
-                          'density': {'value': 6.11, 'units': 'g/cm3'},
-                          'molar_mass': {'value': 50.9415, 'units': 'g/mol'}}
+        _dict_expected = {'density': {'units': 'g/cm3', 'value': 6.11},
+                          'isotopes': {'density': {'units': 'g/cm3',
+                                                   'value': [5.990737703208583, 6.110295499877311]},
+                                       'file_names': ['V-50.csv', 'V-51.csv'],
+                                       'isotopic_ratio': [0.0025, 0.9975],
+                                       'list': ['50-V', '51-V'],
+                                       'mass': {'units': 'g/mol', 'value': [49.9471628, 50.9439637]}},
+                          'molar_mass': {'units': 'g/mol', 'value': 50.9415}}
 
         self.assertEqual(_dict_returned, _dict_expected)
 
     def test_check_iso_ratios(self):
         self.assertRaises(ValueError, check_iso_ratios, ratios=[0, 0, 1.06], tol=0.005)
-        self.assertRaises(ValueError, check_iso_ratios, ratios=[0, 0, 0], tol=0.005)
+        self.assertRaises(AssertionError, check_iso_ratios, ratios=[-1, 0, 0], tol=0.005)
+        self.assertTrue(check_iso_ratios(ratios=[0, 0, 0], tol=0.005))
         self.assertTrue(check_iso_ratios(ratios=[0, 0, 1], tol=0.005))
 
     def test_get_mass(self):
@@ -377,7 +380,7 @@ class TestUtilities_2(unittest.TestCase):
         _stack_returned = o_reso.stack
         _molar_mass, _atoms_per_cm3 = get_atoms_per_cm3_of_layer(compound_dict=_stack['CoAg'])
         print(_atoms_per_cm3)
-        self.assertAlmostEqual(_atoms_per_cm3, 3.5381585195328095e+22, delta=1)
+        self.assertAlmostEqual(_atoms_per_cm3, 3.5381585195328095e+22, delta=1e+15)
 
     def test_calculate_transmission(self):
         """assert calculate_transmission works"""

@@ -216,13 +216,18 @@ def checking_stack(stack, database='ENDF_VII'):
 
 
 def check_iso_ratios(ratios: list, tol: float):
-    if abs(sum(ratios) - 1.0) >= tol:
-        raise ValueError("The sum of the ratios '{}' is '{}' instead of '1.0'!".format(ratios, sum(ratios)))
-    else:
+    _sum = sum(ratios)
+    assert all(x >= 0 for x in ratios)
+    if _sum == 0:
+        print("The sum of the isotopic ratios is 0! Element with no natural abundance, or typo?")
         return True
+    elif abs(_sum - 1.0) <= tol:
+        return True
+    else:
+        raise ValueError("The sum of the ratios '{}' is '{}' instead of '1.0'!".format(ratios, _sum))
 
 
-def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database='ENDF_VII'):
+def formula_to_dictionary(formula='', thickness=np.nan, density=np.nan, database='ENDF_VII'):
     """create dictionary based on formula given
     
     Parameters:
@@ -230,8 +235,8 @@ def formula_to_dictionary(formula='', thickness=np.NaN, density=np.NaN, database
     formula: string
        ex: 'AgCo2'
        ex: 'Ag'
-    thickness: float (in mm) default is np.NaN
-    density: float (in g/cm3) default is np.NaN
+    thickness: float (in mm) default is np.nan
+    density: float (in g/cm3) default is np.nan
     database: string (default is ENDV_VIII). Database where to look for elements
     
     Raises:
@@ -315,15 +320,15 @@ def get_isotope_dicts(element='', database='ENDF_VII'):
     list_files.sort()
     isotope_dict = {'isotopes': {'list': [],
                                  'file_names': [],
-                                 'density': {'value': np.NaN,
+                                 'density': {'value': np.nan,
                                              'units': 'g/cm3'},
                                  'mass': {'value': [],
                                           'units': 'g/mol',
                                           },
                                  'isotopic_ratio': [], },
-                    'density': {'value': np.NaN,
+                    'density': {'value': np.nan,
                                 'units': 'g/cm3'},
-                    'molar_mass': {'value': np.NaN,
+                    'molar_mass': {'value': np.nan,
                                    'units': 'g/mol'},
                     }
 
@@ -333,8 +338,8 @@ def get_isotope_dicts(element='', database='ENDF_VII'):
     _isotopes_mass = []
     _isotopes_density = []
     _isotopes_atomic_ratio = []
-    _density = np.NaN
-    _molar_mass = np.NaN
+    _density = np.nan
+    _molar_mass = np.nan
 
     for file in list_files:
         # Obtain element, z number from the basename
@@ -498,7 +503,7 @@ def get_interpolated_data(df: pd.DataFrame, e_min=np.nan, e_max=np.nan, e_step=n
     return {'x_axis': x_axis, 'y_axis': y_axis}
 
 
-def get_sigma(database_file_name='', e_min=np.NaN, e_max=np.NaN, e_step=np.NaN, t_kelvin=None):
+def get_sigma(database_file_name='', e_min=np.nan, e_max=np.nan, e_step=np.nan, t_kelvin=None):
     """retrieve the Energy and sigma axis for the given isotope
 
     :param database_file_name: path/to/file with extension
@@ -664,7 +669,7 @@ def calculate_transmission(thickness_cm: float, atoms_per_cm3: float, sigma_b: n
     return mu_per_cm, transmission
 
 
-def set_distance_units(value=np.NaN, from_units='mm', to_units='cm'):
+def set_distance_units(value=np.nan, from_units='mm', to_units='cm'):
     """convert distance into new units
     
     Parameters:

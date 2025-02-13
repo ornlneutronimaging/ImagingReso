@@ -20,9 +20,9 @@ class Resonance(object):
 
     density_lock = {}  # dictionary that will defined the densities locked
 
-    energy_max = np.NaN
-    energy_min = np.NaN
-    energy_step = np.NaN
+    energy_max = np.nan
+    energy_min = np.nan
+    energy_step = np.nan
 
     def __init__(self, stack={}, energy_max=1, energy_min=0.001, energy_step=0.001,
                  database='ENDF_VII', temperature='294K'):
@@ -111,7 +111,7 @@ class Resonance(object):
         """
         return json.dumps(self.stack, indent=4)
 
-    def add_layer(self, formula='', thickness=np.NaN, density=np.NaN):
+    def add_layer(self, formula='', thickness=np.nan, density=np.nan):
         """provide another way to define the layers (stack)
 
         Parameters:
@@ -414,7 +414,7 @@ class Resonance(object):
 
     def __fill_missing_keys(self, stack: dict):
         _list_key_to_check = ['density']
-        _list_key_value = [{'value': np.NaN,
+        _list_key_value = [{'value': np.nan,
                             'units': 'g/cm3'}]
 
         list_compound = stack.keys()
